@@ -1,0 +1,25 @@
+<sprite>
+	<animation repeat="0" reverce="0">
+		<frame name="gfx/smoke_0.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_1.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_2.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_3.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_4.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_5.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_6.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_7.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_8.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_9.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_10.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_11.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_12.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_13.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_14.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_15.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_16.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_17.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_18.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_19.bmp" colorkey="0"/>
+		<frame name="gfx/smoke_20.bmp" colorkey="0"/>
+	</animation>
+</sprite>

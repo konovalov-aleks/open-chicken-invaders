@@ -1,0 +1,5 @@
+<sprite>
+	<animation>
+		<frame name="gfx/planet_1.bmp" colorkey="0"/>
+	</animation>
+</sprite>

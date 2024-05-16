@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+
+env = Environment()
+
+libs = ['tinyxml', 'sfml-graphics', 'sfml-window', 'sfml-system', 'sfml-audio', 'boost_chrono', 'boost_system']
+
+sources = [
+    "_test_context.cpp",
+    "../../context/manager.cpp",
+    "../../context/context.cpp",
+    "../../objects/base/collision_object.cpp",
+    "../../objects/base/visible_object.cpp",
+    "../../objects/base/sprite.cpp",
+    "../../window.cpp",
+    "../../resources/loader.cpp"
+]
+
+env.Append(CCFLAGS=['--std=c++11', '-Wall', '-I../../', '-DUSE_BOOST_CHRONO'])
+env.Program(target="context_test", source=sources, LIBS=libs, CPPPath='.')

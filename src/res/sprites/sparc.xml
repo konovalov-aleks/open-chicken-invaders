@@ -1,0 +1,194 @@
+<sprite>
+	<animation>
+		<frame name="gfx/sparc_0.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_32.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_64.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_96.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_1.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_33.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_65.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_97.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_2.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_34.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_66.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_98.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_3.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_35.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_67.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_99.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_4.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_36.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_68.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_100.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_5.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_37.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_69.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_101.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_6.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_38.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_70.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_102.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_7.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_39.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_71.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_103.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_8.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_40.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_72.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_104.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_9.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_41.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_73.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_105.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_10.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_42.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_74.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_106.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_11.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_43.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_75.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_107.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_12.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_44.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_76.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_108.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_13.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_45.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_77.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_109.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_14.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_46.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_78.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_110.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_15.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_47.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_79.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_111.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_16.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_48.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_80.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_112.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_17.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_49.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_81.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_113.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_18.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_50.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_82.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_114.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_19.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_51.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_83.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_115.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_20.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_52.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_84.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_116.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_21.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_53.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_85.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_117.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_22.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_54.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_86.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_118.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_23.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_55.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_87.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_119.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_24.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_56.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_88.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_120.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_25.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_57.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_89.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_121.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_26.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_58.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_90.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_122.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_27.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_59.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_91.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_123.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_28.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_60.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_92.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_124.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_29.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_61.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_93.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_125.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_30.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_62.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_94.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_126.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/sparc_31.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_63.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_95.bmp" colorkey="0"/>
+		<frame name="gfx/sparc_127.bmp" colorkey="0"/>
+	</animation>
+</sprite>

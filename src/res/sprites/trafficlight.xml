@@ -1,0 +1,11 @@
+<sprite>
+	<animation>
+		<frame name="gfx/cutscene_trafficlight_0.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/cutscene_trafficlight_1.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/cutscene_trafficlight_2.bmp" colorkey="0"/>
+	</animation>
+</sprite>

@@ -1,0 +1,36 @@
+<sprite>
+	<animation repeat="1" reverce="1">
+		<frame name="gfx/giftbox-yellow_0.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_1.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_2.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_3.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_4.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_5.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_6.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_7.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_8.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_9.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_10.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_11.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_12.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_13.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_14.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_15.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_16.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_17.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_18.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_19.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_20.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_21.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_22.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_23.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_24.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_25.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_26.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_27.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_28.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_29.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_30.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-yellow_31.bmp" colorkey="0"/>
+	</animation>
+</sprite>

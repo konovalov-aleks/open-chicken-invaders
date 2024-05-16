@@ -1,0 +1,36 @@
+<sprite>
+	<animation repeat="1" reverce="1">
+		<frame name="gfx/giftbox-red_0.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_1.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_2.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_3.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_4.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_5.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_6.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_7.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_8.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_9.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_10.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_11.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_12.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_13.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_14.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_15.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_16.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_17.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_18.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_19.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_20.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_21.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_22.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_23.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_24.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_25.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_26.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_27.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_28.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_29.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_30.bmp" colorkey="0"/>
+		<frame name="gfx/giftbox-red_31.bmp" colorkey="0"/>
+	</animation>
+</sprite>

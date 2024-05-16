@@ -1,0 +1,13 @@
+<sprite>
+	<animation>
+		<frame name="gfx/fighter_0.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_1.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_2.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_3.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_4.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_5.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_6.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_7.bmp" colorkey="0"/>
+		<frame name="gfx/fighter_8.bmp" colorkey="0"/>
+	</animation>
+</sprite>

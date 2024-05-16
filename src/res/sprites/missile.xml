@@ -1,0 +1,98 @@
+<sprite>
+	<animation>
+		<frame name="gfx/missile_0.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_1.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_2.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_3.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_4.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_5.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_6.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_7.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_8.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_9.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_10.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_11.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_12.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_13.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_14.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_15.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_16.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_17.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_18.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_19.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_20.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_21.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_22.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_23.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_24.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_25.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_26.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_27.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_28.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_29.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_30.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/missile_31.bmp" colorkey="0"/>
+	</animation>
+</sprite>

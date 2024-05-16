@@ -1,0 +1,20 @@
+<sprite>
+	<animation repeat="1" reverce="0">
+		<frame name="gfx/atom_0.bmp" colorkey="0"/>
+		<frame name="gfx/atom_1.bmp" colorkey="0"/>
+		<frame name="gfx/atom_2.bmp" colorkey="0"/>
+		<frame name="gfx/atom_3.bmp" colorkey="0"/>
+		<frame name="gfx/atom_4.bmp" colorkey="0"/>
+		<frame name="gfx/atom_5.bmp" colorkey="0"/>
+		<frame name="gfx/atom_6.bmp" colorkey="0"/>
+		<frame name="gfx/atom_7.bmp" colorkey="0"/>
+		<frame name="gfx/atom_8.bmp" colorkey="0"/>
+		<frame name="gfx/atom_9.bmp" colorkey="0"/>
+		<frame name="gfx/atom_10.bmp" colorkey="0"/>
+		<frame name="gfx/atom_11.bmp" colorkey="0"/>
+		<frame name="gfx/atom_12.bmp" colorkey="0"/>
+		<frame name="gfx/atom_13.bmp" colorkey="0"/>
+		<frame name="gfx/atom_14.bmp" colorkey="0"/>
+		<frame name="gfx/atom_15.bmp" colorkey="0"/>
+	</animation>
+</sprite>

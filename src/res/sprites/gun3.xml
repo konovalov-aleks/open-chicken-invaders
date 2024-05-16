@@ -1,0 +1,11 @@
+<sprite>
+	<animation>
+		<frame name="gfx/zigzag-small_0.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/zigzag_0.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/zigzag-big_0.bmp" colorkey="0"/>
+	</animation>
+</sprite>

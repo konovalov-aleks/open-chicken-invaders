@@ -1,0 +1,14 @@
+<sprite>
+	<animation>
+		<frame name="gfx/menuitem_0.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/menuitem_1.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/menuitem_2.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/menuitem_3.bmp" colorkey="0"/>
+	</animation>
+</sprite>

@@ -1,0 +1,8 @@
+<sprite>
+	<animation>
+		<frame name="gfx/fighter-sideview_0.bmp" colorkey="0"/>
+	</animation>
+	<animation>
+		<frame name="gfx/fighter-sideview_1.bmp" colorkey="0"/>
+	</animation>
+</sprite>

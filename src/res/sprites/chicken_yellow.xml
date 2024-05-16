@@ -1,0 +1,14 @@
+<sprite>
+	<animation repeat="1" reverce="1">
+		<frame name="gfx/chicken-yellow_0.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_1.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_2.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_3.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_4.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_5.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_6.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_7.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_8.bmp" colorkey="0"/>
+		<frame name="gfx/chicken-yellow_9.bmp" colorkey="0"/>
+	</animation>
+</sprite>
