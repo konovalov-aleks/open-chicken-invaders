@@ -24,6 +24,8 @@
 #ifdef USE_SFML
 #   include <SFML/Audio/Sound.hpp>
 #   include <SFML/Audio/SoundBuffer.hpp>
+#elif __EMSCRIPTEN__
+#   include <SDL/SDL_mixer.h>
 #else
 #   include <SDL_mixer.h>
 #endif

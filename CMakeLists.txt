@@ -130,17 +130,17 @@ add_custom_command(
 	"${CMAKE_SOURCE_DIR}/utility/download_resources.py"
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
-list(APPEND resources "${CMAKE_BINARY_DIR}/ChickenInvaders2.dat")
 
 
 
 include(GNUInstallDirs)
 if (EMSCRIPTEN)
-    target_compile_options(oci PRIVATE "-sUSE_SDL=2")
+    target_compile_options(oci PRIVATE "-sUSE_SDL=2" "-fexceptions")
     target_link_options(oci PRIVATE
+        "-fexceptions"
         "-sASYNCIFY"
         "--use-port=sdl2"
-        "--use-port=sdl2_image:formats=png"
+        "--use-port=sdl2_mixer"
         "-sINVOKE_RUN=0"
         "-sEXIT_RUNTIME=1"
         "-sMODULARIZE=1"
@@ -148,16 +148,8 @@ if (EMSCRIPTEN)
         "-sEXPORTED_RUNTIME_METHODS=[\"callMain\",\"addOnExit\",\"JSEvents\"]"
         "-lidbfs.js")
 
-    list(TRANSFORM resources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
-    file (GLOB reSL LIST_DIRECTORIES false ${CMAKE_CURRENT_SOURCE_DIR}/resources/reSL/*)
-    file (GLOB extra LIST_DIRECTORIES false ${CMAKE_CURRENT_SOURCE_DIR}/resources/extra/*)
-    list (APPEND resources ${reSL} ${extra})
-
-    foreach(path ${resources})
-        get_filename_component(fname ${path} NAME)
-        MESSAGE("Embed the file: ${path}")
-        target_link_options(oci PRIVATE "--embed-file=${path}@${fname}")
-    endforeach()
+    target_link_options(oci PRIVATE "--embed-file=${CMAKE_CURRENT_SOURCE_DIR}/res/@/res/")
+    target_link_options(oci PRIVATE "--embed-file=${CMAKE_CURRENT_BINARY_DIR}/ChickenInvaders2.dat@/ChickenInvaders2.dat")
 else()
     find_package(SDL2 CONFIG REQUIRED)
     find_package(SDL2_mixer REQUIRED)
