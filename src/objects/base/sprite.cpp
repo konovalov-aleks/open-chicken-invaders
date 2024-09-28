@@ -31,11 +31,14 @@
 #include <stdexcept>
 #include <stdio.h>
 #include <string>
-#include <tinyxml.h>
+#include <string_view>
+#include <tinyxml2.h>
 #include <utils/cache.h>
 
 namespace oci {
 namespace objects {
+
+using namespace std::literals;
 
 namespace {
     /// Тип отрисовки изображения спрайта
@@ -157,19 +160,18 @@ namespace {
 
     class SpriteLoader {
     private:
-        inline bool GetBoolValue(const TiXmlElement& e, const char* name, bool def = false) const {
+        inline bool GetBoolValue(const tinyxml2::XMLElement& e, const char* name, bool def = false) const {
             int value = 0;
-            return e.QueryIntAttribute(name, &value) == TIXML_SUCCESS ? value != 0 : def;
+            return e.QueryIntAttribute(name, &value) == tinyxml2::XML_SUCCESS ? value != 0 : def;
         }
 
-        Sprite::Animation LoadAnimation(const TiXmlElement& animation) const {
+        Sprite::Animation LoadAnimation(const tinyxml2::XMLElement& animation) const {
             Sprite::Animation anim;
-            anim.info.need_reverce = GetBoolValue(animation, "reverce");
+            anim.info.need_reverse = GetBoolValue(animation, "reverce");
             anim.info.need_repeat = GetBoolValue(animation, "repeat");
-            const TiXmlNode* node = NULL;
-            while((node = animation.IterateChildren(node)) != NULL) {
-                const TiXmlElement* frame = node->ToElement();
-                if(frame && frame->ValueStr() == "frame") {
+            for (const tinyxml2::XMLNode* node = animation.FirstChildElement(); node; node = node->NextSiblingElement()) {
+                const tinyxml2::XMLElement* frame = node->ToElement();
+                if(frame && frame->Value() == "frame"sv) {
                     const char* filename = frame->Attribute("name");
                     if(filename) {
                         std::vector<char> data = resources::ResourcesLoader::Instance().GetData(filename);
@@ -192,12 +194,11 @@ namespace {
             return anim;
         }
 
-        Sprite::SpriteData LoadXml(const TiXmlNode& root) const {
+        Sprite::SpriteData LoadXml(const tinyxml2::XMLNode& root) const {
             Sprite::SpriteData result;
-            const TiXmlNode* node = NULL;
-            while((node = root.IterateChildren(node)) != NULL) {
-                const TiXmlElement* animation = node->ToElement();
-                if(animation && animation->ValueStr() == "animation")
+            for (const tinyxml2::XMLNode* node = root.FirstChildElement(); node; node = node->NextSiblingElement()) {
+                const tinyxml2::XMLElement* animation = node->ToElement();
+                if(animation && animation->Value() == "animation"sv)
                     result.push_back(LoadAnimation(*animation));
             }
             return result;
@@ -205,10 +206,10 @@ namespace {
 
     public:
         Sprite::SpriteData operator()(const std::string& name) {
-            TiXmlDocument xml;
-            if(!xml.LoadFile("res/sprites/" + name))
+            tinyxml2::XMLDocument xml;
+            if(xml.LoadFile(("res/sprites/" + name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
                 throw std::logic_error("sprite \"" + name + "\" not found");
-            const TiXmlNode* root = xml.FirstChild("sprite");
+            const tinyxml2::XMLNode* root = xml.FirstChildElement("sprite");
             if(!root)
                 throw std::logic_error("cannot find root tag \"sprite\" in file \"" + name + "\"");
             return LoadXml(*root);
@@ -232,7 +233,7 @@ void Sprite::Init(const std::string& filename) {
     printf("[%x] Sprite (\"%s\")\n", (unsigned int)this, filename);
     #endif
 #ifdef USE_SFML
-    if(strstr(filename.c_str(), ".sprite")) { 
+    if(strstr(filename.c_str(), ".sprite")) {
         static Cache<SpriteData, OldSpriteLoader> old_cache;
         mData = &old_cache.Get(filename);
         printf("Old loader: loaded \"%s\"\n", filename.c_str());

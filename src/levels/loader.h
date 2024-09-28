@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <tinyxml.h>
+#include <tinyxml2.h>
 #include "level.h"
 
 namespace oci {
@@ -37,8 +37,8 @@ private:
     /// Загружает ресурсы уровня с именем levelname
     void LoadLevel(const std::string& levelname);
 
-    TiXmlDocument xml_file;
-    TiXmlElement* ResourcesList;
+    tinyxml2::XMLDocument xml_file;
+    tinyxml2::XMLElement* ResourcesList;
 
     friend class Level;
 };

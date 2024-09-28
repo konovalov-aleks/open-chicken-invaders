@@ -37,7 +37,7 @@ namespace objects {
 class Sprite : public core::Sprite, public Visible {
 public:
     struct AnimationInfo {
-        bool need_reverce;
+        bool need_reverse;
         bool need_repeat;
     };
 

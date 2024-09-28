@@ -24,10 +24,13 @@
 #include <core/color.h>
 #include <resources/loader.h>
 #include <stdexcept>
-#include <tinyxml.h>
+#include <string_view>
+#include <tinyxml2.h>
 #include <utils/cache.h>
 
 namespace oci {
+
+using namespace std::literals;
 
 struct FontLoader {
     Font operator()(const std::string& name) {
@@ -51,16 +54,15 @@ const Image& Font::operator[] (char s) const {
 }
 
 void Font::Load(const std::string& name) {
-    TiXmlDocument xml;
-    if(!xml.LoadFile("res/fonts/" + name))
+    tinyxml2::XMLDocument xml;
+    if(xml.LoadFile(("res/fonts/" + name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
         throw std::logic_error("font \"" + name + "\" not found");
-    const TiXmlNode* root = xml.FirstChild("font");
+    const tinyxml2::XMLNode* root = xml.FirstChildElement("font");
     if(!root)
         throw std::logic_error("cannot find root tag \"font\" in file \"" + name + "\"");
-    const TiXmlNode* node = NULL;
-    while((node = root->IterateChildren(node)) != NULL) {
-        const TiXmlElement* glyph = node->ToElement();
-        if(glyph && glyph->ValueStr() == "glyph") {
+    for (const tinyxml2::XMLNode* node = root->FirstChildElement(); node; node = node->NextSiblingElement()) {
+        const tinyxml2::XMLElement* glyph = node->ToElement();
+        if(glyph && glyph->Value() == "glyph"sv) {
             const char* symbol = glyph->Attribute("symbol");
             if(!symbol || strlen(symbol) != 1)
                 throw std::logic_error("Invalid value for attribute \"symbol\" in tag \"glyph\"");

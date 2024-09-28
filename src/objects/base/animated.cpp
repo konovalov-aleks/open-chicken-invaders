@@ -39,10 +39,10 @@ void Animated::NextFrame() {
             return;
         } else
             mAnimationPosition =
-                (mAnimationPosition < 0 && AnimationInfo().need_reverce) ||
+                (mAnimationPosition < 0 && AnimationInfo().need_reverse) ||
                 (mAnimationPosition > FramesCount() - 1 &&
-                 !AnimationInfo().need_reverce) ? 0 : FramesCount() - 1;
-        if(AnimationInfo().need_reverce)
+                 !AnimationInfo().need_reverse) ? 0 : FramesCount() - 1;
+        if(AnimationInfo().need_reverse)
             mAnimationDirection = -mAnimationDirection;
     }
     SetFrame(static_cast<int>(mAnimationPosition));

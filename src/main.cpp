@@ -28,7 +28,6 @@
 #include <core/window_style.h>
 #include <diagnostics/benchmark/benchmark.h>
 #include <diagnostics/fps.h>
-#include <exception>
 #include "levels/manager.h"
 #include "menu/mainmenu.h"
 #include <portability/unordered_map.h>
@@ -49,21 +48,9 @@ namespace {
         event_handlers.insert(std::make_pair(Event::Closed, onclose));
     };
 
-    void unexpected_handler() {
-        fputs("Unexpected handler called", stderr);
-        exit(EXIT_FAILURE);
-    }
-
-    void terminate_handler() {
-        fputs("Terminate handler called", stderr);
-        exit(EXIT_FAILURE);
-    }
-
 } // namespace
 
 int main(int argc, char* argv[]) {
-    std::set_unexpected(unexpected_handler);
-    std::set_terminate(terminate_handler);
     fill_handlers();
 
     using namespace oci;

@@ -21,6 +21,7 @@
 
 #include "loader.h"
 
+#include <cassert>
 #include <set>
 #include <string>
 
@@ -43,9 +44,9 @@ namespace {
 } // namespace
 
 Loader::Loader() {
-    if(!xml_file.LoadFile("res/description.xml"))
-        FatalError(xml_file.ErrorDesc());
-    TiXmlNode* node = xml_file.FirstChild("ResourcesList");
+    if(xml_file.LoadFile("res/description.xml") != tinyxml2::XML_SUCCESS) [[unlikely]]
+        FatalError(xml_file.ErrorStr());
+    tinyxml2::XMLNode* node = xml_file.FirstChildElement("ResourcesList");
     if(!node)
         FatalError("cannot find node \"ResourceList\"");
     ResourcesList = node->ToElement();
@@ -55,28 +56,26 @@ Loader::Loader() {
 
 void Loader::LoadLevel(const std::string& levelname) {
     assert(ResourcesList);
-    TiXmlNode* level_node = ResourcesList->FirstChild(levelname);
+    tinyxml2::XMLNode* level_node = ResourcesList->FirstChildElement(levelname.c_str());
     if(!level_node)
         LevelLoadFatalError(levelname, "cannot find level element");
-    TiXmlElement* level = level_node->ToElement();
+    tinyxml2::XMLElement* level = level_node->ToElement();
     if(!level)
         LevelLoadFatalError(levelname, "level node is not xml element");
 
     std::set<std::string> sprites_list, sounds_list;
 
     {
-        TiXmlNode* node = level->FirstChild("sprite");
+        tinyxml2::XMLNode* node = level->FirstChildElement("sprite");
         if(node) {
-            TiXmlNode* child = NULL;
-            while((child = node->IterateChildren(child)) != NULL)
+            for (tinyxml2::XMLNode* child = node->FirstChildElement(); child; child = child->NextSiblingElement())
                 sprites_list.insert(child->ToElement()->Attribute("name"));
         }
     }
     {
-        TiXmlNode* node = level->FirstChild("sound");
+        tinyxml2::XMLNode* node = level->FirstChildElement("sound");
         if(node) {
-            TiXmlNode* child = NULL;
-            while((child = node->IterateChildren(child)) != NULL)
+            for (tinyxml2::XMLNode* child = node->FirstChildElement(); child; child = child->NextSiblingElement())
                 sounds_list.insert(child->ToElement()->Attribute("name"));
         }
     }

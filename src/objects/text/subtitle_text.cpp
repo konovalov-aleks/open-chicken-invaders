@@ -25,29 +25,31 @@
 #include <core/window.h>
 #include <font/font.h>
 #include <stdexcept>
-#include <tinyxml.h>
+#include <string_view>
+#include <tinyxml2.h>
 
 namespace oci {
 namespace objects {
+
+using namespace std::literals;
 
 static const int SUBTITLE_Y_POS = 400;
 
 SubtitleText::SubtitleText() : mCurTask(-1), mCurTaskExpireTime(0) {}
 
 void SubtitleText::Init(const std::string& filename) {
-    TiXmlDocument xml;
-    if(!xml.LoadFile("res/subtitle/" + filename))
+    tinyxml2::XMLDocument xml;
+    if(xml.LoadFile(("res/subtitle/" + filename).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
         throw std::logic_error("subtitle \"" + filename + "\" not found");
-    const TiXmlNode* root = xml.FirstChild("subtitle");
+    const tinyxml2::XMLNode* root = xml.FirstChildElement("subtitle");
     if(!root)
         throw std::logic_error("cannot find root tag \"subtitle\" in file \"" +
                                filename + "\"");
-    const TiXmlNode* node = NULL;
-    while((node = root->IterateChildren(node)) != NULL) {
-        const TiXmlElement* sentence = node->ToElement();
-        if(sentence && sentence->ValueStr() == "sentence") {
+    for (const tinyxml2::XMLNode* node = root->FirstChild(); node; node = node->NextSiblingElement()) {
+        const tinyxml2::XMLElement* sentence = node->ToElement();
+        if(sentence && sentence->Value() == "sentence"sv) {
             int time = 0;
-            if(sentence->QueryIntAttribute("time", &time) == TIXML_SUCCESS) {
+            if(sentence->QueryIntAttribute("time", &time) == tinyxml2::XML_SUCCESS) {
                 const char* text = sentence->Attribute("text");
                 mTasks.push_back(std::make_pair(time, text ? text : ""));
             }

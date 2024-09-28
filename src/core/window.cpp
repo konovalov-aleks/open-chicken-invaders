@@ -28,7 +28,7 @@ namespace oci {
 #ifndef USE_SFML
 
 #include <stdexcept>
-#include <boost/thread.hpp>
+#include <thread>
 
 namespace oci {
 
@@ -66,7 +66,7 @@ void WindowImpl::Display() {
         CHRONO::system_clock::time_point current_time = CHRONO::system_clock::now();
         CHRONO::nanoseconds delta = current_time - mLastFrameTime;
         if(delta < CHRONO::microseconds(mFrameMinTime)) {
-            boost::this_thread::sleep_for(
+            std::this_thread::sleep_for(
                 CHRONO::microseconds(mFrameMinTime) - delta);
         }
         mLastFrameTime = current_time;

@@ -22,6 +22,7 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
+#include <cstdlib>
 #include <list>
 #include <memory>
 #include <objects/base/sprite.h>
@@ -96,7 +97,7 @@ private:
         }
 
         virtual context::ObjectsStorage& Storage() override {
-            return *static_cast<context::ObjectsStorage*>(NULL);
+            std::abort(); // unreachable
         }
     } mSprite;
 
