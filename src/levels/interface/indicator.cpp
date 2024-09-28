@@ -21,8 +21,6 @@
 
 #include "lives_indicator.h"
 
-#include <boost/lexical_cast.hpp>
-
 namespace oci {
 namespace levels {
 namespace interface {
@@ -53,7 +51,7 @@ void Indicator::Run() {
         mIcons[1]->Hide();
         mIcons[2]->Hide();
         mText->Show();
-        mText->SetText(boost::lexical_cast<std::string>(value));
+        mText->SetText(std::to_string(value));
     }
 }
 

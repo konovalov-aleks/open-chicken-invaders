@@ -23,7 +23,9 @@
 
 #include <objects/base/active.h>
 #include <objects/text/text.h>
-#include <portability/chrono.h>
+
+#include <chrono>
+#include <memory>
 
 namespace oci {
 namespace diagnostics {
@@ -33,10 +35,10 @@ public:
     void Init();
     void Run() override;
 private:
-    typedef CHRONO::high_resolution_clock Clock;
+    typedef std::chrono::high_resolution_clock Clock;
 
     Clock::time_point mLastFrameTime;
-    shared_ptr<objects::Text> mText;
+    std::shared_ptr<objects::Text> mText;
 };
 
 } // namespace diagnostics

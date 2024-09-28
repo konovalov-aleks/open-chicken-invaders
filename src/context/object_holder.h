@@ -21,13 +21,12 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-#include <portability/memory.h>
+#include <memory>
 
 namespace oci {
 
-template<typename T, template<typename> class Ptr = weak_ptr>
-class ObjectHolder : boost::noncopyable {
+template<typename T, template<typename> class Ptr = std::weak_ptr>
+class ObjectHolder {
 public:
     ObjectHolder() {}
     ObjectHolder(const Ptr<T>& obj) : mObject(obj) {}
@@ -35,6 +34,9 @@ public:
     ~ObjectHolder() {
         reset();
     }
+
+    ObjectHolder(const ObjectHolder&) = delete;
+    ObjectHolder& operator= (const ObjectHolder&) = delete;
 
     ObjectHolder& operator= (const Ptr<T>& obj) {
         reset();
@@ -48,16 +50,16 @@ public:
 
 private:
 
-    shared_ptr<T> get_ptr(weak_ptr<T>& ptr) const {
+    std::shared_ptr<T> get_ptr(std::weak_ptr<T>& ptr) const {
         return ptr.lock();
     }
 
-    shared_ptr<T> get_ptr(shared_ptr<T>& ptr) const {
+    std::shared_ptr<T> get_ptr(std::shared_ptr<T>& ptr) const {
         return ptr;
     }
 
     void reset() {
-        shared_ptr<T> obj = get_ptr(mObject);
+        std::shared_ptr<T> obj = get_ptr(mObject);
         if(obj)
             obj->Storage().KillObject(mObject);
     }

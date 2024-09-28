@@ -52,7 +52,7 @@ protected:
     Gun(short lev, TGunType gun_type);
 
     context::ObjectsStorage& Storage() {
-        shared_ptr<context::Context> game_context(
+        std::shared_ptr<context::Context> game_context(
             context::Manager::Instance().GetContext("game"));
         assert(game_context.get());
         return game_context->GetStorage("level");

@@ -22,19 +22,20 @@
 #pragma once
 
 #include <objects/base/active.h>
-#include <portability/memory.h>
 #include "player.h"
+
+#include <memory>
 
 namespace oci {
 namespace audio {
 
 class ControllerHolder : public objects::Active {
 public:
-    void Init(const shared_ptr<Controller>& sc);
+    void Init(const std::shared_ptr<Controller>& sc);
     void Run() override;
 
 private:
-    shared_ptr<Controller> mController;
+    std::shared_ptr<Controller> mController;
 };
 
 } // namespace audio

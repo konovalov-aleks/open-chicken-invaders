@@ -35,7 +35,7 @@ namespace {
 Image::Image() {}
 
 Image::Image(size_t width, size_t height, const Color& color) {
-    mSurface = shared_ptr<SDL_Surface>(
+    mSurface = std::shared_ptr<SDL_Surface>(
         SDL_CreateRGBSurface(0, width, height, 32,
                              0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff),
         SurfaceDeleter());
@@ -51,23 +51,21 @@ bool Image::LoadTexture() const {
         printf("SDL error: %s\n", SDL_GetError());
         return false;
     }
-    mTexture = shared_ptr<SDL_Texture>(
+    mTexture = std::shared_ptr<SDL_Texture>(
         SDL_CreateTextureFromSurface(Window::Instance().GetRenderer(), mSurface.get()),
         TextureDeleter());
     return mTexture != NULL;
 }
 
 bool Image::LoadFromMemory(const char* data, size_t datasize) {
-    puts("Load from memory");
-    mSurface = shared_ptr<SDL_Surface>(
+    mSurface = std::shared_ptr<SDL_Surface>(
         SDL_LoadBMP_RW(SDL_RWFromConstMem(data, datasize), 1),
         SurfaceDeleter());
     return mSurface != NULL;
 }
 
 bool Image::LoadFromFile(const std::string& filename) {
-    printf("Load from file %s\n", filename.c_str());
-    mSurface = shared_ptr<SDL_Surface>(
+    mSurface = std::shared_ptr<SDL_Surface>(
         SDL_LoadBMP(filename.c_str()),
         SurfaceDeleter());
     return mSurface != NULL;
@@ -80,7 +78,7 @@ void Image::CreateMaskFromColor(Color color_key) {
                                    color_key.r,
                                    color_key.g,
                                    color_key.b));
-        mTexture = shared_ptr<SDL_Texture>();
+        mTexture = std::shared_ptr<SDL_Texture>();
     }
 }
 

@@ -21,19 +21,19 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-
 #ifdef USE_SFML
 #   include <SFML/Graphics/RenderWindow.hpp>
 #else
 #   include "drawable.h"
 #   include "event.h"
 #   include "input.h"
-#   include <portability/chrono.h>
-#   include <portability/memory.h>
-#   include <SDL2/SDL.h>
-#   include <string>
 #   include "video_mode.h"
+
+#   include <SDL.h>
+
+#   include <chrono>
+#   include <memory>
+#   include <string>
 #endif
 
 namespace oci {
@@ -97,18 +97,23 @@ private:
     };
 
     Input mInput;
-    unique_ptr<SDL_Window, WindowDeleter> mWindow;
-    unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
-    CHRONO::system_clock::time_point mLastFrameTime;
+    std::unique_ptr<SDL_Window, WindowDeleter> mWindow;
+    std::unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
+    std::chrono::steady_clock::time_point mLastFrameTime;
     Vector2<unsigned int> mSize;
     int mFrameMinTime;
 };
 
 #endif
 
-class Window : public WindowImpl, boost::noncopyable {
+class Window : public WindowImpl {
 public:
     static Window& Instance() { return mInstance; }
+
+    Window() = default;
+
+    Window(const Window&) = delete;
+    Window& operator= (const Window&) = delete;
 
 private:
     static Window mInstance;

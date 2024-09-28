@@ -26,7 +26,8 @@
 #include <objects/bonus/upgrade_gun.h>
 #include <objects/gun/bullet.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
+
+#include <numbers>
 
 namespace oci {
 namespace objects {
@@ -49,7 +50,7 @@ void UFO::Run() {
             audio::Play("laserLow.wav"));
         Storage().CreateObject<Bullet>(
             "gun4.xml", GetPosition(), UFO_BULLET_SPEED,
-            M_PI, 0, 0, ctPlayerShip, ctEnemyBullet);
+            std::numbers::pi_v<float>, 0, 0, ctPlayerShip, ctEnemyBullet);
     }
     Move(mSpeed, 0);
     if(GetPosition().x >= Window::Instance().GetWidth())

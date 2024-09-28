@@ -23,7 +23,6 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <utils/array_size.h>
 
 namespace oci {
 namespace objects {
@@ -36,7 +35,7 @@ static const char* const SPRITE_NAMES[] = {
     "giftbox_yellow.xml"    // gtYellow
 };
 
-static_assert(ARRAY_SIZE(SPRITE_NAMES) == GUN_TYPE_COUNT,
+static_assert(std::size(SPRITE_NAMES) == GUN_TYPE_COUNT,
               "For each element of enumeration GunType must be exist "
               "element in SPRITE_NAMES");
 

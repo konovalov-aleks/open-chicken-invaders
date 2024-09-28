@@ -27,6 +27,8 @@
 #include <game/state.h>
 #include <objects/particles/smoke.h>
 
+#include <memory>
+
 namespace oci {
 namespace objects {
 
@@ -61,7 +63,7 @@ void Paratrooper::OnCollision(const CollisionObjectInfo& collisedWith) {
         power -= collisedWith.power;
         if(power <= 0) {
             State::Instance().IncScore(1000);
-            weak_ptr<RandomChicken> chicken(
+            std::weak_ptr<RandomChicken> chicken(
                 Storage().CreateObject<RandomChicken>(
                     GetPosition(), MaxBombingPeriod, Chicken::tCyan, 1, CHICKEN_SPEED)
                 );

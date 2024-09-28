@@ -31,10 +31,10 @@ Manager Manager::mInstance;
 Manager::Manager() {
 }
 
-shared_ptr<Context> Manager::GetContext(const std::string& context_name) {
+std::shared_ptr<Context> Manager::GetContext(const std::string& context_name) {
     ContextsMap::const_iterator iter = mContexts.find(context_name);
     if(iter == mContexts.end())
-        iter = mContexts.insert(std::make_pair(context_name, make_shared<Context>())).first;
+        iter = mContexts.insert(std::make_pair(context_name, std::make_shared<Context>())).first;
     return iter->second;
 }
 
@@ -42,7 +42,7 @@ void Manager::KillContext(const std::string& context_name) {
     mContexts.erase(context_name);
 }
 
-void Manager::SetActiveContext(const shared_ptr<Context>& context) {
+void Manager::SetActiveContext(const std::shared_ptr<Context>& context) {
     if(!context)
         throw std::logic_error("Error: attempt to activate NULL context");
     mActiveContext = context;

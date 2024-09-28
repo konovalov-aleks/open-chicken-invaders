@@ -22,10 +22,12 @@
 #include <core/window.h>
 #include "intro_level.h"
 #include "factory.h"
-#include <math.h>
 #include <objects/base/animated.h>
 #include <objects/base/sprite.h>
 #include <objects/characters/ship.h>
+
+#include <math.h>
+#include <memory>
 
 namespace oci {
 namespace levels {
@@ -43,10 +45,10 @@ public:
 private:
     virtual void RunIntro() override;
 
-    shared_ptr<Sprite> mTrafficLights;
-    shared_ptr<Animated> mUFO;
+    std::shared_ptr<Sprite> mTrafficLights;
+    std::shared_ptr<Animated> mUFO;
 //    s32 ufosound;            /// çâóê ÍËÎ
-    shared_ptr<Ship> mShip;              /// êîðàáëü
+    std::shared_ptr<Ship> mShip;              /// êîðàáëü
 //    const CSound enginesound;
 
     int mMode;
@@ -75,8 +77,8 @@ void Intro_1::Init() {
 
 void Intro_1::RunIntro() {
     if(mMode < 20)
-        ++mMode; // mode = 0..19 - æåëòûé ñâåò    
-    else if(mMode == 20) {       // mode = 20 - êðàñíûé ñâåò    
+        ++mMode; // mode = 0..19 - æåëòûé ñâåò
+    else if(mMode == 20) {       // mode = 20 - êðàñíûé ñâåò
         mTrafficLights->SetState(1);
         ++mMode;
     } else if(mMode < 30) {   // êîðàáëü ëåòèò ê ñâåòîôîðó
@@ -85,7 +87,7 @@ void Intro_1::RunIntro() {
             -6.0f + (340.0f - mShip->GetPosition().y) / 10.0f : -6.0f;// çàìåäëÿåìñÿ ïðè ïîäëåòå ê ñâåòîôîðó
         mShip->Move(0, sp);
         if(fabsf(mShip->GetPosition().y - 310.0f) < 10.0f) {
-            mMode = 30; // âñòàåì - ñåé÷àñ ïîåäåò òàðåëêà                
+            mMode = 30; // âñòàåì - ñåé÷àñ ïîåäåò òàðåëêà
             mShip->SetEngineState(0); // âûêëþ÷àåì äâèãàòåëè
         }
     } else if(mMode == 30) { // òàðåëêà âëåòàåò - âêëþ÷àåì çâóê

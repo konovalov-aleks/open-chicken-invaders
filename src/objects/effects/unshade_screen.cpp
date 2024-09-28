@@ -21,7 +21,6 @@
 
 #include "unshade_screen.h"
 
-#include <boost/noncopyable.hpp>
 #include <core/color.h>
 #include <core/image.h>
 #include <core/shape.h>
@@ -34,7 +33,7 @@ namespace objects {
 
 namespace {
 
-class Gradient : public core::Sprite, boost::noncopyable {
+class Gradient : public core::Sprite {
 public:
     static Gradient& Instance() {
         static Gradient instance;
@@ -49,6 +48,9 @@ private:
         mImage.CreateMaskFromColor(Color::White);
         SetImage(mImage);
     }
+
+    Gradient(const Gradient&) = delete;
+    Gradient& operator= (const Gradient&) = delete;
 private:
     Image mImage;
 };

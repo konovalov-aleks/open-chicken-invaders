@@ -22,18 +22,16 @@
 #pragma once
 
 #include "../base/visible.h"
-#include <portability/type_traits.h>
+
+#include <concepts>
 
 namespace oci {
 namespace objects {
 namespace modifiers {
 
-template<typename T>
+template<std::derived_from<objects::Visible> T>
 class Hidden : public T {
 public:
-
-    static_assert((is_base_of<objects::Visible, T>::value),
-                  "T must be visible object");
 
     virtual void Draw() override {
         if(mVisible)

@@ -26,6 +26,9 @@
 #include <objects/modifiers/hidden.h>
 #include <objects/text/text.h>
 
+#include <string>
+#include <memory>
+
 namespace oci {
 namespace levels {
 namespace interface {
@@ -39,8 +42,8 @@ protected:
     virtual int GetValue() const = 0;
 
 private:
-    shared_ptr<objects::modifiers::Hidden<objects::Text> > mText;
-    shared_ptr<
+    std::shared_ptr<objects::modifiers::Hidden<objects::Text> > mText;
+    std::shared_ptr<
         objects::modifiers::Hidden<
             objects::CommonSprite<objects::Visible::dpForeground>
         >

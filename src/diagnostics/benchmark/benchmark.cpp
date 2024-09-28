@@ -26,6 +26,8 @@
 #include <objects/base/animated.h>
 #include <objects/characters/chicken.h>
 
+#include <chrono>
+
 namespace oci {
 namespace benchmark {
 
@@ -62,24 +64,24 @@ namespace benchmark {
 
     void Benchmark::Run() {
         ++mFramesCount;
-        CHRONO::nanoseconds time = Clock::now() - mLastStatisticTime;
+        std::chrono::nanoseconds time = Clock::now() - mLastStatisticTime;
 //        for(int i = 0; i < mChickensCount; ++i)
 //            Storage().KillObject(Storage().CreateObject<BenchmarkChicken>());
         Storage().GetContext().ColliseAll(ctFriendBullet, 100500);
-        if(time >= CHRONO::seconds(1)) {
-            float FPS = mFramesCount / CHRONO::duration_cast<CHRONO::seconds>(time).count();
+        if(time >= std::chrono::seconds(1)) {
+            float FPS = mFramesCount / std::chrono::duration_cast<std::chrono::seconds>(time).count();
             printf("[%d chickens] FPS: %f\n", mChickensCount, FPS);
             mFramesCount = 0;
             mLastStatisticTime = Clock::now();
         }
-        if(Clock::now() - mLastSceneUpdateTime >= CHRONO::seconds(5)) {
+        if(Clock::now() - mLastSceneUpdateTime >= std::chrono::seconds(5)) {
             CreateNewChickens();
             mLastSceneUpdateTime = Clock::now();
         }
     }
 
     void StartBenchmark() {
-        levels::Factory::Instance().Build("benchmark"); 
+        levels::Factory::Instance().Build("benchmark");
     }
 
 } // namespace benchmark

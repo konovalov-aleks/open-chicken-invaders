@@ -21,10 +21,10 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include <core/image.h>
-#include <portability/unordered_map.h>
+
 #include <string>
+#include <unordered_map>
 
 namespace oci {
 
@@ -40,9 +40,9 @@ private:
     void Load(const std::string& name);
     void LoadGlyph(char s, const std::string& filename);
 
-    unordered_map<char, Image> mImages;
+    std::unordered_map<char, Image> mImages;
 
-    friend class FontLoader;
+    friend struct FontLoader;
 };
 
 } // namespace oci

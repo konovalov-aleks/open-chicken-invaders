@@ -23,15 +23,17 @@
 
 #include <objects/base/animated_collision_object.h>
 #include <objects/base/active.h>
-#include <portability/functional.h>
 #include "random_chicken.h"
+
+#include <functional>
+#include <memory>
 
 namespace oci {
 namespace objects {
 
 class Paratrooper : public AnimatedCollisionObject, public Active {
 public:
-    typedef function<void(const weak_ptr<RandomChicken>&)> CreateRndChickenCallbackFunc;
+    typedef std::function<void(const std::weak_ptr<RandomChicken>&)> CreateRndChickenCallbackFunc;
 
     void Init(const Vector2f& position, float speed, int p, short health);
 

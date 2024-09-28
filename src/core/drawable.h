@@ -24,8 +24,9 @@
 #ifdef USE_SFML
 #   include<SFML/Graphics/Drawable.hpp>
 #else
-#   include <SDL2/SDL.h>
 #   include "vector2.h"
+
+#   include <SDL.h>
 #endif
 
 namespace oci {
@@ -40,6 +41,8 @@ namespace oci {
     public:
         Drawable() {}
         Drawable(const Vector2f& position) : mPosition(position) {}
+
+        virtual ~Drawable() = default;
 
         const Vector2f& GetPosition() const { return mPosition; }
         void SetPosition(float x, float y) { mPosition.x = x; mPosition.y = y; }

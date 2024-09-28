@@ -21,6 +21,8 @@
 
 #include "fps.h"
 
+#include <iterator>
+
 namespace oci {
 namespace diagnostics {
 
@@ -34,11 +36,11 @@ void FPSViewer::Init() {
 }
 
 void FPSViewer::Run() {
-    int frame_time = CHRONO::duration_cast<CHRONO::milliseconds>(
+    int frame_time = std::chrono::duration_cast<std::chrono::milliseconds>(
                         Clock::now() - mLastFrameTime).count();
     char buf[128] = "Inf";
     if(frame_time != 0)
-        sprintf(buf, "%.2f", 1000.0f / frame_time);
+        snprintf(buf, std::size(buf), "%.2f", 1000.0f / frame_time);
     mText->SetText(buf);
 }
 

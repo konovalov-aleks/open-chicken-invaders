@@ -23,7 +23,8 @@
 
 #include <objects/base/active.h>
 #include <objects/base/sprite.h>
-#include <portability/memory.h>
+
+#include <memory>
 
 namespace oci {
 
@@ -82,7 +83,7 @@ public:
 private:
     virtual void Run() override;
 
-    weak_ptr<objects::Sprite> mPlanets[11]; /// Спрайты планет
+    std::weak_ptr<objects::Sprite> mPlanets[11]; /// Спрайты планет
 };
 
 } // namespace oci

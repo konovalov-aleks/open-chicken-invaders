@@ -24,6 +24,8 @@
 #include <core/input.h>
 #include <core/window.h>
 
+#include <memory>
+
 namespace oci {
 namespace menu {
 
@@ -33,7 +35,7 @@ void Cursor::Init() {
     Window::Instance().ShowMouseCursor(false);
     Vector2f wnd_center(Window::Instance().GetWidth() / 2.0,
                         Window::Instance().GetHeight() / 2.0);
-    shared_ptr<CursorSpriteType> sprite = Storage().CreateObject<
+    std::shared_ptr<CursorSpriteType> sprite = Storage().CreateObject<
                                     CommonSprite<Visible::dpForeground>
                                 >("fork.xml", wnd_center);
     Window::Instance().SetCursorPosition(wnd_center.x, wnd_center.y);
@@ -43,7 +45,7 @@ void Cursor::Init() {
 
 void Cursor::Run() {
     const Input& input = Window::Instance().GetInput();
-    shared_ptr<CursorSpriteType> p = mSprite.get().lock();
+    std::shared_ptr<CursorSpriteType> p = mSprite.get().lock();
     if(p)
         p->SetPosition(Vector2f(input.GetMouseX(), input.GetMouseY()));
 }

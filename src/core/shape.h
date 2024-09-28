@@ -26,8 +26,8 @@
 #else
 #   include "color.h"
 #   include "drawable.h"
-#   include <portability/cpp11.h>
-#   include <portability/memory.h>
+
+#   include <memory>
 #endif
 
 namespace oci {
@@ -50,7 +50,7 @@ public:
 
 private:
     Shape(Impl* impl);
-    unique_ptr<Impl> mImpl;
+    std::unique_ptr<Impl> mImpl;
 };
 
 #endif

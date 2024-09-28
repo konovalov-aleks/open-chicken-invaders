@@ -21,11 +21,12 @@
 
 #include "solar_system.h"
 
-#include <assert.h>
 #include <background/background.h>
-#include <boost/lexical_cast.hpp>
-#include <stdexcept>
 #include <core/window.h>
+
+#include <cassert>
+#include <memory>
+#include <stdexcept>
 
 namespace oci {
 
@@ -68,7 +69,7 @@ namespace {
         }
     };
 
-    inline weak_ptr<objects::Sprite> CreatePlanet(context::ObjectsStorage& storage, const char* name, int ind) {
+    inline std::weak_ptr<objects::Sprite> CreatePlanet(context::ObjectsStorage& storage, const char* name, int ind) {
         return storage.CreateObject<Planet>(name, ind);
     }
 } // namespace
@@ -100,17 +101,17 @@ void SolarSystem::Init(float /*x0*/, float /*y0*/, short planets) {
 
 int SolarSystem::GetPlanetHeight(short ind) {
     assert(ind >= PLANET_IND_SUN && ind <= PLANET_IND_PLUTO);
-    shared_ptr<objects::Sprite> planet(mPlanets[ind].lock());
+    std::shared_ptr<objects::Sprite> planet(mPlanets[ind].lock());
     if(!planet)
         throw std::logic_error("Произведена попытка обращения к несуществующей планете (позиция: " +
-                               boost::lexical_cast<std::string>(ind) + ")");
+                               std::to_string(ind) + ")");
     return planet->GetHeight();
 }
 
 void SolarSystem::Run() {
     /// Двигаем все планеты исходя из положения фона
     for(int i = 0; i < 11; ++i) {
-        shared_ptr<objects::Sprite> planet(mPlanets[i].lock());
+        std::shared_ptr<objects::Sprite> planet(mPlanets[i].lock());
         if(planet) {
             planet->SetPosition(PLANETS_X[i] + Background::Instance().GetController().GetX(),
                                 Background::Instance().GetController().GetY() +

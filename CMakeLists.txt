@@ -106,8 +106,6 @@ add_executable(oci ${sources} ${headers})
 
 set_property(TARGET oci PROPERTY CXX_STANDARD 20)
 
-add_compile_definitions("-DCPP11=1")
-
 #
 # Build tinyxml2
 #
@@ -163,10 +161,8 @@ if (EMSCRIPTEN)
 else()
     find_package(SDL2 CONFIG REQUIRED)
     find_package(SDL2_mixer REQUIRED)
-    find_package(Boost CONFIG REQUIRED)
 
-    target_include_directories(oci PRIVATE ${Boost_INCLUDE_DIRS})
-    target_link_libraries(oci PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer ${Boost_LIBRARIES})
+    target_link_libraries(oci PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer)
 
     install(TARGETS oci RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
     install(FILES

@@ -24,7 +24,8 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include "player_bullet.h"
-#include <portability/math.h>
+
+#include <numbers>
 
 namespace oci {
 namespace objects {
@@ -57,7 +58,7 @@ void RedGun::Fire(float x, float y) {
             break;
         case 4:
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 0, 1);
+                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 0, 1);
             CreateBullet<CPlayerBullet>(
                 "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 0, 1);
             CreateBullet<CPlayerBullet>(
@@ -65,9 +66,9 @@ void RedGun::Fire(float x, float y) {
             break;
         case 5:
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 0, 1);
+                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 0, 1);
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * M_PI) - 0.13f, 0, 1);
+                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.13f, 0, 1);
             CreateBullet<CPlayerBullet>(
                 "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 0, 1);
             CreateBullet<CPlayerBullet>(
@@ -77,9 +78,9 @@ void RedGun::Fire(float x, float y) {
             break;
         case 6:
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 0, 1);
+                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 0, 1);
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * M_PI) - 0.13f, 0, 1);
+                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.13f, 0, 1);
             CreateBullet<CPlayerBullet>(
                 "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 1, 2);
             CreateBullet<CPlayerBullet>(
@@ -89,9 +90,9 @@ void RedGun::Fire(float x, float y) {
             break;
         case 7:
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 0, 1);
+                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 0, 1);
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * M_PI) - 0.13f, 1, 2);
+                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.13f, 1, 2);
             CreateBullet<CPlayerBullet>(
                 "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 0, 1);
             CreateBullet<CPlayerBullet>(
@@ -101,9 +102,9 @@ void RedGun::Fire(float x, float y) {
             break;
         case 8:
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 0, 1);
+                "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 0, 1);
             CreateBullet<CPlayerBullet>(
-                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * M_PI) - 0.13f, 1, 2);
+                "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.13f, 1, 2);
             CreateBullet<CPlayerBullet>(
                 "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 1, 2);
             CreateBullet<CPlayerBullet>(
@@ -114,9 +115,9 @@ void RedGun::Fire(float x, float y) {
         default:
             if(level<20) {
                 CreateBullet<CPlayerBullet>(
-                    "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 1, 2);
+                    "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 1, 2);
                 CreateBullet<CPlayerBullet>(
-                    "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * M_PI) - 0.13f, 1, 2);
+                    "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.13f, 1, 2);
                 CreateBullet<CPlayerBullet>(
                     "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 1, 2);
                 CreateBullet<CPlayerBullet>(
@@ -125,11 +126,11 @@ void RedGun::Fire(float x, float y) {
                     "gun1.xml", x + 6, y - 12, BULLET_SPEED, 0.26f, 1, 2);
             } else {
                 CreateBullet<CPlayerBullet>(
-                    "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.7f,  1, 2);
+                    "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.7f,  1, 2);
                 CreateBullet<CPlayerBullet>(
-                    "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * M_PI) - 0.26f, 1, 2);
+                    "gun1.xml", x - 6, y - 12, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.26f, 1, 2);
                 CreateBullet<CPlayerBullet>(
-                    "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * M_PI) - 0.13f, 1, 2);
+                    "gun1.xml", x - 4, y - 16, BULLET_SPEED, (2 * std::numbers::pi_v<float>) - 0.13f, 1, 2);
                 CreateBullet<CPlayerBullet>(
                     "gun1.xml", x,     y - 18, BULLET_SPEED, 0, 1, 2);
                 CreateBullet<CPlayerBullet>(

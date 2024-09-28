@@ -23,10 +23,14 @@
 
 #include <core/color.h>
 #include <resources/loader.h>
+#include <utils/cache.h>
+
+#include <tinyxml2.h>
+
 #include <stdexcept>
 #include <string_view>
-#include <tinyxml2.h>
-#include <utils/cache.h>
+#include <vector>
+#include <unordered_map>
 
 namespace oci {
 
@@ -49,7 +53,7 @@ Font::Font(const std::string& name) {
 
 const Image& Font::operator[] (char s) const {
     static const Image empty;
-    unordered_map<char, Image>::const_iterator res = mImages.find(s);
+    std::unordered_map<char, Image>::const_iterator res = mImages.find(s);
     return res == mImages.end() ? empty : res->second;
 }
 
@@ -74,7 +78,7 @@ void Font::Load(const std::string& name) {
     }
     if(mImages.find(' ') == mImages.end()) {
         int sum_width = 0;
-        for(unordered_map<char, Image>::const_iterator iter = mImages.begin();
+        for(std::unordered_map<char, Image>::const_iterator iter = mImages.begin();
            iter != mImages.end(); ++iter)
             sum_width += iter->second.GetWidth();
         Image img(sum_width / mImages.size(), 1, Color::Black);
@@ -84,10 +88,10 @@ void Font::Load(const std::string& name) {
 }
 
 void Font::LoadGlyph(char s, const std::string& filename) {
-    std::vector<char> data = resources::ResourcesLoader::Instance().GetData(filename);
+    std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
     if(data.empty())
         throw std::logic_error("Image resource \"" + filename + "\" is empty");
-    std::pair<unordered_map<char, Image>::iterator, bool> res =
+    std::pair<std::unordered_map<char, Image>::iterator, bool> res =
         mImages.insert(std::make_pair(s, Image()));
     if(res.second) {
         Image& img = res.first->second;

@@ -24,7 +24,7 @@
 #ifdef USE_SFML
 #   include <SFML/Window/Event.hpp>
 #else
-#   include <SDL2/SDL.h>
+#   include <SDL.h>
 #endif
 
 namespace oci {

@@ -21,29 +21,31 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include "context.h"
-#include <portability/memory.h>
-#include <portability/unordered_map.h>
+#include <memory>
+#include <unordered_map>
 #include <string>
 
 namespace oci {
 namespace context {
 
-class Manager : boost::noncopyable {
+class Manager {
 public:
     inline static Manager& Instance() { return mInstance; }
 
-    shared_ptr<Context> GetContext(const std::string& context_name);
+    Manager(const Manager&) = delete;
+    Manager& operator= (const Manager&) = delete;
+
+    std::shared_ptr<Context> GetContext(const std::string& context_name);
     void KillContext(const std::string& context_name);
 
-    shared_ptr<Context> GetActiveContext() { return mActiveContext; }
-    void SetActiveContext(const shared_ptr<Context>& context);
+    std::shared_ptr<Context> GetActiveContext() { return mActiveContext; }
+    void SetActiveContext(const std::shared_ptr<Context>& context);
 private:
     Manager();
 
-    shared_ptr<Context> mActiveContext;
-    typedef unordered_map<std::string, shared_ptr<Context> > ContextsMap;
+    std::shared_ptr<Context> mActiveContext;
+    typedef std::unordered_map<std::string, std::shared_ptr<Context> > ContextsMap;
     ContextsMap mContexts;
     static Manager mInstance;
 };

@@ -21,20 +21,22 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
+#include <objects/base/sprite.h>
+
 #include <cstdlib>
 #include <list>
 #include <memory>
-#include <objects/base/sprite.h>
 
 namespace oci {
 
 /// Синглтон, отвечающий за фон
-class Background : boost::noncopyable {
+class Background {
 public:
     /// Интерфейс класса, управляющего движением фонового изображения
     class Controller {
     public:
+        virtual ~Controller() = default;
+
         /// \return Координату Х фона
         virtual int GetX() const = 0;
         /// \return Координату Y фона
@@ -70,17 +72,20 @@ public:
         }
 
     private:
-        shared_ptr<T> mController;
+        std::shared_ptr<T> mController;
     };
 
     static Background& Instance();
 
+    Background(const Background&) = delete;
+    Background& operator= (const Background&) = delete;
+
     /// Нарисовать фон
     void Draw();
     /// Установить контроллер фона
-    void SetController(const shared_ptr<Controller>& controller);
+    void SetController(const std::shared_ptr<Controller>& controller);
     /// Сбросить контроллер, использовать предыдущий
-    void ResetController(const shared_ptr<Controller>& controller);
+    void ResetController(const std::shared_ptr<Controller>& controller);
     /// Получить используемый контроллер
     const Controller& GetController() const;
 
@@ -102,7 +107,7 @@ private:
     } mSprite;
 
     Background();
-    std::list<shared_ptr<Controller> > mControllers;
+    std::list<std::shared_ptr<Controller> > mControllers;
 };
 
 } // namespace oci

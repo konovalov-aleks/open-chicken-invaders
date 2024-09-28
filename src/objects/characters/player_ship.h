@@ -24,15 +24,16 @@
 #include <core/window.h>
 #include <objects/base/collision_object.h>
 #include <objects/gun/gun.h>
-#include <portability/memory.h>
 #include "shield.h"
 #include "ship.h"
+
+#include <memory>
 
 namespace oci {
 namespace objects {
 
 class PlayerShip : public Ship, public ICollisionObject,
-                   public enable_shared_from_this<PlayerShip> {
+                   public std::enable_shared_from_this<PlayerShip> {
 public:
     void Init();
 
@@ -87,9 +88,9 @@ private:
     bool mEnterPressed;
 
     /// оружие
-    unique_ptr<Gun> mGun;
+    std::unique_ptr<Gun> mGun;
 
-    weak_ptr<Shield> mShield;
+    std::weak_ptr<Shield> mShield;
 };
 
 } // namespace objects

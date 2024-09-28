@@ -21,82 +21,44 @@
 
 #pragma once
 
-#include <boost/fusion/functional/invocation/invoke_procedure.hpp>
-#include <boost/fusion/functional/invocation/invoke.hpp>
-#include <boost/fusion/tuple.hpp>
-#include <boost/noncopyable.hpp>
 #include <context/objects_storage.h>
-#include <string>
-#include <portability/cpp11.h>
-#include <portability/functional.h>
-#include <portability/unordered_map.h>
 
-#ifndef CPP11
-#   include <boost/preprocessor.hpp>
-#endif
+#include <memory>
+#include <string>
+#include <tuple>
+#include <unordered_map>
 
 namespace oci {
 namespace levels {
 
-class Factory : boost::noncopyable {
+class Factory {
 public:
     static Factory& Instance();
 
-#ifdef CPP11
+    Factory() = default;
+
+    Factory(const Factory&) = delete;
+    Factory& operator= (const Factory&) = delete;
 
     template<typename T, typename... Args>
     void Register(const std::string& obj_name, const std::string& context_name,
                   Args... args) {
         mObjects.insert(
-            std::make_pair(obj_name, unique_ptr<IGenerator>(
+            std::make_pair(obj_name, std::unique_ptr<IGenerator>(
                            new Generator<T, Args...>(context_name, args...)))
         );
     }
-
-#else
-    #define _GEN_FACTORY_PP_REGISTER(N, I, U) \
-    template<typename T BOOST_PP_COMMA_IF(I) BOOST_PP_ENUM_PARAMS(I, typename T)> \
-    void Register(const std::string& obj_name, const std::string& context_name    \
-                  BOOST_PP_COMMA_IF(I)                                            \
-                  BOOST_PP_ENUM_BINARY_PARAMS(I, const T, &arg)) {                \
-        mObjects.insert(                                                          \
-            std::make_pair(obj_name, unique_ptr<IGenerator>(                      \
-                new Generator##I<T BOOST_PP_COMMA_IF(I) BOOST_PP_ENUM_PARAMS(I, T)>( \
-                        context_name BOOST_PP_COMMA_IF(I)                         \
-                        BOOST_PP_ENUM_PARAMS(I, arg))))                           \
-        );                                                                        \
-    }
-    BOOST_PP_REPEAT(MAX_PARAMS_COUNT, _GEN_FACTORY_PP_REGISTER, ~)
-#endif
 
     void Build(const std::string& obj_name);
 
     template<typename T>
     class Registrator {
     public:
-    #ifdef CPP11
-
         template<typename... Args>
         Registrator(const std::string& obj_name,
                     const std::string& context_name, const Args& ...args) {
             Factory::Instance().Register<T>(obj_name, context_name, args...);
         }
-
-    #else
-        Registrator(const std::string& obj_name,
-                    const std::string& context_name) {
-            Factory::Instance().Register<T>(obj_name, context_name);
-        }
-        #define _GEN_REGISTRATOR_PP_CONSTRUCTOR(N, I, U)            \
-        template<BOOST_PP_ENUM_PARAMS(I, typename T)>               \
-        Registrator(const std::string& obj_name,                    \
-                    const std::string& context_name,                \
-                    BOOST_PP_ENUM_BINARY_PARAMS(I, const T, arg)) { \
-            Factory::Instance().Register<T>(obj_name, context_name, \
-                BOOST_PP_ENUM_PARAMS(I, arg));                      \
-        }
-        BOOST_PP_REPEAT_FROM_TO(1, MAX_PARAMS_COUNT, _GEN_REGISTRATOR_PP_CONSTRUCTOR, ~)
-    #endif
     };
 
 private:
@@ -114,8 +76,6 @@ private:
         std::string mContextName;
     };
 
-#ifdef CPP11
-
     template<typename T, typename ...Args>
     class Generator : public IGenerator {
     public:
@@ -123,44 +83,15 @@ private:
             IGenerator(context_name), mArgs(args...) {}
     protected:
         virtual void DoBuild(context::ObjectsStorage& storage) override {
-            boost::fusion::tuple<context::ObjectsStorage*> s(&storage);
-            boost::fusion::invoke(
-                mem_fn(&context::ObjectsStorage::CreateObject<T, Args...>),
-                boost::fusion::joint_view<
-                    boost::fusion::tuple<context::ObjectsStorage*>,
-                    boost::fusion::tuple<Args...>
-                >(s, mArgs));
+            const auto args =
+                std::tuple_cat(std::tuple(&storage), mArgs);
+            std::apply(&context::ObjectsStorage::CreateObject<T, Args...>, args);
         }
     private:
-        boost::fusion::tuple<Args...> mArgs;
+        std::tuple<Args...> mArgs;
     };
 
-#else
-    #define _GEN_GENERATOR_PP_CLASS(N, I, U) \
-    template<typename T BOOST_PP_COMMA_IF(I) BOOST_PP_ENUM_PARAMS(I, typename T)> \
-    class Generator##I : public IGenerator {                                     \
-    public:                                                                   \
-        Generator##I(const std::string& context_name BOOST_PP_COMMA_IF(I)        \
-                  BOOST_PP_ENUM_BINARY_PARAMS(I, const T, &arg)) :            \
-            IGenerator(context_name), mArgs(BOOST_PP_ENUM_PARAMS(I, arg)) {}  \
-    protected:                                                                \
-        virtual void DoBuild(context::ObjectsStorage& storage) {              \
-            boost::fusion::tuple<context::ObjectsStorage*> s(&storage);       \
-            boost::fusion::invoke(                                            \
-                mem_fn(&context::ObjectsStorage::CreateObject<                \
-                    T BOOST_PP_COMMA_IF(I) BOOST_PP_ENUM_PARAMS(I, T)>),      \
-                boost::fusion::joint_view<                                    \
-                    boost::fusion::tuple<context::ObjectsStorage*>,           \
-                    boost::fusion::tuple<BOOST_PP_ENUM_PARAMS(I, T)>          \
-                >(s, mArgs));                                                 \
-        }                                                                     \
-    private:                                                                  \
-        boost::fusion::tuple<BOOST_PP_ENUM_PARAMS(I, T)> mArgs;               \
-    };
-    BOOST_PP_REPEAT(MAX_PARAMS_COUNT, _GEN_GENERATOR_PP_CLASS, ~)
-#endif
-
-    typedef unordered_map<std::string, unique_ptr<IGenerator> > ObjectsMap;
+    typedef std::unordered_map<std::string, std::unique_ptr<IGenerator> > ObjectsMap;
     ObjectsMap mObjects;
 };
 

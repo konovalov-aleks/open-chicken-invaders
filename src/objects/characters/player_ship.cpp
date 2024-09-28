@@ -23,7 +23,6 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <boost/lexical_cast.hpp>
 #include <core/event.h>
 #include <core/input.h>
 #include <core/window.h>
@@ -33,7 +32,9 @@
 #include <objects/gun/red_gun.h>
 #include <objects/gun/missile.h>
 #include <objects/particles/bang.h>
+
 #include <stdexcept>
+#include <memory>
 
 namespace oci {
 namespace objects {
@@ -76,7 +77,7 @@ namespace {
 
     class BangEffect : public objects::Active {
     public:
-        void Init(const shared_ptr<PlayerShip>& ship) {
+        void Init(const std::shared_ptr<PlayerShip>& ship) {
             mShip = ship;
             mShip->StopFire();
             Bang(Storage(), mShip->GetPosition(), 20);
@@ -101,7 +102,7 @@ namespace {
         }
 
     private:
-        shared_ptr<PlayerShip> mShip;
+        std::shared_ptr<PlayerShip> mShip;
     };
 
     template<typename T, typename T2, typename T3>
@@ -254,7 +255,7 @@ void PlayerShip::Run() {
     SetFrame(a < static_cast<int>(FramesCount()) ? (a >= 0 ? a : 0) : FramesCount() - 1);
 
     SetPosition(x, y);
-    shared_ptr<Shield> shield = mShield.lock();
+    std::shared_ptr<Shield> shield = mShield.lock();
     if(shield)
         shield->SetPosition(GetPosition());
     Ship::Run();
@@ -301,8 +302,7 @@ void PlayerShip::SelectGun(TGunType gun_type) {
             mGun.reset(new GreenGun(level));
             break;
         default:
-            throw std::logic_error("Unknown gun type: " +
-                                   boost::lexical_cast<std::string>(gun_type));
+            throw std::logic_error("Unknown gun type: " + std::to_string(gun_type));
     }
 }
 

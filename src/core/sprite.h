@@ -26,7 +26,6 @@
 #else
 #   include "drawable.h"
 #   include "image.h"
-#   include <portability/cpp11.h>
 #   include "rect.h"
 #   include "vector2.h"
 #endif

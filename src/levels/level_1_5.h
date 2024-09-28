@@ -23,7 +23,9 @@
 
 #include "game_level.h"
 #include <objects/base/object.h>
-#include <portability/forward_list.h>
+
+#include <forward_list>
+#include <memory>
 
 namespace oci {
 namespace levels {
@@ -37,7 +39,7 @@ protected:
 private:
     inline void CreateParatrooper(float x, float y);
 
-    typedef forward_list<weak_ptr<objects::Object> > ChickensList;
+    typedef std::forward_list<std::weak_ptr<objects::Object> > ChickensList;
     /// Все курицы (в том числе и парашютисты, и свободно летающие)
     ChickensList mChickens;
     /// Скорость кур-парашютисток

@@ -22,9 +22,10 @@
 #pragma once
 
 #include <core/vector2.h>
-#include <portability/chrono.h>
 #include <objects/base/active.h>
 #include <objects/base/animated_collision_object.h>
+
+#include <chrono>
 
 namespace oci {
 namespace objects {
@@ -44,7 +45,7 @@ private:
 
     int speed;
     bool in_floor;
-    CHRONO::system_clock::time_point lifetime;
+    std::chrono::steady_clock::time_point lifetime;
 };
 
 } // namespace objects

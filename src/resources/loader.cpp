@@ -22,16 +22,20 @@
 #include "loader.h"
 
 #include <fstream>
-#include <portability/unordered_map.h>
 #include <stdexcept>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace oci {
 namespace resources {
 
-    ResourcesLoader ResourcesLoader::mInstance;
+    ResourceLoader ResourceLoader::mInstance;
 
-    class ResourcesLoader::Impl {
+    class ResourceLoader::Impl {
     public:
         virtual ~Impl() {}
 
@@ -92,14 +96,14 @@ namespace resources {
         }
 
         std::ifstream mFile;
-        typedef unordered_map<std::string, std::pair<int, int> > TOCType;
+        typedef std::unordered_map<std::string, std::pair<int, int> > TOCType;
         TOCType mTOC;
     };
 
-    ResourcesLoader::ResourcesLoader() : mImpl(new Impl) {
+    ResourceLoader::ResourceLoader() : mImpl(new Impl) {
     }
 
-    std::vector<char> ResourcesLoader::GetData(const std::string& resource_name) {
+    std::vector<char> ResourceLoader::GetData(const std::string& resource_name) {
         return mImpl->GetData(resource_name);
     }
 

@@ -27,6 +27,7 @@ namespace oci {
 
 #ifndef USE_SFML
 
+#include <chrono>
 #include <stdexcept>
 #include <thread>
 
@@ -63,11 +64,12 @@ void WindowImpl::Display() {
     SDL_RenderPresent(mRenderer.get());
 #ifndef ANDROID
     if(mFrameMinTime > 0) {
-        CHRONO::system_clock::time_point current_time = CHRONO::system_clock::now();
-        CHRONO::nanoseconds delta = current_time - mLastFrameTime;
-        if(delta < CHRONO::microseconds(mFrameMinTime)) {
+        std::chrono::steady_clock::time_point current_time =
+            std::chrono::steady_clock::now();
+        std::chrono::nanoseconds delta = current_time - mLastFrameTime;
+        if(delta < std::chrono::microseconds(mFrameMinTime)) {
             std::this_thread::sleep_for(
-                CHRONO::microseconds(mFrameMinTime) - delta);
+                std::chrono::microseconds(mFrameMinTime) - delta);
         }
         mLastFrameTime = current_time;
     }

@@ -24,7 +24,7 @@
 namespace oci {
 namespace audio {
 
-void ControllerHolder::Init(const shared_ptr<Controller>& controller) {
+void ControllerHolder::Init(const std::shared_ptr<Controller>& controller) {
     mController = controller;
 }
 

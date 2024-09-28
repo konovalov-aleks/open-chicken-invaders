@@ -21,7 +21,6 @@
 
 #include "interface.h"
 
-#include <boost/lexical_cast.hpp>
 #include <core/window.h>
 #include <game/state.h>
 #include "lives_indicator.h"

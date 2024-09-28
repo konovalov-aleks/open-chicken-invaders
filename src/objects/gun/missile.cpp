@@ -27,14 +27,16 @@
 #include <core/window.h>
 #include <objects/particles/smoke.h>
 #include <objects/particles/spark.h>
-#include <portability/math.h>
+
+#include <cmath>
+#include <memory>
+#include <numbers>
 
 namespace oci {
 namespace objects {
 
 namespace {
     static const float MISSILE_MAX_SPEED = 10;
-    static const float MISSILE_EPSILON = 2.0f;
     static const float MISSILE_ACCELERATION = 1.0f;
     static const int MISSILE_POWER = 35;
     static const int MISSILE_MAX_LIFE_TIME = 30;
@@ -56,10 +58,10 @@ void Missile::Run() {
     float delta_y = GetPosition().y - (Window::Instance().GetHeight() / 2.0f);
 
     if(--mLifeTime < 0 ||
-       (fabsf(delta_x) < mSpeed && fabsf(delta_y) < mSpeed)) {
+       (std::fabsf(delta_x) < mSpeed && std::fabsf(delta_y) < mSpeed)) {
         Storage().CreateObject<audio::ControllerHolder>(
             audio::Play("fx113.wav"));
-        shared_ptr<context::Context> context =
+        std::shared_ptr<context::Context> context =
             context::Manager::Instance().GetActiveContext();
         if(context)
             context->ColliseAll(ctMissile, MISSILE_POWER);
@@ -67,7 +69,7 @@ void Missile::Run() {
         Smoke(Storage(), GetPosition(), 20);
         Storage().KillObject(this);
     } else {
-        float ideal_angle = atan2f(delta_x, delta_y);
+        float ideal_angle = std::atan2f(delta_x, delta_y);
         mAngle = (mAngle * 10.0f + ideal_angle) / 11.0f;
         mDX = sinf(mAngle) * mSpeed;
         mDY = -cosf(mAngle) * mSpeed;
@@ -76,7 +78,7 @@ void Missile::Run() {
         if(mSpeed > MISSILE_MAX_SPEED)
             mSpeed = MISSILE_MAX_SPEED;
 
-        int state = round(mAngle / (2 * M_PI) * StatesCount());
+        int state = std::round(mAngle / (2 * std::numbers::pi_v<float>) * StatesCount());
         if(state < 0)
             state += StatesCount();
         if(state >= static_cast<int>(StatesCount()))

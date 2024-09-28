@@ -24,6 +24,8 @@
 #include <background/simple_controller.h>
 #include "level.h"
 
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -36,7 +38,7 @@ protected:
 private:
     float mDY;
     int mTime;
-    shared_ptr<SimpleController> mBackgroundController;
+    std::shared_ptr<SimpleController> mBackgroundController;
 };
 
 } // namespace levels

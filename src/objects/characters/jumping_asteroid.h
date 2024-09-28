@@ -22,7 +22,9 @@
 #pragma once
 
 #include "asteroid.h"
-#include <portability/functional.h>
+
+#include <functional>
+#include <memory>
 
 namespace oci {
 namespace objects {
@@ -31,7 +33,7 @@ namespace objects {
 /// (создаются 3 объекта CAsteroid)
 class JumpingAsteroid : public Asteroid {
 public:
-    typedef function<void(shared_ptr<JumpingAsteroid>)> CreateSplinterCallback;
+    typedef std::function<void(std::shared_ptr<JumpingAsteroid>)> CreateSplinterCallback;
 
     /// \param split Раскалывать ли астероид после взрыва
     void Init(const Vector2f& position, float angle, float speed, short health,

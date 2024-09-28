@@ -26,6 +26,8 @@
 #include <objects/base/sprite.h>
 #include <objects/text/text.h>
 
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -37,7 +39,7 @@ public:
     void Run() override;
 private:
     int mDisplayedScore;
-    shared_ptr<objects::Text> mScoreText;
+    std::shared_ptr<objects::Text> mScoreText;
 };
 
 } // namespace levels

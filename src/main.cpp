@@ -30,8 +30,12 @@
 #include <diagnostics/fps.h>
 #include "levels/manager.h"
 #include "menu/mainmenu.h"
-#include <portability/unordered_map.h>
-#include <stdio.h>
+
+#include <cstdio>
+#include <exception>
+#include <memory>
+#include <unordered_map>
+#include <utility>
 
 using namespace oci;
 
@@ -41,7 +45,7 @@ namespace {
         Window::Instance().Close();
     }
 
-    typedef unordered_map<int, void (*)(const Event&)> EventsMap;
+    typedef std::unordered_map<int, void (*)(const Event&)> EventsMap;
     static EventsMap event_handlers;
 
     void fill_handlers() {
@@ -72,7 +76,7 @@ int main(int argc, char* argv[]) {
                     it->second(event);
             }
             Window::Instance().Clear();
-            shared_ptr<context::Context> context =
+            std::shared_ptr<context::Context> context =
                 context::Manager::Instance().GetActiveContext();
             Background::Instance().Draw();
             context->Run();
@@ -82,7 +86,7 @@ int main(int argc, char* argv[]) {
             Window::Instance().Display();
         }
     } catch(const std::exception& e) {
-        fprintf(stderr, "Error: %s\n", e.what());
+        std::fprintf(stderr, "Error: %s\n", e.what());
     } catch(...) {
         fputs("Unknown error :(\n", stderr);
     }

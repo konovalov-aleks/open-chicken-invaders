@@ -32,7 +32,6 @@
 #include <objects/bonus/switch_gun.h>
 #include <objects/bonus/upgrade_gun.h>
 #include <objects/particles/smoke.h>
-#include <utils/array_size.h>
 
 namespace oci {
 namespace objects {
@@ -49,7 +48,7 @@ void Chicken::Init(const Vector2f& position, int period, Type type,
         "chicken_purple.xml",
         "chicken_pink.xml"
     };
-    static_assert(ARRAY_SIZE(SPRITES) == TYPE_COUNT,
+    static_assert(std::size(SPRITES) == TYPE_COUNT,
                   "For each elements of enumeration Chicken::Type must be "
                   "exists element in array SPRITES");
 

@@ -25,10 +25,13 @@
 #   include<SFML/Graphics/Image.hpp>
 #else
 #   include "color.h"
-#   include <portability/memory.h>
-#   include <SDL2/SDL.h>
-#   include <string>
 #   include "vector2.h"
+
+#   include <SDL.h>
+
+#   include <stddef.h>
+#   include <memory>
+#   include <string>
 #endif
 
 namespace oci {
@@ -74,8 +77,8 @@ private:
         }
     };
 
-    shared_ptr<SDL_Surface> mSurface;
-    mutable shared_ptr<SDL_Texture> mTexture;
+    std::shared_ptr<SDL_Surface> mSurface;
+    mutable std::shared_ptr<SDL_Texture> mTexture;
 };
 
 #endif

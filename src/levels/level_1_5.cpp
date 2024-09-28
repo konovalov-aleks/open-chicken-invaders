@@ -26,6 +26,9 @@
 #include "factory.h"
 #include <utils/cleanup_container.h>
 
+#include <functional>
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -38,12 +41,12 @@ static Factory::Registrator<CLevel_1_5> reg2("level_1_6", "game", 1);
 static Factory::Registrator<CLevel_1_5> reg3("level_1_7", "game", 2);
 
 inline void CLevel_1_5::CreateParatrooper(float x, float y) {
-    weak_ptr<Paratrooper> paratrooper = Storage().CreateObject<Paratrooper>(
+    std::weak_ptr<Paratrooper> paratrooper = Storage().CreateObject<Paratrooper>(
         Vector2f(x, y), ChickenSpeed, 400, 1);
-    shared_ptr<Paratrooper>(paratrooper)->SetOnCreateRandomChickenCallback(
-        bind(static_cast<
+    std::shared_ptr<Paratrooper>(paratrooper)->SetOnCreateRandomChickenCallback(
+        std::bind(static_cast<
                 void(ChickensList::*)(const ChickensList::value_type&)
-            >(&ChickensList::push_front), mChickens, placeholders::_1));
+            >(&ChickensList::push_front), mChickens, std::placeholders::_1));
     mChickens.push_front(paratrooper);
 }
 

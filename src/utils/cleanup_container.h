@@ -21,27 +21,27 @@
 
 #pragma once
 
+#include <functional>
+#include <forward_list>
 #include <list>
-#include <portability/forward_list.h>
-#include <portability/functional.h>
 
 namespace oci {
 
 /// Удаляет из контейнера все "мертвые" указатели
 template<typename T>
-inline void cleanup(std::list<T>& container) {
-    container.remove_if(mem_fn(&T::expired));
+void cleanup(std::list<T>& container) {
+    container.remove_if(std::mem_fn(&T::expired));
 }
 
 /// Удаляет из контейнера все "мертвые" указатели
 template<typename T>
-inline void cleanup(forward_list<T>& container) {
-    container.remove_if(mem_fn(&T::expired));
+void cleanup(std::forward_list<T>& container) {
+    container.remove_if(std::mem_fn(&T::expired));
 }
 
 /// Удаляет из контейнера все "мертвые" указатели
 template<typename T>
-inline void cleanup(T& container) {
+void cleanup(T& container) {
     for(typename T::iterator iter = container.begin();
        iter != container.end();) {
         typename T::iterator current = iter++;

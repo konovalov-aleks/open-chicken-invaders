@@ -19,10 +19,11 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <boost/lexical_cast.hpp>
 #include "game_level.h"
 #include <levels/factory.h>
 #include <objects/characters/ufo.h>
+
+#include <memory>
 #include <stdexcept>
 
 namespace oci {
@@ -53,8 +54,7 @@ public:
             break;
         default:
             throw std::logic_error(
-                        "level 1.9: unknown level step (" +
-                        boost::lexical_cast<std::string>(step) + ")");
+                        "level 1.9: unknown level step (" + std::to_string(step) + ")");
         }
         mUFO = Storage().CreateObject<objects::UFO>(ufo_speed);
         ShowLevelInfo(str, "bonus");
@@ -67,7 +67,7 @@ protected:
             EndLevel();
     }
 private:
-    weak_ptr<objects::UFO> mUFO;
+    std::weak_ptr<objects::UFO> mUFO;
 };
 
 Factory::Registrator<Level_1_9> reg1("level_1_9", "game", 0);

@@ -25,6 +25,8 @@
 #include <objects/base/active.h>
 #include <objects/base/animated_collision_object.h>
 
+#include <memory>
+
 namespace oci {
 namespace objects {
 
@@ -45,7 +47,7 @@ private:
     float mSpeed;
     /// Время до следующего выстрела
     int mTime;
-    shared_ptr<audio::Controller> mEngineSound;
+    std::shared_ptr<audio::Controller> mEngineSound;
 };
 
 } // namespace objects

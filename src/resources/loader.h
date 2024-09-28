@@ -21,25 +21,28 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-#include <portability/memory.h>
+#include <memory>
+#include <string>
 #include <vector>
 
 namespace oci {
 namespace resources {
 
-    class ResourcesLoader : boost::noncopyable {
+    class ResourceLoader {
     public:
-        inline static ResourcesLoader& Instance() { return mInstance; }
+        static ResourceLoader& Instance() { return mInstance; }
 
         std::vector<char> GetData(const std::string& resource_name);
 
     private:
-        ResourcesLoader();
+        ResourceLoader();
+
+        ResourceLoader(const ResourceLoader&) = delete;
+        ResourceLoader& operator= (const ResourceLoader&) = delete;
 
         class Impl;
-        unique_ptr<Impl> mImpl;
-        static ResourcesLoader mInstance;
+        std::unique_ptr<Impl> mImpl;
+        static ResourceLoader mInstance;
     };
 
 } // namespace resources

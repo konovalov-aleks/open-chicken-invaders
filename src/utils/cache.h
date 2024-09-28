@@ -19,7 +19,9 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <portability/unordered_map.h>
+#include <string>
+#include <unordered_map>
+#include <utility>
 
 namespace oci {
 
@@ -36,7 +38,7 @@ public:
     }
 
 private:
-    typedef unordered_map<std::string, T> Storage;
+    typedef std::unordered_map<std::string, T> Storage;
     Storage mCache;
 };
 

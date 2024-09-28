@@ -25,6 +25,8 @@
 #include "factory.h"
 #include <objects/modifiers/auto_killable.h>
 
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -40,7 +42,7 @@ void Level_1_4::Init() {
     ShowLevelInfo("4", "meteor shower", "watch out!", true);
 }
 
-weak_ptr<objects::Asteroid> Level_1_4::CreateAsteroid() {
+std::weak_ptr<objects::Asteroid> Level_1_4::CreateAsteroid() {
     int x = Window::Instance().GetWidth() + 10;
     int y = -10;
     if(rand() % 3)

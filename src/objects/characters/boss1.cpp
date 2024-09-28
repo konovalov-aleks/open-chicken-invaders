@@ -27,7 +27,9 @@
 #include <objects/bonus/chicken_leg.h>
 #include <objects/gun/bullet.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
+
+#include <cstdlib>
+#include <numbers>
 
 namespace oci {
 namespace objects {
@@ -67,7 +69,7 @@ void Boss1::Run() {
 void Boss1::OnCollision(const CollisionObjectInfo& collisedWith) {
     mOffset.y = -3;
     if(collisedWith.type == ctFriendBullet || collisedWith.type == ctMissile) {
-//        for(int i = 0; i < rand() % 3 + 1; ++i)
+//        for(int i = 0; i < std::rand() % 3 + 1; ++i)
 //            Storage().CreateObject<CFeather>(GetPosition());
 
         power -= collisedWith.power;
@@ -76,8 +78,8 @@ void Boss1::OnCollision(const CollisionObjectInfo& collisedWith) {
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("rdfx31-16k.wav"));
             for(int i = 0; i < 10; ++i) {
-                float xx = ((float)rand() / RAND_MAX) * 8 - 4;
-                float yy = ((float)rand() / RAND_MAX) * 4 - 2;
+                float xx = ((float)std::rand() / RAND_MAX) * 8 - 4;
+                float yy = ((float)std::rand() / RAND_MAX) * 4 - 2;
                 Storage().CreateObject<BonusChickenLeg>(GetPosition(), xx, yy);
             }
             Storage().KillObject(this);
@@ -90,8 +92,8 @@ void Boss1::OnCollision(const CollisionObjectInfo& collisedWith) {
 void Boss1::GenerateNewPoint() {
     do {
         mDestination = Vector2f(
-            rand() % (Window::Instance().GetWidth() - GetWidth()) + GetWidth() / 2,
-            rand() % (Window::Instance().GetHeight() - GetHeight()) + GetHeight() / 2);
+            std::rand() % (Window::Instance().GetWidth() - GetWidth()) + GetWidth() / 2,
+            std::rand() % (Window::Instance().GetHeight() - GetHeight()) + GetHeight() / 2);
     } while(!CalculateSpeed());
     mode = 0;
 }
@@ -100,7 +102,7 @@ bool Boss1::CalculateSpeed() {
     float xx = mDestination.x - mRealPosition.x;
     float yy = mDestination.y - mRealPosition.y;
     float l = sqrtf(xx * xx + yy * yy);
-    float sp = mAbsoluteSpeed + (float)rand() / RAND_MAX;
+    float sp = mAbsoluteSpeed + (float)std::rand() / RAND_MAX;
     if(l < sp)
         return false;
     mSpeed = Vector2f(mAbsoluteSpeed * xx / l, mAbsoluteSpeed * yy / l);
@@ -111,7 +113,7 @@ void Boss1::Fire() {
     Storage().CreateObject<audio::ControllerHolder>(
         audio::Play("laserLow.wav"));
     Storage().CreateObject<Bullet>(
-        "gun4.xml", GetPosition(), BOSS1_BULLET_SPEED, M_PI, 0, 0,
+        "gun4.xml", GetPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float>, 0, 0,
         ctPlayerShip, ctEnemyBullet);
     Storage().CreateObject<Bullet>(
         "gun4.xml", GetPosition(), BOSS1_BULLET_SPEED, M_PI + 0.52f, 0, 0,

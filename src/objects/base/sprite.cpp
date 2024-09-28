@@ -22,7 +22,6 @@
 #include "sprite.h"
 
 #include <assert.h>
-#include <boost/lexical_cast.hpp>
 #include <core/color.h>
 #include <core/rect.h>
 #include <core/window.h>
@@ -48,13 +47,13 @@ namespace {
         bdtCOLORKEY     = 1  ///< копирование с цветовым ключем (отрисовываются все пиксели, чей цвет отличен от ключа)
     };
 
+#ifdef USE_SFML
     inline Color ColorFrom565(unsigned short color) {
         return Color((color >> 11) & 0x1f,
                      (color >> 5) & 0x3f,
                      color & 0x3f);
     }
 
-#ifdef USE_SFML
     struct OldSpriteLoader {
         Sprite::SpriteData operator()(const std::string& name) {
             Sprite::SpriteData data;
@@ -123,7 +122,7 @@ namespace {
                         break;
                     default:
                         throw std::logic_error("unknown animation mode (" +
-                                boost::lexical_cast<std::string>(mode) + ")");
+                                std::to_string(mode) + ")");
                 };
                 #ifdef DEBUG_SPRITE
                 printf("\tAnimation mode: %hhd\n", anim.mode);
@@ -174,7 +173,7 @@ namespace {
                 if(frame && frame->Value() == "frame"sv) {
                     const char* filename = frame->Attribute("name");
                     if(filename) {
-                        std::vector<char> data = resources::ResourcesLoader::Instance().GetData(filename);
+                        std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
                         if(data.empty())
                             throw std::logic_error("Image resource \"" + std::string(filename) + "\" is empty");
                         anim.images.push_back(Image());
@@ -284,8 +283,8 @@ size_t Sprite::CurrentFrame() const {
 bool Sprite::SetFrame(size_t frame) {
     if(frame >= FramesCount())
         throw std::logic_error(
-           "Frames count = " + boost::lexical_cast<std::string>(FramesCount()) +
-           ", but selected frame " + boost::lexical_cast<std::string>(frame));
+           "Frames count = " + std::to_string(FramesCount()) +
+           ", but selected frame " + std::to_string(frame));
     mCurrentFrame = frame;
     assert(mData);
     const Image& img = (*mData)[mCurrentState].images[mCurrentFrame];

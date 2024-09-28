@@ -25,6 +25,8 @@
 #include <core/vector2.h>
 #include <font/font.h>
 #include <objects/base/visible.h>
+
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -65,7 +67,7 @@ private:
     Vector2f mPosition;
 
     class Aligner;
-    unique_ptr<Aligner> mAligner;
+    std::unique_ptr<Aligner> mAligner;
 };
 
 } // namespace objects

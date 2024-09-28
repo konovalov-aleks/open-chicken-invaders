@@ -21,8 +21,9 @@
 
 #include "background.h"
 
-#include <assert.h>
 #include <core/window.h>
+
+#include <cassert>
 #include <stdexcept>
 
 namespace oci {
@@ -43,7 +44,7 @@ Background& Background::Instance() {
 }
 
 Background::Background() {
-    SetController(make_shared<StaticController>());
+    SetController(std::make_shared<StaticController>());
 }
 
 void Background::Draw() {
@@ -66,12 +67,12 @@ void Background::Draw() {
     }
 }
 
-void Background::SetController(const shared_ptr<Controller>& controller) {
+void Background::SetController(const std::shared_ptr<Controller>& controller) {
     assert(controller.get());
     mControllers.push_front(controller);
 }
 
-void Background::ResetController(const shared_ptr<Controller>& controller) {
+void Background::ResetController(const std::shared_ptr<Controller>& controller) {
     mControllers.remove(controller);
 }
 

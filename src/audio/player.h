@@ -21,17 +21,17 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include "controller.h"
-#include <portability/memory.h>
+
+#include <memory>
 #include <string>
 
 namespace oci {
 namespace audio {
 
-shared_ptr<Controller> Play(const std::string& filename,
-                            bool autoplay = true,
-                            bool loop = false);
+std::shared_ptr<Controller> Play(const std::string& filename,
+                                 bool autoplay = true,
+                                 bool loop = false);
 
 } // namespace audio
 } // namespace oci

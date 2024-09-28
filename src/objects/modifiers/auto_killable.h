@@ -23,7 +23,8 @@
 
 #include <core/window.h>
 #include <objects/base/active.h>
-#include <portability/type_traits.h>
+
+#include <type_traits>
 
 namespace oci {
 namespace objects {
@@ -89,11 +90,11 @@ template<typename T,
          typename B3 = BoundNone,
          typename B4 = BoundNone>
 class AutoKillable : public T,
-                     public conditional<is_base_of<Active, T>::value,
-                                        details::Dummy, Active> {
+                     public std::conditional<std::is_base_of<Active, T>::value,
+                                             details::Dummy, Active> {
 public:
     virtual void Run() override {
-        CallParentRun(is_base_of<Active, T>());
+        CallParentRun(std::is_base_of<Active, T>());
         details::CheckAction<B1>()(*this);
         details::CheckAction<B2>()(*this);
         details::CheckAction<B3>()(*this);
@@ -102,8 +103,8 @@ public:
 
 private:
 
-    void CallParentRun(integral_constant<bool, false>) {}
-    void CallParentRun(integral_constant<bool, true>) { T::Run(); }
+    void CallParentRun(std::integral_constant<bool, false>) {}
+    void CallParentRun(std::integral_constant<bool, true>) { T::Run(); }
 };
 
 } // namespace modifiers

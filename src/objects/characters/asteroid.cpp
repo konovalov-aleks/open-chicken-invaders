@@ -25,8 +25,9 @@
 #include <audio/player.h>
 #include <core/window.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
-#include <utils/array_size.h>
+
+#include <cstdlib>
+#include <numbers>
 
 namespace oci {
 namespace objects {
@@ -37,7 +38,7 @@ void Asteroid::Init(const Vector2f& position, float angle, float speed,
         "asteroid_small_rock.xml", "asteroid_big_rock.xml",
         "asteroid_small_fire.xml", "asteroid_big_fire.xml"
     };
-    static_assert(ARRAY_SIZE(SPRITE_NAMES) == TYPE_COUNT,
+    static_assert(std::size(SPRITE_NAMES) == TYPE_COUNT,
                   "for each element in enumeration Asteroid::Type must "
                   "exists string in array SPRITE_NAMES");
     AnimatedCollisionObject::Init(SPRITE_NAMES[type], position, health),
@@ -47,13 +48,13 @@ void Asteroid::Init(const Vector2f& position, float angle, float speed,
 }
 
 void Asteroid::Run() {
-    if(rand() % 3 == 0) {
+    if(std::rand() % 3 == 0) {
         // FIXME
-        int angle = (atan2(mDX, mDY) * M_PI) / 180;
-        int dx = rand() % GetWidth() - GetWidth() / 2;
+        int angle = (atan2(mDX, mDY) * std::numbers::pi) / 180;
+        int dx = std::rand() % GetWidth() - GetWidth() / 2;
         Storage().CreateObject<CSmoke>(
             Vector2f(GetPosition().x + dx, GetPosition().y),
-            rand() % 3 + 0.5f, angle);
+            std::rand() % 3 + 0.5f, angle);
     }
     Move(mDX, mDY);
 }

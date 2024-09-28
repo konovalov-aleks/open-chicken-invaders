@@ -22,50 +22,24 @@
 #pragma once
 
 #include "../base/visible.h"
-#include <portability/cpp11.h>
-#include <portability/type_traits.h>
 
-#ifndef CPP11
-#   include <boost/preprocessor.hpp>
-#endif
+#include <concepts>
 
 namespace oci {
 namespace objects {
 namespace modifiers {
 
-template<typename T>
+template<std::derived_from<Visible> T>
 class Blinkable : public T {
 public:
 
-    static_assert((is_base_of<Visible, T>::value), "T must be visible object");
-
     Blinkable() : mBlinkPeriod(), mCurrentTime() {}
-
-#ifdef CPP11
 
     template<typename... Args>
     void Init(int blink_period, const Args&... args) {
         mBlinkPeriod = blink_period;
         T::Init(args...);
     }
-
-#else
-
-    void Init(int blink_period) {
-        mBlinkPeriod = blink_period;
-        T::Init();
-    }
-
-    #define _GEN_BLINKABLE_PP_INIT_METHOD(N, I, U)             \
-    template<BOOST_PP_ENUM_PARAMS(I, typename T)>              \
-    void Init(int blink_period,                                \
-              BOOST_PP_ENUM_BINARY_PARAMS(I, const T, &arg)) { \
-        mBlinkPeriod = blink_period;                           \
-        T::Init(BOOST_PP_ENUM_PARAMS(I, arg));                 \
-    }
-    BOOST_PP_REPEAT_FROM_TO(1, MAX_PARAMS_COUNT, _GEN_BLINKABLE_PP_INIT_METHOD, ~)
-
-#endif
 
     virtual void Draw() override {
         ++mCurrentTime;

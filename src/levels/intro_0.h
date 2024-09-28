@@ -29,6 +29,9 @@
 #include <objects/text/subtitle_text.h>
 #include <solar_system.h>
 
+#include <list>
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -92,12 +95,12 @@ private:
         int x, y;
     };
 
-    weak_ptr<objects::Sprite> mShip;
-    weak_ptr<Exhaust> mExhaust;
-    weak_ptr<IntroChicken1> mChicken;
-    weak_ptr<objects::SubtitleText> mSubtitle;
+    std::weak_ptr<objects::Sprite> mShip;
+    std::weak_ptr<Exhaust> mExhaust;
+    std::weak_ptr<IntroChicken1> mChicken;
+    std::weak_ptr<objects::SubtitleText> mSubtitle;
     Background::ControllerSetter<BackgroundController> mBackgroundController;
-    std::list<weak_ptr<IntroChicken2> > mChickens2;
+    std::list<std::weak_ptr<IntroChicken2> > mChickens2;
     char mMode;
 };
 

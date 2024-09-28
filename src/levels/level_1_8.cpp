@@ -25,6 +25,8 @@
 #include "factory.h"
 #include <utils/cleanup_container.h>
 
+#include <functional>
+
 namespace oci {
 namespace levels {
 
@@ -44,9 +46,9 @@ void CLevel_1_8::Init(int Step) {
             10,                          // health
             objects::Asteroid::tRockBig, // type
             true,                        // split
-            bind(static_cast<
+            std::bind(static_cast<
                     void(AsteroidsList::*)(const AsteroidsList::value_type&)
-                >(&AsteroidsList::push_front), &mAsteroids, placeholders::_1)
+                >(&AsteroidsList::push_front), &mAsteroids, std::placeholders::_1)
         )
     );
     ShowLevelInfo(Step == 0 ? "8" : "18", "asteroids!", "no, really", true);

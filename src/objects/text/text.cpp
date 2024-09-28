@@ -21,10 +21,11 @@
 
 #include "text.h"
 
-#include <algorithm>
-#include <assert.h>
 #include <core/window.h>
-#include <portability/array.h>
+
+#include <algorithm>
+#include <array>
+#include <cassert>
 #include <stdexcept>
 
 namespace oci {
@@ -62,7 +63,7 @@ private:
 class Text::Aligner {
 public:
     Aligner(Text::VerticalAlign va, Text::HorizontalAlign ha) {
-        typedef array<
+        typedef std::array<
             std::pair<Text::VerticalAlign, AlignerFunc>,
             3
         > VerticalArr;
@@ -72,7 +73,7 @@ public:
             std::make_pair(vaBottom, BottomAlign)
         };
 
-        typedef  array<
+        typedef std::array<
             std::pair<Text::HorizontalAlign, AlignerFunc>,
             3
         > HorizontalArr;

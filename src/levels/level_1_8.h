@@ -23,7 +23,9 @@
 
 #include "game_level.h"
 #include <objects/characters/jumping_asteroid.h>
-#include <portability/forward_list.h>
+
+#include <forward_list>
+#include <memory>
 
 namespace oci {
 namespace levels {
@@ -35,7 +37,7 @@ public:
 protected:
     virtual void Run() override;
 private:
-    typedef forward_list<weak_ptr<objects::JumpingAsteroid> > AsteroidsList;
+    typedef std::forward_list<std::weak_ptr<objects::JumpingAsteroid> > AsteroidsList;
     AsteroidsList mAsteroids;
 };
 

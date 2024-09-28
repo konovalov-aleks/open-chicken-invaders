@@ -29,7 +29,7 @@ namespace oci {
 namespace objects {
 
 namespace {
-    static const CHRONO::seconds EGG_LIFE_TIME = CHRONO::seconds(1);
+    static const std::chrono::seconds EGG_LIFE_TIME = std::chrono::seconds(1);
     static const int EGG_SPEED = 3;
 }
 
@@ -56,11 +56,11 @@ void Egg::Run() {
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("fx11.wav"));
 
-            lifetime = CHRONO::system_clock::now();
+            lifetime = std::chrono::steady_clock::now();
             in_floor = true;
         }
     }
-    if(in_floor && CHRONO::system_clock::now() - lifetime >= EGG_LIFE_TIME)
+    if(in_floor && std::chrono::steady_clock::now() - lifetime >= EGG_LIFE_TIME)
         Storage().KillObject(this);
 }
 

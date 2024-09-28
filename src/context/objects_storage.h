@@ -22,16 +22,10 @@
 #pragma once
 
 #include "context.h"
-#include <boost/noncopyable.hpp>
-#include <memory>
-#include <portability/cpp11.h>
-#include <portability/memory.h>
-#include <portability/type_traits.h>
-#include <portability/unordered_map.h>
 
-#ifndef CPP11
-#   include <boost/preprocessor.hpp>
-#endif
+#include <concepts>
+#include <memory>
+#include <unordered_map>
 
 namespace oci {
 
@@ -45,43 +39,26 @@ namespace storage {
     const char LOCAL[] = "local";
 } // namespace storage
 
-class ObjectsStorage : boost::noncopyable {
+class ObjectsStorage {
 public:
+    ObjectsStorage(const ObjectsStorage&) = delete;
+    ObjectsStorage& operator= (const ObjectsStorage&) = delete;
 
-#ifdef CPP11
-    template<typename T, typename... Values>
-    shared_ptr<T> CreateObject(const Values&... args) {
-        static_assert((is_base_of<objects::Object, T>::value),
-                      "T must be derived from Object");
-        shared_ptr<T> obj(make_shared<StorageSetter<T>>(*this));
+    template<std::derived_from<objects::Object> T, typename... Values>
+    std::shared_ptr<T> CreateObject(const Values&... args) {
+        std::shared_ptr<T> obj(std::make_shared<StorageSetter<T>>(*this));
         obj->Init(args...);
         mObjects.insert({obj.get(), obj});
         RegisterObject(obj);
         return obj;
     }
-#else
-
-    #define __GEN_OBJSTOR_PP_CONSTRUCTOR(N, I, U)                 \
-    template<typename T BOOST_PP_COMMA_IF(I) BOOST_PP_ENUM_PARAMS(I, typename Value)> \
-    shared_ptr<T> CreateObject(BOOST_PP_ENUM_BINARY_PARAMS(I, const Value, &arg)) {   \
-        static_assert((is_base_of<objects::Object, T>::value),    \
-                      "T must be derived from Object");           \
-        shared_ptr<T> obj(new StorageSetter<T>(*this));           \
-        obj->Init(BOOST_PP_ENUM_PARAMS(I, arg));                  \
-        mObjects.insert(std::make_pair(obj.get(), obj));          \
-        RegisterObject(obj);                                      \
-        return obj;                                               \
-    }
-    BOOST_PP_REPEAT_FROM_TO(0, MAX_PARAMS_COUNT, __GEN_OBJSTOR_PP_CONSTRUCTOR, ~)
-
-#endif // CPP11
 
     void KillObject(objects::Object* obj) {
         mObjects.erase(obj);
     }
 
     template<typename T>
-    void KillObject(const weak_ptr<T>& obj) {
+    void KillObject(const std::weak_ptr<T>& obj) {
         if(!obj.expired())
             mObjects.erase(obj.lock().get());
     }
@@ -107,26 +84,26 @@ private:
     ObjectsStorage(Context& context) : mContext(&context) {}
 
     template<typename Func, typename T>
-    inline void do_register(integral_constant<bool, false>, Func, T) {}
+    inline void do_register(std::integral_constant<bool, false>, Func, T) {}
 
     template<typename Func, typename T>
-    inline void do_register(integral_constant<bool, true>, Func f, T obj) {
+    inline void do_register(std::integral_constant<bool, true>, Func f, T obj) {
         (mContext->*f)(obj);
     }
 
     template<typename T>
-    void RegisterObject(shared_ptr<T> obj) {
-        do_register(typename is_convertible<T*, objects::Visible*>::type(),
+    void RegisterObject(std::shared_ptr<T> obj) {
+        do_register(typename std::is_convertible<T*, objects::Visible*>::type(),
                     &Context::RegisterVisible, obj);
-        do_register(typename is_convertible<T*, objects::Active*>::type(),
+        do_register(typename std::is_convertible<T*, objects::Active*>::type(),
                     &Context::RegisterActiveObject, obj);
-        do_register(typename is_convertible<T*, objects::ICollisionObject*>::type(),
+        do_register(typename std::is_convertible<T*, objects::ICollisionObject*>::type(),
                     &Context::RegisterCollisionObject, obj);
-        do_register(typename is_convertible<T*, objects::Animated*>::type(),
+        do_register(typename std::is_convertible<T*, objects::Animated*>::type(),
                     &Context::RegisterAnimated, obj);
     }
 
-    unordered_map<objects::Object*, shared_ptr<objects::Object> > mObjects;
+    std::unordered_map<objects::Object*, std::shared_ptr<objects::Object> > mObjects;
     Context* mContext;
 
     friend class Context;

@@ -22,12 +22,9 @@
 #pragma once
 
 #include <memory>
-#include <boost/noncopyable.hpp>
 #include <objects/base/collision_object_types.h>
-#include <portability/memory.h>
 
 namespace oci {
-
 namespace objects {
 
 class Active;
@@ -41,15 +38,18 @@ namespace context {
 
 class ObjectsStorage;
 
-class Context : boost::noncopyable {
+class Context {
 public:
     Context();
     ~Context();
 
-    void RegisterActiveObject(const shared_ptr<objects::Active>& func);
-    void RegisterVisible(const shared_ptr<objects::Visible>& obj);
-    void RegisterAnimated(const shared_ptr<objects::Animated>& obj);
-    void RegisterCollisionObject(const shared_ptr<objects::ICollisionObject>& obj);
+    Context(const Context&) = delete;
+    Context& operator= (const Context&) = delete;
+
+    void RegisterActiveObject(const std::shared_ptr<objects::Active>& func);
+    void RegisterVisible(const std::shared_ptr<objects::Visible>& obj);
+    void RegisterAnimated(const std::shared_ptr<objects::Animated>& obj);
+    void RegisterCollisionObject(const std::shared_ptr<objects::ICollisionObject>& obj);
 
     void Run();
     void Draw();
@@ -63,7 +63,7 @@ public:
 
 private:
     class Impl;
-    unique_ptr<Impl> mImpl;
+    std::unique_ptr<Impl> mImpl;
 };
 
 } // namespace context

@@ -41,7 +41,7 @@ void Factory::Build(const std::string& obj_name) {
 }
 
 void Factory::IGenerator::Build() {
-    shared_ptr<context::Context> context =
+    std::shared_ptr<context::Context> context =
         context::Manager::Instance().GetContext(mContextName);
     DoBuild(context->GetStorage(context::storage::LOCAL));
     context::Manager::Instance().SetActiveContext(context);

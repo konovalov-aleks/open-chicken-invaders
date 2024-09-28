@@ -23,7 +23,9 @@
 
 #include "game_level.h"
 #include <objects/characters/chicken.h>
+
 #include <list>
+#include <memory>
 
 namespace oci {
 namespace levels {
@@ -51,7 +53,7 @@ public:
 
 protected:
 
-    virtual void CreateChickens(std::list<weak_ptr<LevelChicken> >& chickens) = 0;
+    virtual void CreateChickens(std::list<std::weak_ptr<LevelChicken> >& chickens) = 0;
 
     /** \param flyenable Могут ли куры вылетать из своих ячеек.
                          Обычно в уровне 2 false, в уровне 3 true
@@ -61,11 +63,11 @@ protected:
 private:
     virtual void Run() override;
 
-    std::list<weak_ptr<LevelChicken> > mChickens;
+    std::list<std::weak_ptr<LevelChicken> > mChickens;
 
     float mFlockXPos;    /// смещение всей стаи по x
     float mFlockXSpeed; /// скорость перемещения всей стаи по x
-    bool mFlyEnable;    /// могут ли куры пойти улететь из своей ячейки 
+    bool mFlyEnable;    /// могут ли куры пойти улететь из своей ячейки
 };
 
 } // namespace levels

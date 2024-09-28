@@ -23,7 +23,10 @@
 
 #include <core/window.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
+
+#include <cmath>
+#include <cstdlib>
+#include <numbers>
 
 namespace oci {
 namespace objects {
@@ -39,13 +42,13 @@ void JumpingAsteroid::Init(const Vector2f& position, float angle,
 }
 
 void JumpingAsteroid::Run() {
-    if(rand() % 3 == 0) {
+    if(std::rand() % 3 == 0) {
         // FIXME
-        int angle = (atan2(mDX, mDY) * M_PI) / 180;
-        int dx = rand() % GetWidth() - GetWidth() / 2;
+        int angle = (std::atan2(mDX, mDY) * std::numbers::pi) / 180;
+        int dx = std::rand() % GetWidth() - GetWidth() / 2;
         Storage().CreateObject<CSmoke>(
             Vector2f(GetPosition().x + dx, GetPosition().y),
-            rand() % 3 + 0.5f, angle);
+            std::rand() % 3 + 0.5f, angle);
     }
 
     Move(mDX, mDY);
@@ -60,11 +63,11 @@ void JumpingAsteroid::Run() {
 void JumpingAsteroid::OnBang(CollisionType ct) {
     if(mSplit && ct == ctFriendBullet)
         for(int i = 0; i < 3; ++i)
-            CreateAsteroidSplinter(static_cast<float>( rand() ) / RAND_MAX * M_PI * 2.0);
+            CreateAsteroidSplinter(static_cast<float>(std::rand() ) / RAND_MAX * std::numbers::pi_v<float> * 2.0);
 }
 
 void JumpingAsteroid::CreateAsteroidSplinter(float angle) {
-    shared_ptr<JumpingAsteroid> s = Storage().CreateObject<JumpingAsteroid>(
+    std::shared_ptr<JumpingAsteroid> s = Storage().CreateObject<JumpingAsteroid>(
         GetPosition(), angle, mSpeed, 4, mType == tRockBig || mType == tRockSmall ? tRockSmall : tFireSmall,
         false, mOnCreateSplinter);
     if(mOnCreateSplinter)

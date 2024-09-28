@@ -23,7 +23,9 @@
 
 #include <core/window.h>
 #include <objects/particles/spark.h>
-#include <portability/math.h>
+
+#include <cmath>
+#include <numbers>
 
 namespace oci {
 namespace objects {
@@ -40,7 +42,7 @@ void Bullet::Init(const std::string& sprite_name, const Vector2f& pos,
     dx = 0.4f * dx0;
     dy = 0.4f * dy0;
 
-    int frame = round(angle / (M_PI * 2.0) * 32.0f);
+    int frame = std::round(angle / (std::numbers::pi_v<float> * 2.0f) * 32.0f);
     if(frame >= static_cast<int>(FramesCount()))
         frame = 0;
     SetFrame(frame);
@@ -54,9 +56,9 @@ void Bullet::OnCollision(const CollisionObjectInfo& /*collisedWith*/) {
 void Bullet::Run() {
     dx += 0.03f * dx0;
     dy += 0.03f * dy0;
-    if(fabsf(dx) > fabsf(dx0))
+    if(std::fabsf(dx) > std::fabsf(dx0))
         dx = dx0;
-    if(fabsf(dy) > fabsf(dy0))
+    if(std::fabsf(dy) > std::fabsf(dy0))
         dy = dy0;
 
     Move(dx, dy);

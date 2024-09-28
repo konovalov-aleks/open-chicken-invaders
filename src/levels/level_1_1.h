@@ -24,6 +24,8 @@
 #include "game_level.h"
 #include <objects/characters/random_chicken.h>
 
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -34,7 +36,7 @@ public:
 private:
     virtual void Run() override;
 
-    weak_ptr<objects::RandomChicken> mChicken;
+    std::weak_ptr<objects::RandomChicken> mChicken;
     int mMode;
 };
 

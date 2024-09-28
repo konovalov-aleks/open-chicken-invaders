@@ -21,7 +21,6 @@
 
 #include "intro_0.h"
 
-#include <assert.h>
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <core/window.h>
@@ -31,10 +30,12 @@
 #include <objects/gun/player_bullet.h>
 #include <objects/modifiers/auto_killable.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
-#include <stdexcept>
-#include <utils/array_size.h>
 #include <utils/cleanup_container.h>
+
+#include <cassert>
+#include <memory>
+#include <numbers>
+#include <stdexcept>
 
 namespace oci {
 namespace levels {
@@ -95,7 +96,7 @@ void Intro_0::IntroChicken1::Run() {
 void Intro_0::IntroChicken2::Init(const Vector2f& position, Type type) {
     static const float CHICKEN_SPEEDS[] = { 3.0f, 3.5f, 4.0f };
     Animated::Init("chicken_intro.xml", position);
-    assert(type >= 0 && type <= ARRAY_SIZE(CHICKEN_SPEEDS));
+    assert(type >= 0 && type <= std::size(CHICKEN_SPEEDS));
     mSpeed = CHICKEN_SPEEDS[type];
     mType = type;
     SetState(type + 1);
@@ -125,12 +126,12 @@ void Intro_0::Init() {
 }
 
 void Intro_0::RunIntro() {
-    shared_ptr<Sprite> ship(mShip.lock());
-    if(!ship)
-        throw std::logic_error("Произведена попытка использовать удалённый объект Ship");
-    shared_ptr<Exhaust> exhaust(mExhaust.lock());
-    if(!exhaust)
-        throw std::logic_error("Произведена попытка использовать удалённый объект Exhaust");
+    std::shared_ptr<Sprite> ship(mShip.lock());
+    if(!ship) [[unlikely]]
+        throw std::logic_error("Attempt to use a destroyed Ship object");
+    std::shared_ptr<Exhaust> exhaust(mExhaust.lock());
+    if(!exhaust) [[unlikely]]
+        throw std::logic_error("Attempt to use a destroyed Exhaust object");
     switch(mMode) {
     case 0:
         if(mBackgroundController->x < SOLAR_SYSTEM_STOP_POS_X)
@@ -145,7 +146,7 @@ void Intro_0::RunIntro() {
         if(fabsf(ship->GetPosition().x - SHIP_SHOT_POS) <= SHIP_SPEED) {
             ++mMode;
             Storage().CreateObject<CPlayerBullet>(
-                "gun1.xml", ship->GetPosition(), BULLET_SPEED, M_PI * 1.5f, 0, 0);
+                "gun1.xml", ship->GetPosition(), BULLET_SPEED, std::numbers::pi_v<float> * 1.5f, 0, 0);
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("tr3_239.wav"));
         }

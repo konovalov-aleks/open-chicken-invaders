@@ -25,6 +25,8 @@
 #include <objects/base/active.h>
 #include <objects/particles/exhaust.h>
 
+#include <memory>
+
 namespace oci {
 namespace objects {
 
@@ -41,7 +43,7 @@ protected:
     virtual void Run() override;
 
     /// огоньки от двигателей
-    shared_ptr<Exhaust> e1, e2;
+    std::shared_ptr<Exhaust> e1, e2;
     /// смещение огоньков двигателей к центру при наклоне корабля
     float dx_e;
 

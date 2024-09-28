@@ -32,7 +32,9 @@
 #include <objects/base/sprite.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/text/text.h>
-#include <portability/functional.h>
+
+#include <functional>
+#include <memory>
 
 namespace oci {
 
@@ -55,7 +57,7 @@ namespace {
         Button() : mPressed(false) {}
 
         void Init(const std::string& caption, int ypos,
-                  const function<void()>& on_press_callback) {
+                  const std::function<void()>& on_press_callback) {
             Sprite::Init("menuitem.xml");
             SetPosition(Window::Instance().GetWidth() / 2, ypos);
             mCaption = Storage().CreateObject<Text>(
@@ -86,7 +88,7 @@ namespace {
     private:
         ObjectHolder<Text> mCaption;
         bool mPressed;
-        function<void()> mOnPressCallback;
+        std::function<void()> mOnPressCallback;
     };
 
     class Logo : public CommonSprite<Visible::dpForeground> {
@@ -110,7 +112,7 @@ void MainMenu::Init() {
 
     Storage().CreateObject<Logo>();
     Storage().CreateObject<Button>("save the world", 260,
-            bind( &levels::Manager::NewGame, &levels::Manager::Instance()));
+            std::bind(&levels::Manager::NewGame, &levels::Manager::Instance()));
     Storage().CreateObject<Button>("quit", 300, doexit);
 
     Storage().CreateObject<Text>(
@@ -131,7 +133,7 @@ void MainMenu::SwitchToMenu() {
 }
 
 void MainMenu::InitMenu() {
-    shared_ptr<context::Context> context =
+    std::shared_ptr<context::Context> context =
         context::Manager::Instance().GetContext(MENU_CONTEXT_NAME);
     context->GetStorage(context::storage::LOCAL).CreateObject<MainMenu>();
     context::Manager::Instance().SetActiveContext(context);

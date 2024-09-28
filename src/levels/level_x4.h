@@ -23,7 +23,9 @@
 
 #include "game_level.h"
 #include <objects/characters/asteroid.h>
-#include <portability/forward_list.h>
+
+#include <forward_list>
+#include <memory>
 
 namespace oci {
 namespace levels {
@@ -47,14 +49,14 @@ protected:
     */
     void Init(int p, int cnt);
     /// В этом методе должны создаваться астероиды
-    virtual weak_ptr<objects::Asteroid> CreateAsteroid() = 0;
+    virtual std::weak_ptr<objects::Asteroid> CreateAsteroid() = 0;
 
 private:
     virtual void Run() override;
 
     int mP;     /// вероятность того, что сейчас создастся новый астероид
     int mCount; /// кол-во астероидов, которые прилетят
-    forward_list<weak_ptr<objects::Asteroid> > mAsteroids;
+    std::forward_list<std::weak_ptr<objects::Asteroid> > mAsteroids;
 };
 
 } // namespace levels
