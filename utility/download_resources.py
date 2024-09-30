@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import ssl
 import os
 import json
 import urllib.request
@@ -11,6 +12,8 @@ EXPECTED_MD5 = '0a4ba26b610262697222cfaa212e171c'
 
 BASE_URL = 'https://cloud-api.yandex.net/v1/disk/public/resources/download?'
 PUBLIC_KEY = 'https://disk.yandex.ru/d/0gZmYHpGPAaLZ'
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def check_hash(data):

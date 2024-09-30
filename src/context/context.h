@@ -21,8 +21,10 @@
 
 #pragma once
 
-#include <memory>
 #include <objects/base/collision_object_types.h>
+
+#include <memory>
+#include <string>
 
 namespace oci {
 namespace objects {

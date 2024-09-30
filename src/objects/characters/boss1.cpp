@@ -118,10 +118,10 @@ void Boss1::Fire() {
         "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float>, 0, 0,
         ctPlayerShip, ctEnemyBullet);
     Storage().CreateObject<Bullet>(
-        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, M_PI + 0.52f, 0, 0,
+        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float> + 0.52f, 0, 0,
         ctPlayerShip, ctEnemyBullet);
     Storage().CreateObject<Bullet>(
-        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, M_PI - 0.52f, 0, 0,
+        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float> - 0.52f, 0, 0,
         ctPlayerShip,ctEnemyBullet);
 }
 
