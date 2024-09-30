@@ -102,13 +102,13 @@ public:
     std::shared_ptr<Mix_Chunk> operator()(const std::string& name) {
         std::vector<char> data =
             resources::ResourceLoader::Instance().GetData("sfx/" + name);
-        if(data.empty())
+        if(data.empty()) [[unlikely]]
             throw std::logic_error("Sound resource \"sfx/" + name +
                                    "\" is empty");
         std::shared_ptr<Mix_Chunk> res = std::shared_ptr<Mix_Chunk>(
-            Mix_LoadWAV_RW(SDL_RWFromConstMem(&data[0], data.size()), 1),
+            Mix_LoadWAV_RW(SDL_RWFromConstMem(&data[0], static_cast<int>(data.size())), 1),
             MixChunkDeleter());
-        if(!res)
+        if(!res) [[unlikely]]
             throw std::logic_error("Cannot load sound \"" + name + "\": " +
                                    Mix_GetError());
         return res;

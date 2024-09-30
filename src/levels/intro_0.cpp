@@ -21,23 +21,31 @@
 
 #include "intro_0.h"
 
+#include "factory.h"
+#include "intro_level.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/objects_storage.h>
 #include <core/window.h>
-#include "factory.h"
-#include "manager.h"
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/gun/player_bullet.h>
 #include <objects/modifiers/auto_killable.h>
 #include <objects/particles/smoke.h>
+#include <objects/text/subtitle_text.h>
+#include <solar_system.h>
 #include <utils/cleanup_container.h>
 
 #include <cassert>
-#include <cstdlib>
 #include <cmath>
+#include <cstdlib>
+#include <iterator>
 #include <memory>
 #include <numbers>
 #include <stdexcept>
+#include <string>
 
 namespace oci {
 namespace levels {
@@ -78,7 +86,7 @@ static const float SMOKE_SPEED = -2;
 /// Максимальная координата кур, летящих вправо, за экраном слева (то есть создаются они случайно, от MIN_CHICKEN_POS до 0)
 static const int MIN_CHICKEN_START_POS = 560;
 
-static Factory::Registrator<Intro_0> reg("intro_0", "intro");
+static Factory::Registrar<Intro_0> reg("intro_0", "intro");
 
 void Intro_0::IntroChicken1::Init(const Vector2f& position) {
     AnimatedCollisionObject::Init("chicken_intro.xml", position, 1000, 0.3f);

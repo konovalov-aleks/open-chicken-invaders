@@ -80,7 +80,7 @@ void Loader::LoadLevel(const std::string& levelname) {
         }
     }
 
-    int max_progr = sprites_list.size() + sounds_list.size();
+    std::size_t max_progr = sprites_list.size() + sounds_list.size();
     if(max_progr) {
 //            CLoadScreen lscreen;
 //            lscreen.InitMax(sprites_list.size() + sounds_list.size());

@@ -24,11 +24,14 @@
 #include <core/vector2.h>
 #include <objects/base/active.h>
 #include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object_types.h>
 
 #include <chrono>
 
 namespace oci {
 namespace objects {
+
+struct CollisionObjectInfo;
 
 class Egg : public AnimatedCollisionObject, public Active {
 public:

@@ -31,7 +31,7 @@
 namespace oci {
 namespace levels {
 
-static Factory::Registrator<CLevel_1_8> reg("level_1_8", "game", 0);
+static Factory::Registrar<CLevel_1_8> reg("level_1_8", "game", 0);
 
 static const float ASTEROID_SPEED = 8.0f;
 static const float INITIAL_POS_Y = 20.0f;

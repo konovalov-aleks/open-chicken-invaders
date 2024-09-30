@@ -37,7 +37,7 @@ namespace {
     /// Скорость босса
     extern const float BOSS_SPEED = 4.0f;
 
-    static Factory::Registrator<Level_1_10> reg("level_1_10", "game");
+    static Factory::Registrar<Level_1_10> reg("level_1_10", "game");
 } // namespace
 
 void Level_1_10::Init() {

@@ -54,7 +54,7 @@ private:
     int mMode;
 };
 
-static Factory::Registrator<Intro_1> reg("intro_1", "intro");
+static Factory::Registrar<Intro_1> reg("intro_1", "intro");
 
 void Intro_1::Init() {
     IntroLevel::Init("intro1");

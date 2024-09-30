@@ -21,8 +21,8 @@
 
 #pragma once
 
+#include "controller.h"
 #include <objects/base/active.h>
-#include "player.h"
 
 #include <memory>
 

@@ -70,9 +70,9 @@ private:
     std::weak_ptr<objects::UFO> mUFO;
 };
 
-Factory::Registrator<Level_1_9> reg1("level_1_9", "game", 0);
-Factory::Registrator<Level_1_9> reg2("level_2_9", "game", 1);
-Factory::Registrator<Level_1_9> reg3("level_3_9", "game", 2);
+Factory::Registrar<Level_1_9> reg1("level_1_9", "game", 0);
+Factory::Registrar<Level_1_9> reg2("level_2_9", "game", 1);
+Factory::Registrar<Level_1_9> reg3("level_3_9", "game", 2);
 
 } // namespace levels
 } // namespace oci

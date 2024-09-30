@@ -83,7 +83,7 @@ void Missile::Run() {
         if(state < 0)
             state += StatesCount();
         if(state >= static_cast<int>(StatesCount()))
-            state = StatesCount() - 1;
+            state = static_cast<int>(StatesCount() - 1);
         SetState(state);
     }
 }

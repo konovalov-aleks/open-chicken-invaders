@@ -34,7 +34,7 @@ namespace levels {
 using namespace objects;
 using namespace modifiers;
 
-static Factory::Registrator<Level_1_4> reg("level_1_4", "game");
+static Factory::Registrar<Level_1_4> reg("level_1_4", "game");
 
 static const float ASTEROID_SPEED = 8.0f;
 

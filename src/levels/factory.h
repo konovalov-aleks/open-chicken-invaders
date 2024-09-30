@@ -25,8 +25,10 @@
 
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <tuple>
 #include <unordered_map>
+#include <utility>
 
 namespace oci {
 namespace levels {
@@ -41,23 +43,24 @@ public:
     Factory& operator= (const Factory&) = delete;
 
     template<typename T, typename... Args>
-    void Register(const std::string& obj_name, const std::string& context_name,
-                  Args... args) {
+    void Register(std::string&& obj_name, std::string&& context_name, Args... args) {
         mObjects.insert(
-            std::make_pair(obj_name, std::unique_ptr<IGenerator>(
-                           new Generator<T, Args...>(context_name, args...)))
+            std::make_pair(std::move(obj_name), std::unique_ptr<IGenerator>(
+                new Generator<T, Args...>(std::move(context_name), args...)))
         );
     }
 
     void Build(const std::string& obj_name);
 
     template<typename T>
-    class Registrator {
+    class Registrar {
     public:
         template<typename... Args>
-        Registrator(const std::string& obj_name,
-                    const std::string& context_name, const Args& ...args) {
-            Factory::Instance().Register<T>(obj_name, context_name, args...);
+        Registrar(std::string&& obj_name,
+                  std::string&& context_name, Args... args) {
+            Factory::Instance().Register<T>(std::move(obj_name),
+                                            std::move(context_name),
+                                            args...);
         }
     };
 
@@ -65,8 +68,11 @@ private:
 
     class IGenerator {
     public:
-        IGenerator(const std::string& context_name) : mContextName(context_name) {}
-        virtual ~IGenerator() {}
+        IGenerator(std::string&& context_name)
+            : mContextName(std::move(context_name))
+        {}
+
+        virtual ~IGenerator() = default;
         void Build();
 
     protected:
@@ -76,11 +82,13 @@ private:
         std::string mContextName;
     };
 
-    template<typename T, typename ...Args>
+    template<typename T, typename... Args>
     class Generator : public IGenerator {
     public:
-        Generator(const std::string& context_name, const Args& ...args) :
-            IGenerator(context_name), mArgs(args...) {}
+        Generator(std::string&& context_name, Args... args)
+            : IGenerator(std::move(context_name))
+            , mArgs(args...)
+        {}
     protected:
         virtual void DoBuild(context::ObjectsStorage& storage) override {
             const auto args =

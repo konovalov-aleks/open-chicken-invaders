@@ -21,6 +21,9 @@
 
 #include "controller_holder.h"
 
+#include "controller.h"
+#include <context/objects_storage.h>
+
 namespace oci {
 namespace audio {
 

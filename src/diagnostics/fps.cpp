@@ -36,8 +36,9 @@ void FPSViewer::Init() {
 }
 
 void FPSViewer::Run() {
-    int frame_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-                        Clock::now() - mLastFrameTime).count();
+    int frame_time = static_cast<int>(
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            Clock::now() - mLastFrameTime).count());
     char buf[128] = "Inf";
     if(frame_time != 0)
         snprintf(buf, std::size(buf), "%.2f", 1000.0f / frame_time);

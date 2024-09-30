@@ -45,10 +45,10 @@ static const float CellSize = 50;
 /// Смещение ячейки в сетке
 static const float CellOffset = 56;
 
-static Factory::Registrator<Level_1_2> reg1("level_1_2", "game", 0);
-static Factory::Registrator<Level_1_2> reg2("level_1_3", "game", 1);
+static Factory::Registrar<Level_1_2> reg1("level_1_2", "game", 0);
+static Factory::Registrar<Level_1_2> reg2("level_1_3", "game", 1);
 
-void Level_1_2::Init(char Step) {
+void Level_1_2::Init(int Step) {
     GameLevel::Init("level_1_1");
     mode = 0;
     dx = FLOCK_SPEED;

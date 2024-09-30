@@ -45,7 +45,7 @@ const float BACKGROUND_FINISH_SPEED = 8.0f;
 const float BACKGROUND_DECELERATION = -0.2;
 const int LEVEL_TIME = 50;
 
-Factory::Registrator<StartRound> reg("start_round_1", "game", "");
+Factory::Registrar<StartRound> reg("start_round_1", "game", "");
 
 } // namespace
 

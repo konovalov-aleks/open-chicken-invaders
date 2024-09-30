@@ -42,7 +42,7 @@ void Image::create(unsigned width, unsigned height, const Color& color) {
 }
 
 bool Image::loadFromMemory(const char* data, std::size_t datasize) {
-    mSurface.reset(SDL_LoadBMP_RW(SDL_RWFromConstMem(data, datasize), 1));
+    mSurface.reset(SDL_LoadBMP_RW(SDL_RWFromConstMem(data, static_cast<int>(datasize)), 1));
     return mSurface != nullptr;
 }
 

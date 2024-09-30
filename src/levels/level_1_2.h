@@ -49,7 +49,7 @@ public:
         char mode;
     };
 
-    void Init(char Step);
+    void Init(int Step);
 
 private:
     std::list<std::weak_ptr<LevelChicken> > mChickens;

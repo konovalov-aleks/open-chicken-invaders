@@ -41,7 +41,7 @@ namespace {
     /// Скорость куры
     const float CHICKEN_SPEED = 2.0f;
 
-    Factory::Registrator<Level_1_1> reg("level_1_1", "game");
+    Factory::Registrar<Level_1_1> reg("level_1_1", "game");
 } // namespace
 
 void Level_1_1::Init() {

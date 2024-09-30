@@ -74,7 +74,7 @@ namespace resources {
                     "#rs############\0####################-./################89##456"
                     "70123";
             mFile.seekg(0, std::ios::end);
-            const int file_size = mFile.tellg();
+            const int file_size = static_cast<int>(mFile.tellg());
             mFile.seekg(0, std::ios::beg);
             int items_count = 0;
             if(!mFile.read(reinterpret_cast<char*>(&items_count), 4))

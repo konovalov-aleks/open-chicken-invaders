@@ -37,9 +37,9 @@ using namespace objects;
 
 const float CLevel_1_5::ChickenSpeed = 2.0f;
 
-static Factory::Registrator<CLevel_1_5> reg1("level_1_5", "game", 0);
-static Factory::Registrator<CLevel_1_5> reg2("level_1_6", "game", 1);
-static Factory::Registrator<CLevel_1_5> reg3("level_1_7", "game", 2);
+static Factory::Registrar<CLevel_1_5> reg1("level_1_5", "game", 0);
+static Factory::Registrar<CLevel_1_5> reg2("level_1_6", "game", 1);
+static Factory::Registrar<CLevel_1_5> reg3("level_1_7", "game", 2);
 
 inline void CLevel_1_5::CreateParatrooper(float x, float y) {
     std::weak_ptr<Paratrooper> paratrooper = Storage().CreateObject<Paratrooper>(

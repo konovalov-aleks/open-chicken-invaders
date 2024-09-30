@@ -32,7 +32,7 @@
 namespace oci {
 namespace benchmark {
 
-    static levels::Factory::Registrator<Benchmark> reg("benchmark", "benchmark");
+    static levels::Factory::Registrar<Benchmark> reg("benchmark", "benchmark");
 
     class BenchmarkChicken : public objects::Animated {
     public:

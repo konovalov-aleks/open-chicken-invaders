@@ -46,7 +46,7 @@ public:
     }
 };
 
-static Factory::Registrator<GameOver> reg("game_over", "");
+static Factory::Registrar<GameOver> reg("game_over", "");
 
 } // namespace levels
 } // namespace oci
