@@ -21,8 +21,8 @@
 
 #include "factory.h"
 
-#include <stdexcept>
 #include <context/manager.h>
+#include <core/critical_error.h>
 
 namespace oci {
 namespace levels {
@@ -34,9 +34,8 @@ Factory& Factory::Instance() {
 
 void Factory::Build(const std::string& obj_name) {
     ObjectsMap::iterator iter = mObjects.find(obj_name);
-    if(iter == mObjects.end())
-        throw std::logic_error("Cannot find level object by name \"" +
-                               obj_name + "\"");
+    if(iter == mObjects.end()) [[unlikely]]
+        CriticalError("Cannot find level object by name \"", obj_name, '"');
     iter->second->Build();
 }
 

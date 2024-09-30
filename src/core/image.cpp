@@ -23,20 +23,19 @@
 
 #ifndef USE_SFML
 
+#include "critical_error.h"
 #include "window.h"
 
 #include <string>
 
 namespace oci {
 
-using namespace std::string_literals;
-
 void Image::create(unsigned width, unsigned height, const Color& color) {
     mSurface.reset(
         SDL_CreateRGBSurface(0, width, height, 32,
                              0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff));
     if(!mSurface) [[unlikely]]
-        throw std::runtime_error("Cannot create SDL surface: "s + SDL_GetError());
+        CriticalError("Cannot create SDL surface: ", SDL_GetError());
     SDL_FillRect(mSurface.get(), NULL, SDL_MapRGB(mSurface->format,
                                                   color.r, color.g, color.b));
 }

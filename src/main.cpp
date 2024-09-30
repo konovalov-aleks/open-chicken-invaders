@@ -31,40 +31,33 @@
 #include <diagnostics/benchmark/benchmark.h>
 #include <diagnostics/fps.h>
 
-#include <cstdio>
-#include <exception>
+#include <cstring>
 
 int main(int argc, char* argv[]) {
     using namespace oci;
 
-    try {
-        VideoMode vm(640, 480);
-        Window::Instance().create(vm, "Chicken invaders", Style::Close);
-        if(argc == 2 && !strcmp(argv[1], "-benchmark"))
-            benchmark::StartBenchmark();
-        else {
-            Window::Instance().setFramerateLimit(25);
-            MainMenu::InitMenu();
+    VideoMode vm(640, 480);
+    Window::Instance().create(vm, "Chicken invaders", Style::Close);
+    if(argc == 2 && !std::strcmp(argv[1], "-benchmark"))
+        benchmark::StartBenchmark();
+    else {
+        Window::Instance().setFramerateLimit(25);
+        MainMenu::InitMenu();
+    }
+    while(Window::Instance().isOpen()) {
+        Event event;
+        while(Window::Instance().pollEvent(event)) {
+            if (event.type == Event::Closed)
+                Window::Instance().close();
         }
-        while(Window::Instance().isOpen()) {
-            Event event;
-            while(Window::Instance().pollEvent(event)) {
-                if (event.type == Event::Closed)
-                    Window::Instance().close();
-            }
-            Window::Instance().clear();
-            std::shared_ptr<context::Context> context =
-                context::Manager::Instance().GetActiveContext();
-            Background::Instance().Draw();
-            context->Run();
-            context->ProcessCollisions();
-            context->Animate();
-            context->Draw();
-            Window::Instance().display();
-        }
-    } catch(const std::exception& e) {
-        std::fprintf(stderr, "Error: %s\n", e.what());
-    } catch(...) {
-        std::fputs("Unknown error :(\n", stderr);
+        Window::Instance().clear();
+        std::shared_ptr<context::Context> context =
+            context::Manager::Instance().GetActiveContext();
+        Background::Instance().Draw();
+        context->Run();
+        context->ProcessCollisions();
+        context->Animate();
+        context->Draw();
+        Window::Instance().display();
     }
 }

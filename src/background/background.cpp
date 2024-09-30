@@ -25,7 +25,6 @@
 #include <core/window.h>
 
 #include <cassert>
-#include <stdexcept>
 
 namespace oci {
 

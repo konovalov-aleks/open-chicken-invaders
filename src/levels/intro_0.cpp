@@ -26,6 +26,7 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/objects_storage.h>
+#include <core/critical_error.h>
 #include <core/window.h>
 #include <objects/base/animated_collision_object.h>
 #include <objects/base/sprite.h>
@@ -44,7 +45,6 @@
 #include <iterator>
 #include <memory>
 #include <numbers>
-#include <stdexcept>
 #include <string>
 
 namespace oci {
@@ -138,10 +138,10 @@ void Intro_0::Init() {
 void Intro_0::RunIntro() {
     std::shared_ptr<Sprite> ship(mShip.lock());
     if(!ship) [[unlikely]]
-        throw std::logic_error("Attempt to use a destroyed Ship object");
+        CriticalError("Attempt to use a destroyed Ship object");
     std::shared_ptr<Exhaust> exhaust(mExhaust.lock());
     if(!exhaust) [[unlikely]]
-        throw std::logic_error("Attempt to use a destroyed Exhaust object");
+        CriticalError("Attempt to use a destroyed Exhaust object");
     switch(mMode) {
     case 0:
         if(mBackgroundController->x < SOLAR_SYSTEM_STOP_POS_X)

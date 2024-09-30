@@ -22,6 +22,7 @@
 #include "unshade_screen.h"
 
 #include <core/color.h>
+#include <core/critical_error.h>
 #include <core/image.h>
 #include <core/rect.h>
 #include <core/rectangle_shape.h>
@@ -29,8 +30,6 @@
 #include <core/texture.h>
 #include <core/vector2.h>
 #include <core/window.h>
-
-#include <stdexcept>
 
 namespace oci {
 namespace objects {
@@ -52,11 +51,10 @@ private:
     Gradient() {
         Image img;
         if(!img.loadFromFile("res/images/gradient.bmp")) [[unlikely]]
-            throw std::logic_error("Can not load image file "
-                                   "\"res/images/gradient.bmp\"");
+            CriticalError("Can not load image file \"res/images/gradient.bmp\"");
         img.createMaskFromColor(Color::White);
         if(!mTexture.loadFromImage(img)) [[unlikely]]
-            throw std::logic_error("Can't create a texture");
+            CriticalError("Can't create a texture");
         setTexture(mTexture, true);
     }
 

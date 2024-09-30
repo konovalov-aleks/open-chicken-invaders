@@ -27,8 +27,9 @@ namespace oci {
 
 #ifndef USE_SFML
 
+#include "critical_error.h"
+
 #include <chrono>
-#include <stdexcept>
 #include <thread>
 
 namespace oci {
@@ -47,12 +48,12 @@ void WindowImpl::create(VideoMode mode, const std::string& title, unsigned int) 
     mWindow.reset(SDL_CreateWindow(title.c_str(), 0, 0,
                                    mode.Width(), mode.Height(),
                                    SDL_WINDOW_SHOWN));
-    if(!mWindow)
-        throw std::runtime_error("Cannot create window");
+    if(!mWindow) [[unlikely]]
+        CriticalError("Cannot create a window. ", SDL_GetError());
 
     mRenderer.reset(SDL_CreateRenderer(mWindow.get(), -1, SDL_RENDERER_ACCELERATED));
-    if(!mRenderer)
-        throw std::runtime_error("Cannot create renderer");
+    if(!mRenderer) [[unlikely]]
+        CriticalError("Cannot create a renderer. ", SDL_GetError());
 }
 
 void WindowImpl::close() {

@@ -23,6 +23,7 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <core/critical_error.h>
 #include <core/keyboard.h>
 #include <core/window.h>
 #include <game/state.h>
@@ -33,7 +34,6 @@
 #include <objects/particles/bang.h>
 
 #include <cmath>
-#include <stdexcept>
 #include <memory>
 
 namespace oci {
@@ -300,8 +300,8 @@ void PlayerShip::SelectGun(TGunType gun_type) {
         case gt_Green:
             mGun.reset(new GreenGun(level));
             break;
-        default:
-            throw std::logic_error("Unknown gun type: " + std::to_string(gun_type));
+        default: [[unlikely]]
+            CriticalError("Unknown gun type: ", gun_type);
     }
 }
 

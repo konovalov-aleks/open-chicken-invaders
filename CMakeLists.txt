@@ -143,9 +143,8 @@ if (EMSCRIPTEN)
         message(FATAL_ERROR "Only SDL build is supported for WASM target")
     endif ()
 
-    target_compile_options(oci PRIVATE "-sUSE_SDL=2" "-fexceptions")
+    target_compile_options(oci PRIVATE "-sUSE_SDL=2")
     target_link_options(oci PRIVATE
-        "-fexceptions"
         "-sASYNCIFY"
         "--use-port=sdl2"
         "--use-port=sdl2_mixer"
@@ -154,7 +153,7 @@ if (EMSCRIPTEN)
         "-sMODULARIZE=1"
         "-sEXPORT_NAME=\"createModule\""
         "-sEXPORTED_RUNTIME_METHODS=[\"callMain\",\"addOnExit\",\"JSEvents\"]"
-        "-lidbfs.js")
+    )
 
     target_link_options(oci PRIVATE "--embed-file=${CMAKE_CURRENT_SOURCE_DIR}/res/@/res/")
     target_link_options(oci PRIVATE "--embed-file=${CMAKE_CURRENT_BINARY_DIR}/ChickenInvaders2.dat@/ChickenInvaders2.dat")
@@ -179,7 +178,8 @@ else()
 
     install(TARGETS oci RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
     install(FILES
-        ${resources}
+        ${CMAKE_CURRENT_SOURCE_DIR}/res/
+        ${CMAKE_CURRENT_BINARY_DIR}/ChickenInvaders2.dat
         DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
@@ -208,9 +208,9 @@ else()
 endif()
 
 if (MSVC)
-    target_compile_options(oci PRIVATE "/D_CRT_SECURE_NO_WARNINGS" "/GR-")
+    target_compile_options(oci PRIVATE "/D_CRT_SECURE_NO_WARNINGS" "/GR-" "/EHsc" "/D_HAS_EXCEPTIONS=0")
 else()
-    target_compile_options(oci PRIVATE "-fno-rtti" "-Wextra" "-Wall")
+    target_compile_options(oci PRIVATE "-fno-rtti" "-fno-exceptions" "-Wextra" "-Wall")
 endif()
 
 target_include_directories(oci PRIVATE ${CMAKE_SOURCE_DIR}/src)

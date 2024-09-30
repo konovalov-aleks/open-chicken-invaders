@@ -21,20 +21,22 @@
 
 #include "sprite.h"
 
-#include <assert.h>
 #include <core/color.h>
+#include <core/critical_error.h>
 #include <core/image.h>
 #include <core/rect.h>
 #include <core/texture.h>
 #include <core/window.h>
-#include <fstream>
 #include <resources/loader.h>
-#include <stdexcept>
+#include <utils/cache.h>
+
+#include <tinyxml2.h>
+
+#include <cassert>
+#include <fstream>
 #include <stdio.h>
 #include <string>
 #include <string_view>
-#include <tinyxml2.h>
-#include <utils/cache.h>
 
 namespace oci {
 namespace objects {
@@ -62,16 +64,16 @@ namespace {
 
             printf("Loading sprite \"%s\"\n", name.c_str());
             std::ifstream f(std::string("res/images/") + name, std::ios_base::binary);
-            if(!f)
-                throw std::logic_error("file \"" + name + "\" not found");
+            if(!f) [[unlikely]]
+                CriticalError("file \"", name, "\" not found");
             std::string image_name;
             char c[2];
             while(f.read(c, 2) && c[0])
                 image_name += c[0];
             puts(image_name.c_str());
             Image img;
-            if(!img.loadFromFile("res/images/" + image_name))
-                throw std::logic_error("cannot load image \"" + image_name + "\"");
+            if(!img.loadFromFile("res/images/" + image_name)) [[unlikely]]
+                CriticalError("cannot load image \"", image_name, '"');
 
             unsigned char draw_type;
             f.read((char*)&draw_type, 1);
@@ -121,9 +123,8 @@ namespace {
                         anim.info.need_reverse = false;
                         anim.info.need_repeat = false;
                         break;
-                    default:
-                        throw std::logic_error("unknown animation mode (" +
-                                std::to_string(mode) + ")");
+                    default: [[unlikely]]
+                        CriticalError("unknown animation mode (", mode, ')');
                 };
                 #ifdef DEBUG_SPRITE
                 printf("\tAnimation mode: %hhd\n", anim.mode);
@@ -142,7 +143,7 @@ namespace {
                         anim.images.emplace_back();
                         Texture& tex = anim.images.back();
                         if(!tex.loadFromImage(img, IntRect(left, top, width, height))) [[unlikely]]
-                            throw std::runtime_error("Unable to create a texture");
+                            CriticalError("Unable to create a texture");
                         #ifdef DEBUG_SPRITE
                         printf("\t\t[%d, %d, %d, %d]\n", left, top, left + width, top + height);
                         #endif
@@ -177,11 +178,11 @@ namespace {
                     const char* filename = frame->Attribute("name");
                     if(filename) {
                         std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
-                        if(data.empty())
-                            throw std::logic_error("Image resource \"" + std::string(filename) + "\" is empty");
+                        if(data.empty()) [[unlikely]]
+                            CriticalError("Image resource \"", filename, "\" is empty");
                         Image img;
                         if(!img.loadFromMemory(&data[0], data.size())) [[unlikely]]
-                            throw std::logic_error("Could not open image resource \"" + std::string(filename) + "\"");
+                            CriticalError("Could not open image resource \"", filename, '"');
                         const char* colorkey = frame->Attribute("colorkey");
                         if(colorkey) {
                             int ck = atoi(colorkey);
@@ -191,7 +192,7 @@ namespace {
                         }
                         Texture tex;
                         if(!tex.loadFromImage(img)) [[unlikely]]
-                            throw std::runtime_error("Unable to create a texture");
+                            CriticalError("Unable to create a texture");
                         anim.images.push_back(std::move(tex));
                     }
                 }
@@ -213,10 +214,10 @@ namespace {
         Sprite::SpriteData operator()(const std::string& name) {
             tinyxml2::XMLDocument xml;
             if(xml.LoadFile(("res/sprites/" + name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
-                throw std::logic_error("sprite \"" + name + "\" not found");
+                CriticalError("sprite \"", name, "\" not found");
             const tinyxml2::XMLNode* root = xml.FirstChildElement("sprite");
             if(!root)
-                throw std::logic_error("cannot find root tag \"sprite\" in file \"" + name + "\"");
+                CriticalError("cannot find root tag \"sprite\" in file \"", name, '"');
             return LoadXml(*root);
         }
     };
@@ -287,10 +288,8 @@ size_t Sprite::CurrentFrame() const {
 }
 
 bool Sprite::SetFrame(size_t frame) {
-    if(frame >= FramesCount())
-        throw std::logic_error(
-           "Frames count = " + std::to_string(FramesCount()) +
-           ", but selected frame " + std::to_string(frame));
+    if(frame >= FramesCount()) [[unlikely]]
+        CriticalError("Frames count = ", FramesCount(), ", but selected frame ", frame);
     mCurrentFrame = frame;
     assert(mData);
     const Texture& tex = (*mData)[mCurrentState].images[mCurrentFrame];

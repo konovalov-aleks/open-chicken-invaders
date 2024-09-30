@@ -21,10 +21,10 @@
 
 #include "manager.h"
 
+#include <core/critical_error.h>
 #include <context/manager.h>
 #include <game/state.h>
 #include <objects/text/text.h>
-#include <stdexcept>
 #include "factory.h"
 #include "interface/interface.h"
 
@@ -131,8 +131,8 @@ void Manager::GameOver() {
 }
 
 objects::PlayerShip& Manager::GetPlayerShip() const {
-    if(!mPlayerShip)
-        throw std::logic_error("Player ship is not created");
+    if(!mPlayerShip) [[unlikely]]
+        CriticalError("Player ship is not created");
     return *mPlayerShip;
 }
 

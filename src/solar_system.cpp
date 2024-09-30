@@ -22,11 +22,11 @@
 #include "solar_system.h"
 
 #include <background/background.h>
+#include <core/critical_error.h>
 #include <core/window.h>
 
 #include <cassert>
 #include <memory>
-#include <stdexcept>
 
 namespace oci {
 
@@ -102,9 +102,8 @@ void SolarSystem::Init(float /*x0*/, float /*y0*/, short planets) {
 int SolarSystem::GetPlanetHeight(short ind) {
     assert(ind >= PLANET_IND_SUN && ind <= PLANET_IND_PLUTO);
     std::shared_ptr<objects::Sprite> planet(mPlanets[ind].lock());
-    if(!planet)
-        throw std::logic_error("Произведена попытка обращения к несуществующей планете (позиция: " +
-                               std::to_string(ind) + ")");
+    if(!planet) [[unlikely]]
+        CriticalError("attempt to access to a non-existent planet (index: ", ind, ')');
     return planet->GetHeight();
 }
 

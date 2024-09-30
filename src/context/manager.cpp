@@ -21,7 +21,7 @@
 
 #include "manager.h"
 
-#include <stdexcept>
+#include <core/critical_error.h>
 
 namespace oci {
 namespace context {
@@ -43,8 +43,8 @@ void Manager::KillContext(const std::string& context_name) {
 }
 
 void Manager::SetActiveContext(const std::shared_ptr<Context>& context) {
-    if(!context)
-        throw std::logic_error("Error: attempt to activate NULL context");
+    if(!context) [[unlikely]]
+        CriticalError("attempt to activate a NULL context");
     mActiveContext = context;
 }
 

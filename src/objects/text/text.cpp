@@ -21,12 +21,12 @@
 
 #include "text.h"
 
+#include <core/critical_error.h>
 #include <core/window.h>
 
 #include <algorithm>
 #include <array>
 #include <cassert>
-#include <stdexcept>
 
 namespace oci {
 namespace objects {
@@ -86,15 +86,15 @@ public:
         VerticalArr::const_iterator viter =
             std::find_if(vertical.begin(), vertical.end(),
                          PairFilter<Text::VerticalAlign>(va));
-        if(viter == vertical.end())
-            throw std::logic_error("FATAL ERROR: unknown vertical align type");
+        if(viter == vertical.end()) [[unlikely]]
+            CriticalError("unknown vertical align type");
         mVAligner = viter->second;
 
         HorizontalArr::const_iterator hiter =
             std::find_if(horizontal.begin(), horizontal.end(),
                         PairFilter<Text::HorizontalAlign>(ha));
-        if(hiter == horizontal.end())
-            throw std::logic_error("FATAL ERROR: unknown horizontal align type");
+        if(hiter == horizontal.end()) [[unlikely]]
+            CriticalError("unknown horizontal align type");
         mHAligner = hiter->second;
     }
 

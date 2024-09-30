@@ -30,10 +30,10 @@
 #   include <SDL_mixer.h>
 #endif
 
+#include <core/critical_error.h>
 #include <resources/loader.h>
 #include <utils/cache.h>
 
-#include <stdexcept>
 #include <vector>
 
 namespace oci {
@@ -48,12 +48,11 @@ public:
     sf::SoundBuffer operator()(const std::string& name) {
         std::vector<char> data =
             resources::ResourceLoader::Instance().GetData("sfx/" + name);
-        if(data.empty())
-            throw std::logic_error("Sound resource \"sfx/" + name +
-                                   "\" is empty");
+        if(data.empty()) [[unlikely]]
+            CriticalError("Sound resource \"sfx/", name, "\" is empty");
         sf::SoundBuffer sb;
-        if(!sb.loadFromMemory(&data[0], data.size()))
-            throw std::logic_error("Cannot load sound \"" + name + "\"");
+        if(!sb.loadFromMemory(&data[0], data.size())) [[unlikely]]
+            CriticalError("Cannot load sound \"", name, '"');
         return sb;
     }
 };
@@ -103,14 +102,12 @@ public:
         std::vector<char> data =
             resources::ResourceLoader::Instance().GetData("sfx/" + name);
         if(data.empty()) [[unlikely]]
-            throw std::logic_error("Sound resource \"sfx/" + name +
-                                   "\" is empty");
+            CriticalError("Sound resource \"sfx/", name, "\" is empty");
         std::shared_ptr<Mix_Chunk> res = std::shared_ptr<Mix_Chunk>(
             Mix_LoadWAV_RW(SDL_RWFromConstMem(&data[0], static_cast<int>(data.size())), 1),
             MixChunkDeleter());
         if(!res) [[unlikely]]
-            throw std::logic_error("Cannot load sound \"" + name + "\": " +
-                                   Mix_GetError());
+            CriticalError("Cannot load sound \"", name, "\"\n", Mix_GetError());
         return res;
     }
 };

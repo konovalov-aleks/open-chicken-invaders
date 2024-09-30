@@ -20,11 +20,11 @@
  */
 
 #include "game_level.h"
+#include <core/critical_error.h>
 #include <levels/factory.h>
 #include <objects/characters/ufo.h>
 
 #include <memory>
-#include <stdexcept>
 
 namespace oci {
 namespace levels {
@@ -52,9 +52,8 @@ public:
             str = "29";
             ufo_speed = 6;
             break;
-        default:
-            throw std::logic_error(
-                        "level 1.9: unknown level step (" + std::to_string(step) + ")");
+        default: [[unlikely]]
+            CriticalError("level 1.9: unknown level step (", step, ')');
         }
         mUFO = Storage().CreateObject<objects::UFO>(ufo_speed);
         ShowLevelInfo(str, "bonus");

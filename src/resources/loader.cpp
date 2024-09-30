@@ -21,8 +21,9 @@
 
 #include "loader.h"
 
+#include <core/critical_error.h>
+
 #include <fstream>
-#include <stdexcept>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -53,8 +54,8 @@ namespace resources {
 
         inline std::vector<char> GetData(const std::string& resource_name) {
             TOCType::const_iterator iter = mTOC.find(resource_name);
-            if(iter == mTOC.end())
-                throw std::logic_error("Cannot find file \"" + resource_name + "\"");
+            if(iter == mTOC.end()) [[unlikely]]
+                CriticalError("Cannot find file \"", resource_name, '"');
             std::vector<char> v;
             if(iter->second.second > 0) {
                 v.resize(iter->second.second);

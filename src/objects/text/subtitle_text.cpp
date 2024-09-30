@@ -21,12 +21,14 @@
 
 #include "subtitle_text.h"
 
-#include <assert.h>
+#include <core/critical_error.h>
 #include <core/window.h>
 #include <font/font.h>
-#include <stdexcept>
-#include <string_view>
+
 #include <tinyxml2.h>
+
+#include <cassert>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -40,11 +42,10 @@ SubtitleText::SubtitleText() : mCurTask(-1), mCurTaskExpireTime(0) {}
 void SubtitleText::Init(const std::string& filename) {
     tinyxml2::XMLDocument xml;
     if(xml.LoadFile(("res/subtitle/" + filename).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
-        throw std::logic_error("subtitle \"" + filename + "\" not found");
+        CriticalError("subtitle \"", filename, "\" not found");
     const tinyxml2::XMLNode* root = xml.FirstChildElement("subtitle");
-    if(!root)
-        throw std::logic_error("cannot find root tag \"subtitle\" in file \"" +
-                               filename + "\"");
+    if(!root) [[unlikely]]
+        CriticalError("cannot find root tag \"subtitle\" in file \"", filename, '"');
     for (const tinyxml2::XMLNode* node = root->FirstChild(); node; node = node->NextSiblingElement()) {
         const tinyxml2::XMLElement* sentence = node->ToElement();
         if(sentence && sentence->Value() == "sentence"sv) {

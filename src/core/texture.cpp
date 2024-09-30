@@ -23,10 +23,10 @@
 
 #ifndef USE_SFML
 
+#include "critical_error.h"
 #include "window.h"
 
 #include <cassert>
-#include <stdexcept>
 
 namespace oci {
 
@@ -46,7 +46,7 @@ Vector2u Texture::getSize() const
     assert(mTexture);
     int w, h;
     if(SDL_QueryTexture(mTexture.get(), nullptr, nullptr, &w, &h)) [[unlikely]]
-        throw std::runtime_error("SDL_QueryTexture failed");
+        CriticalError("SDL_QueryTexture failed\n", SDL_GetError());
     return Vector2u(w, h);
 }
 
