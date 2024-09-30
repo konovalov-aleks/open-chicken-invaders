@@ -115,10 +115,15 @@ set_property(TARGET oci PROPERTY CXX_STANDARD 20)
 #
 
 option(tinyxml2_BUILD_TESTING "" OFF)
-add_subdirectory(third-party/tinyxml2)
+include(FetchContent)
+FetchContent_Declare(tinyxml
+    GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
+    GIT_TAG v10.0.0
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
+FetchContent_MakeAvailable(tinyxml)
 set_property(TARGET tinyxml2 PROPERTY CXX_STANDARD 20)
-target_include_directories(oci PRIVATE third-party/tinyxml2)
-target_link_directories(oci PRIVATE ${CMAKE_BINARY_DIR}/third-party/tinyxml2)
 target_link_libraries(oci PRIVATE tinyxml2)
 
 #
@@ -160,7 +165,6 @@ if (EMSCRIPTEN)
 else()
     if (${USE_SFML})
         # https://github.com/SFML/cmake-sfml-project/blob/master/CMakeLists.txt
-        include(FetchContent)
         FetchContent_Declare(SFML
             GIT_REPOSITORY https://github.com/SFML/SFML.git
             GIT_TAG 2.6.x
