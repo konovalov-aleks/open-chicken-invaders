@@ -19,63 +19,40 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <background/background.h>
 #include "context/context.h"
 #include "context/manager.h"
+#include "levels/manager.h"
+#include "menu/mainmenu.h"
+#include <background/background.h>
 #include <core/event.h>
 #include <core/video_mode.h>
 #include <core/window.h>
 #include <core/window_style.h>
 #include <diagnostics/benchmark/benchmark.h>
 #include <diagnostics/fps.h>
-#include "levels/manager.h"
-#include "menu/mainmenu.h"
 
 #include <cstdio>
 #include <exception>
-#include <memory>
-#include <unordered_map>
-#include <utility>
-
-using namespace oci;
-
-namespace {
-
-    void onclose(const Event& /*event*/) {
-        Window::Instance().Close();
-    }
-
-    typedef std::unordered_map<int, void (*)(const Event&)> EventsMap;
-    static EventsMap event_handlers;
-
-    void fill_handlers() {
-        event_handlers.insert(std::make_pair(Event::Closed, onclose));
-    };
-
-} // namespace
 
 int main(int argc, char* argv[]) {
-    fill_handlers();
-
     using namespace oci;
 
     try {
         VideoMode vm(640, 480);
-        Window::Instance().Create(vm, "Chicken invaders", Style::Close);
+        Window::Instance().create(vm, "Chicken invaders", Style::Close);
         if(argc == 2 && !strcmp(argv[1], "-benchmark"))
             benchmark::StartBenchmark();
         else {
-            Window::Instance().SetFramerateLimit(25);
+            Window::Instance().setFramerateLimit(25);
             MainMenu::InitMenu();
         }
-        while(Window::Instance().IsOpened()) {
+        while(Window::Instance().isOpen()) {
             Event event;
-            while(Window::Instance().GetEvent(event)) {
-                EventsMap::const_iterator it = event_handlers.find(event.Type);
-                if(it != event_handlers.end())
-                    it->second(event);
+            while(Window::Instance().pollEvent(event)) {
+                if (event.type == Event::Closed)
+                    Window::Instance().close();
             }
-            Window::Instance().Clear();
+            Window::Instance().clear();
             std::shared_ptr<context::Context> context =
                 context::Manager::Instance().GetActiveContext();
             Background::Instance().Draw();
@@ -83,11 +60,11 @@ int main(int argc, char* argv[]) {
             context->ProcessCollisions();
             context->Animate();
             context->Draw();
-            Window::Instance().Display();
+            Window::Instance().display();
         }
     } catch(const std::exception& e) {
         std::fprintf(stderr, "Error: %s\n", e.what());
     } catch(...) {
-        fputs("Unknown error :(\n", stderr);
+        std::fputs("Unknown error :(\n", stderr);
     }
 }

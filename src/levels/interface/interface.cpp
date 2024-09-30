@@ -51,15 +51,16 @@ namespace {
 } // namespace
 
 void Interface::Init() {
+    const Vector2u wndSize = Window::Instance().getSize();
+
     // Top panel
     Storage().CreateObject<CommonSprite<Visible::dpForeground> >(
-        "hud.xml", Vector2f(Window::Instance().GetWidth() - 50, 0));
+        "hud.xml", Vector2f(wndSize.x - 50, 0));
     // Bottom panel
     Storage().CreateObject<CommonSprite<Visible::dpForeground> >(
-        "hud.xml", Vector2f(Window::Instance().GetWidth() - 50,
-                                Window::Instance().GetHeight()));
+        "hud.xml", Vector2f(wndSize.x - 50, wndSize.y));
     mScoreText = Storage().CreateObject<Text>("0",
-        Vector2f(Window::Instance().GetWidth() - 2, 2),
+        Vector2f(wndSize.x - 2, 2),
         Font::GetFont("medium.xml"), Text::haRight, Text::vaTop);
 
     Storage().CreateObject<interface::LivesIndicator>();

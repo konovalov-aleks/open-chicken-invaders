@@ -47,16 +47,17 @@ void JumpingAsteroid::Run() {
         int angle = (std::atan2(mDX, mDY) * std::numbers::pi) / 180;
         int dx = std::rand() % GetWidth() - GetWidth() / 2;
         Storage().CreateObject<CSmoke>(
-            Vector2f(GetPosition().x + dx, GetPosition().y),
+            Vector2f(getPosition().x + dx, getPosition().y),
             std::rand() % 3 + 0.5f, angle);
     }
 
-    Move(mDX, mDY);
-    if((GetPosition().x <= 0 && mDX < 0) ||
-       (GetPosition().x >= Window::Instance().GetWidth() && mDX > 0))
+    move(mDX, mDY);
+    const Vector2u wnd_size = Window::Instance().getSize();
+    if((getPosition().x <= 0 && mDX < 0) ||
+       (getPosition().x >= wnd_size.x && mDX > 0))
         mDX = -mDX;
-    if((GetPosition().y <= 0 && mDY < 0) ||
-       (GetPosition().y >= Window::Instance().GetHeight() && mDY > 0))
+    if((getPosition().y <= 0 && mDY < 0) ||
+       (getPosition().y >= wnd_size.y && mDY > 0))
         mDY = -mDY;
 }
 
@@ -68,7 +69,7 @@ void JumpingAsteroid::OnBang(CollisionType ct) {
 
 void JumpingAsteroid::CreateAsteroidSplinter(float angle) {
     std::shared_ptr<JumpingAsteroid> s = Storage().CreateObject<JumpingAsteroid>(
-        GetPosition(), angle, mSpeed, 4, mType == tRockBig || mType == tRockSmall ? tRockSmall : tFireSmall,
+        getPosition(), angle, mSpeed, 4, mType == tRockBig || mType == tRockSmall ? tRockSmall : tFireSmall,
         false, mOnCreateSplinter);
     if(mOnCreateSplinter)
         mOnCreateSplinter(s);

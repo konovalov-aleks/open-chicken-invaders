@@ -25,69 +25,40 @@
 
 #include "window.h"
 
+#include <string>
+
 namespace oci {
 
-namespace {
+using namespace std::string_literals;
 
-
-} // namespace
-
-Image::Image() {}
-
-Image::Image(size_t width, size_t height, const Color& color) {
-    mSurface = std::shared_ptr<SDL_Surface>(
+void Image::create(unsigned width, unsigned height, const Color& color) {
+    mSurface.reset(
         SDL_CreateRGBSurface(0, width, height, 32,
-                             0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff),
-        SurfaceDeleter());
-    if(!mSurface)
-        throw std::runtime_error(std::string("Cannot create SDL surface: ") +
-                                 SDL_GetError());
+                             0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff));
+    if(!mSurface) [[unlikely]]
+        throw std::runtime_error("Cannot create SDL surface: "s + SDL_GetError());
     SDL_FillRect(mSurface.get(), NULL, SDL_MapRGB(mSurface->format,
                                                   color.r, color.g, color.b));
 }
 
-bool Image::LoadTexture() const {
-    if(!mSurface) {
-        printf("SDL error: %s\n", SDL_GetError());
-        return false;
-    }
-    mTexture = std::shared_ptr<SDL_Texture>(
-        SDL_CreateTextureFromSurface(Window::Instance().GetRenderer(), mSurface.get()),
-        TextureDeleter());
-    return mTexture != NULL;
+bool Image::loadFromMemory(const char* data, std::size_t datasize) {
+    mSurface.reset(SDL_LoadBMP_RW(SDL_RWFromConstMem(data, datasize), 1));
+    return mSurface != nullptr;
 }
 
-bool Image::LoadFromMemory(const char* data, size_t datasize) {
-    mSurface = std::shared_ptr<SDL_Surface>(
-        SDL_LoadBMP_RW(SDL_RWFromConstMem(data, datasize), 1),
-        SurfaceDeleter());
-    return mSurface != NULL;
+bool Image::loadFromFile(const std::string& filename) {
+    mSurface.reset(SDL_LoadBMP(filename.c_str()));
+    return mSurface != nullptr;
 }
 
-bool Image::LoadFromFile(const std::string& filename) {
-    mSurface = std::shared_ptr<SDL_Surface>(
-        SDL_LoadBMP(filename.c_str()),
-        SurfaceDeleter());
-    return mSurface != NULL;
-}
-
-void Image::CreateMaskFromColor(Color color_key) {
+void Image::createMaskFromColor(Color color_key) {
     if(mSurface) {
         SDL_SetColorKey(mSurface.get(), 1,
                         SDL_MapRGB(mSurface->format,
                                    color_key.r,
                                    color_key.g,
                                    color_key.b));
-        mTexture = std::shared_ptr<SDL_Texture>();
     }
-}
-
-size_t Image::GetWidth() const {
-    return mSurface ? mSurface->w : 0;
-}
-
-size_t Image::GetHeight() const {
-    return mSurface ? mSurface->h : 0;
 }
 
 } // namespace oci

@@ -32,7 +32,7 @@ void Particle::Init(const char* sprite_name, const Vector2f& pos, float speed,
 }
 
 void Particle::Run() {
-    Move(mDX, mDY);
+    move(mDX, mDY);
 }
 
 } // namespace objects

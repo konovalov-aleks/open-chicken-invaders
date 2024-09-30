@@ -49,7 +49,7 @@ void Bullet::Init(const std::string& sprite_name, const Vector2f& pos,
 }
 
 void Bullet::OnCollision(const CollisionObjectInfo& /*collisedWith*/) {
-    Spark(Storage(), GetPosition(), 20);
+    Spark(Storage(), getPosition(), 20);
     Storage().KillObject(this);
 }
 
@@ -61,9 +61,10 @@ void Bullet::Run() {
     if(std::fabsf(dy) > std::fabsf(dy0))
         dy = dy0;
 
-    Move(dx, dy);
-    if(GetPosition().x > Window::Instance().GetWidth() || GetPosition().x < 0 ||
-       GetPosition().y > Window::Instance().GetHeight() || GetPosition().y < 0)
+    move(dx, dy);
+    const Vector2u wnd_size =  Window::Instance().getSize();
+    if(getPosition().x > wnd_size.x || getPosition().x < 0 ||
+       getPosition().y > wnd_size.y || getPosition().y < 0)
         Storage().KillObject(this);
 }
 

@@ -48,11 +48,11 @@ void CCollisionObject::Init(const std::string& sprite_name,
 }
 
 float CCollisionObject::DoGetX() const {
-    return GetPosition().x;
+    return getPosition().x;
 }
 
 float CCollisionObject::DoGetY() const {
-    return GetPosition().y;
+    return getPosition().y;
 }
 
 int CCollisionObject::DoGetFrameWidth() const {

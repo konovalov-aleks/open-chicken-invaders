@@ -23,7 +23,9 @@
 
 #include <assert.h>
 #include <core/color.h>
+#include <core/image.h>
 #include <core/rect.h>
+#include <core/texture.h>
 #include <core/window.h>
 #include <fstream>
 #include <resources/loader.h>
@@ -68,9 +70,8 @@ namespace {
                 image_name += c[0];
             puts(image_name.c_str());
             Image img;
-            if(!img.LoadFromFile("res/images/" + image_name))
+            if(!img.loadFromFile("res/images/" + image_name))
                 throw std::logic_error("cannot load image \"" + image_name + "\"");
-            img.SetSmooth(false);
 
             unsigned char draw_type;
             f.read((char*)&draw_type, 1);
@@ -83,7 +84,7 @@ namespace {
                 case bdtCOLORKEY: {
                     unsigned short color_key = 0;
                     f.read((char*)&color_key, sizeof(color_key));
-                    img.CreateMaskFromColor(ColorFrom565(color_key));
+                    img.createMaskFromColor(ColorFrom565(color_key));
                     break;
                 }
                 default:
@@ -109,15 +110,15 @@ namespace {
                 f.read(&mode, 1);
                 switch(mode) {
                     case 0:
-                        anim.info.need_reverce = false;
+                        anim.info.need_reverse = false;
                         anim.info.need_repeat = true;
                         break;
                     case 1:
-                        anim.info.need_reverce = true;
+                        anim.info.need_reverse = true;
                         anim.info.need_repeat = true;
                         break;
                     case 2:
-                        anim.info.need_reverce = false;
+                        anim.info.need_reverse = false;
                         anim.info.need_repeat = false;
                         break;
                     default:
@@ -138,8 +139,10 @@ namespace {
                     printf("\tFrame[%d x %hhd]: width = %hd, height = %hd\n", k, n, width, height);
                     #endif
                     for(int t = 0; t < n; ++t) {
-                        anim.images.push_back(Image(width, height));
-                        anim.images.back().Copy(img, 0, 0, IntRect(left, top, left + width, top + height));
+                        anim.images.emplace_back();
+                        Texture& tex = anim.images.back();
+                        if(!tex.loadFromImage(img, IntRect(left, top, width, height))) [[unlikely]]
+                            throw std::runtime_error("Unable to create a texture");
                         #ifdef DEBUG_SPRITE
                         printf("\t\t[%d, %d, %d, %d]\n", left, top, left + width, top + height);
                         #endif
@@ -166,7 +169,7 @@ namespace {
 
         Sprite::Animation LoadAnimation(const tinyxml2::XMLElement& animation) const {
             Sprite::Animation anim;
-            anim.info.need_reverse = GetBoolValue(animation, "reverce");
+            anim.info.need_reverse = GetBoolValue(animation, "reverse");
             anim.info.need_repeat = GetBoolValue(animation, "repeat");
             for (const tinyxml2::XMLNode* node = animation.FirstChildElement(); node; node = node->NextSiblingElement()) {
                 const tinyxml2::XMLElement* frame = node->ToElement();
@@ -176,17 +179,20 @@ namespace {
                         std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
                         if(data.empty())
                             throw std::logic_error("Image resource \"" + std::string(filename) + "\" is empty");
-                        anim.images.push_back(Image());
-                        if(!anim.images.back().LoadFromMemory(&data[0], data.size()))
+                        Image img;
+                        if(!img.loadFromMemory(&data[0], data.size())) [[unlikely]]
                             throw std::logic_error("Could not open image resource \"" + std::string(filename) + "\"");
-                        anim.images.back().SetSmooth(false);
                         const char* colorkey = frame->Attribute("colorkey");
                         if(colorkey) {
                             int ck = atoi(colorkey);
-                            anim.images.back().CreateMaskFromColor(Color(ck >> 16 & 0xFF,
-                                                                         ck >> 8  & 0xFF,
-                                                                         ck & 0xFF));
+                            img.createMaskFromColor(Color(ck >> 16 & 0xFF,
+                                                          ck >> 8  & 0xFF,
+                                                          ck & 0xFF));
                         }
+                        Texture tex;
+                        if(!tex.loadFromImage(img)) [[unlikely]]
+                            throw std::runtime_error("Unable to create a texture");
+                        anim.images.push_back(std::move(tex));
                     }
                 }
             }
@@ -223,7 +229,7 @@ void Sprite::Init(const std::string& filename, const Vector2f& pos) {
     printf("[%x] Sprite(\"%s\", %f, %f)\n", (unsigned int)this,
            filename.c_str(), pos.x, pos.y);
     #endif
-    SetPosition(pos);
+    setPosition(pos);
 }
 
 void Sprite::Init(const std::string& filename) {
@@ -245,8 +251,8 @@ void Sprite::Init(const std::string& filename) {
     // FIXME проверка, что есть кадры и изображения в кадрах
     assert(mData);
     assert(!mData->empty());
-    SetImage(mData->front().images.front());
-    bool res = SetState(0);
+    setTexture(mData->front().images.front(), true);
+    [[maybe_unused]] bool res = SetState(0);
     assert(res);
 }
 
@@ -287,23 +293,22 @@ bool Sprite::SetFrame(size_t frame) {
            ", but selected frame " + std::to_string(frame));
     mCurrentFrame = frame;
     assert(mData);
-    const Image& img = (*mData)[mCurrentState].images[mCurrentFrame];
-    SetImage(img);
-    SetSubRect(IntRect(0, 0, img.GetWidth(), img.GetHeight()));
-    SetCenter(img.GetWidth() / 2, img.GetHeight() / 2);
+    const Texture& tex = (*mData)[mCurrentState].images[mCurrentFrame];
+    setTexture(tex, true);
+    setOrigin(tex.getSize().x / 2, tex.getSize().y / 2);
     return true;
 }
 
 int Sprite::GetWidth() const {
-    return mData ? (*mData)[mCurrentState].images[mCurrentFrame].GetWidth() : 0;
+    return mData ? (*mData)[mCurrentState].images[mCurrentFrame].getSize().x : 0;
 }
 
 int Sprite::GetHeight() const {
-    return mData ? (*mData)[mCurrentState].images[mCurrentFrame].GetHeight() : 0;
+    return mData ? (*mData)[mCurrentState].images[mCurrentFrame].getSize().y : 0;
 }
 
 void Sprite::Draw() {
-    Window::Instance().Draw(*this);
+    Window::Instance().draw(*this);
 }
 
 } // namespace objects

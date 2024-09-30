@@ -29,10 +29,8 @@ namespace levels {
 namespace interface {
 
 void MissilesIndicator::Init() {
-
-    Indicator::Init("iconbomb.xml",
-                    Vector2f(Window::Instance().GetWidth() - 110,
-                             Window::Instance().GetHeight() - 10));
+    const Vector2u wndSize = Window::Instance().getSize();
+    Indicator::Init("iconbomb.xml", Vector2f(wndSize.x - 110, wndSize.y - 10));
 }
 
 int MissilesIndicator::GetValue() const {

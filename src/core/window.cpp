@@ -41,7 +41,7 @@ WindowImpl::~WindowImpl() {
     SDL_Quit();
 }
 
-void WindowImpl::Create(VideoMode mode, const std::string& title, unsigned int) {
+void WindowImpl::create(VideoMode mode, const std::string& title, unsigned int) {
     mSize.x = mode.Width();
     mSize.y = mode.Height();
     mWindow.reset(SDL_CreateWindow(title.c_str(), 0, 0,
@@ -55,12 +55,12 @@ void WindowImpl::Create(VideoMode mode, const std::string& title, unsigned int) 
         throw std::runtime_error("Cannot create renderer");
 }
 
-void WindowImpl::Close() {
+void WindowImpl::close() {
     mRenderer.reset();
     mWindow.reset();
 }
 
-void WindowImpl::Display() {
+void WindowImpl::display() {
     SDL_RenderPresent(mRenderer.get());
 #ifndef ANDROID
     if(mFrameMinTime > 0) {
@@ -76,46 +76,35 @@ void WindowImpl::Display() {
 #endif
 }
 
-void WindowImpl::Draw(const Drawable& obj) {
+void WindowImpl::draw(const Drawable& obj) {
     obj.DoDraw(mRenderer.get());
 }
 
-void WindowImpl::Clear() {
+void WindowImpl::clear() {
     SDL_RenderClear(mRenderer.get());
 }
 
-void WindowImpl::ShowMouseCursor(bool show) {
-    SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
+void WindowImpl::setMouseCursorVisible(bool visible) {
+    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
 }
 
-void WindowImpl::SetCursorPosition(unsigned int x, unsigned int y) {
-#ifdef ANDROID
-    const float scale = static_cast<float>(GetRealHeight() / GetHeight());
-#else
-    const float scale = 1.0f;
-#endif
-    SDL_WarpMouseInWindow(mWindow.get(), x * scale, y * scale);
-}
-
-bool WindowImpl::GetEvent(Event& event_received) {
+bool WindowImpl::pollEvent(Event& event_received) {
     SDL_Event event;
     if(SDL_PollEvent(&event)) {
-        event_received.Type = static_cast<Event::EventType>(event.type);
+        event_received.type = static_cast<Event::EventType>(event.type);
         return true;
     }
     return false;
 }
 
-bool WindowImpl::IsOpened() const {
+bool WindowImpl::isOpen() const {
     return mWindow.get() != NULL;
 }
 
-namespace {
-    inline Vector2i GetWindowSize(SDL_Window* wnd) {
-        Vector2i result;
-        SDL_GetWindowSize(wnd, &result.x, &result.y);
-        return result;
-    }
+inline Vector2i GetWindowSize(SDL_Window* wnd) {
+    Vector2i result;
+    SDL_GetWindowSize(wnd, &result.x, &result.y);
+    return result;
 }
 
 unsigned int WindowImpl::GetRealWidth() const {
@@ -126,7 +115,7 @@ unsigned int WindowImpl::GetRealHeight() const {
     return GetWindowSize(mWindow.get()).y;
 }
 
-void WindowImpl::SetFramerateLimit(unsigned int limit) {
+void WindowImpl::setFramerateLimit(unsigned int limit) {
     mFrameMinTime = limit > 0 ? 1000000 / limit : 0;
 }
 

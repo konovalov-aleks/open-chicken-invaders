@@ -1,5 +1,5 @@
 /*
- * shape.cpp
+ * rectangle_shape.cpp
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -19,41 +19,22 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "shape.h"
+#include "rectangle_shape.h"
 
 #ifndef USE_SFML
 
 namespace oci {
 
-namespace {
-
-    class RectangleShapeImpl : public Shape::Impl {
-    public:
-        RectangleShapeImpl(float p1x, float p1y, float p2x, float p2y,
-                           const Color& color) : mColor(color) {
-            mRect.x = p1x;
-            mRect.y = p1y;
-            mRect.w = p2x - p1x;
-            mRect.h = p2y - p1y;
-        }
-
-        void Draw(SDL_Renderer* renderer) const override {
-            SDL_SetRenderDrawColor(renderer, mColor.r, mColor.g, mColor.b, 255);
-            SDL_RenderFillRect(renderer, &mRect);
-        }
-
-    private:
-        Color mColor;
-        SDL_Rect mRect;
+void RectangleShape::DoDraw(SDL_Renderer* renderer) const
+{
+    SDL_Rect rect = {
+        static_cast<int>(getPosition().x),
+        static_cast<int>(getPosition().y),
+        static_cast<int>(mSize.x),
+        static_cast<int>(mSize.y)
     };
-
-} // namespace
-
-Shape::Shape(Impl* impl) : mImpl(impl) {}
-
-Shape Shape::Rectangle(float p1x, float p1y, float p2x, float p2y,
-                       const Color& color) {
-    return Shape(new RectangleShapeImpl(p1x, p1y, p2x, p2y, color));
+    SDL_SetRenderDrawColor(renderer, mFillColor.r, mFillColor.g, mFillColor.b, 255);
+    SDL_RenderFillRect(renderer, &rect);
 }
 
 } // namespace oci

@@ -208,7 +208,7 @@
     <sound name="gun1.wav"/>
     <sound name="chicken1.wav"/>
     <sound name="engine_start.wav"/>
-    <sound name="reverce.wav"/>
+    <sound name="reverse.wav"/>
   </intro0>
   <intro1>
     <sprite name="trafficlights.sprite"/>

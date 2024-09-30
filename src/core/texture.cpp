@@ -1,5 +1,5 @@
 /*
- * input.h
+ * texture.cpp
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -19,30 +19,37 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#pragma once
+#include "texture.h"
 
-#ifdef USE_SFML
-#   include <SFML/Window/Input.hpp>
-#else
-#   include "event.h"
-#endif
+#ifndef USE_SFML
+
+#include "window.h"
+
+#include <cassert>
+#include <stdexcept>
 
 namespace oci {
 
-#ifdef USE_SFML
+bool Texture::loadFromImage(const Image& img)
+{
+    SDL_Surface* surface = img.SDLHandle();
+    if(!surface) [[unlikely]]
+        return false;
 
-using sf::Input;
+    mTexture = std::unique_ptr<SDL_Texture, TextureDeleter>(
+        SDL_CreateTextureFromSurface(Window::Instance().GetRenderer(), surface));
+    return mTexture.get();
+}
 
-#else
-
-class Input {
-public:
-    bool IsKeyDown(Key::Code key) const;
-    bool IsMouseButtonDown(Mouse::Button button) const;
-    int GetMouseX() const;
-    int GetMouseY() const;
-};
-
-#endif
+Vector2u Texture::getSize() const
+{
+    assert(mTexture);
+    int w, h;
+    if(SDL_QueryTexture(mTexture.get(), nullptr, nullptr, &w, &h)) [[unlikely]]
+        throw std::runtime_error("SDL_QueryTexture failed");
+    return Vector2u(w, h);
+}
 
 } // namespace oci
+
+#endif //USE_SFML

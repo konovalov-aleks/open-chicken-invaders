@@ -1,5 +1,5 @@
 /*
- * shape.h
+ * mouse.h
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -22,35 +22,31 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include<SFML/Graphics/Shape.hpp>
+#   include <SFML/Window/Mouse.hpp>
 #else
-#   include "color.h"
-#   include "drawable.h"
-
-#   include <memory>
+#   include "vector2.h"
+#   include "window.h"
 #endif
 
 namespace oci {
 
 #ifdef USE_SFML
-using sf::Shape;
+
+using sf::Mouse;
+
 #else
 
-class Shape : public Drawable {
+class Mouse {
 public:
-    static Shape Rectangle(float p1x, float p1y, float p2x, float p2y, const Color& color);
-
-    void DoDraw(SDL_Renderer* renderer) const override { mImpl->Draw(renderer); }
-
-    class Impl {
-    public:
-        virtual ~Impl() {}
-        virtual void Draw(SDL_Renderer* renderer) const = 0;
+    enum Button {
+        Left   = SDL_BUTTON_LMASK,
+        Right  = SDL_BUTTON_RMASK,
+        Middle = SDL_BUTTON_MMASK
     };
 
-private:
-    Shape(Impl* impl);
-    std::unique_ptr<Impl> mImpl;
+    static bool isButtonPressed(Button);
+    static Vector2i getPosition(const Window& relativeTo);
+    static void setPosition(const Vector2i&, const Window& relativeTo);
 };
 
 #endif

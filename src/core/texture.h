@@ -1,5 +1,5 @@
 /*
- * vector2.h
+ * texture.h
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -22,50 +22,46 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include<SFML/System/Vector2.hpp>
+#   include<SFML/Graphics/Texture.hpp>
+#else
+#   include "image.h"
+#   include "vector2.h"
+
+#   include <SDL.h>
+
+#   include <memory>
 #endif
 
 namespace oci {
 
 #ifdef USE_SFML
 
-using sf::Vector2f;
-using sf::Vector2i;
-using sf::Vector2u;
+using Texture = sf::Texture;
 
 #else
 
-template<typename T>
-class Vector2 {
+class Texture {
 public:
-    Vector2() : x(), y() {}
+    Texture() = default;
+    Texture(Texture&&) = default;
+    Texture& operator= (Texture&&) = default;
 
-    Vector2(T x, T y) : x(x), y(y) {}
+    bool loadFromImage(const Image&);
 
-    template<typename T2>
-    Vector2(const Vector2<T2>& other) : x(other.x), y(other.y) {}
+    Vector2u getSize() const;
 
-    template<typename T2>
-    Vector2& operator += (const Vector2<T2>& other) {
-        x += other.x;
-        y += other.y;
-        return *this;
-    }
+    SDL_Texture* SDLObject() const noexcept { return mTexture.get(); }
 
-    Vector2 operator+ (const Vector2& other) const {
-        return Vector2(x + other.x, y + other.y);
-    }
+private:
+    struct TextureDeleter {
+        void operator() (SDL_Texture* texture) {
+            if(texture)
+                SDL_DestroyTexture(texture);
+        }
+    };
 
-    Vector2 operator- (const Vector2& other) const {
-        return Vector2(x - other.x, y - other.y);
-    }
-
-    T x, y;
+    std::unique_ptr<SDL_Texture, TextureDeleter> mTexture;
 };
-
-using Vector2f = Vector2<float>;
-using Vector2i = Vector2<int>;
-using Vector2u = Vector2<unsigned>;
 
 #endif
 

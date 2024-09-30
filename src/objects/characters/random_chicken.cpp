@@ -21,8 +21,9 @@
 
 #include "random_chicken.h"
 
+#include <cmath>
 #include <core/window.h>
-#include <math.h>
+#include <cstdlib>
 
 namespace oci {
 namespace objects {
@@ -42,8 +43,8 @@ void RandomChicken::Init(const Vector2f& position, int period, Type type,
     mSpeed = speed;
     mX1 = X0;
     mY1 = Y0;
-    float xx = mX1 - GetPosition().x;
-    float yy = mY1 - GetPosition().y;
+    float xx = mX1 - getPosition().x;
+    float yy = mY1 - getPosition().y;
     float l = sqrtf(xx * xx + yy * yy);
     mDX = mSpeed * xx / l;
     mDY = mSpeed * yy / l;
@@ -52,21 +53,21 @@ void RandomChicken::Init(const Vector2f& position, int period, Type type,
 void RandomChicken::GenerateNewPoint() {
     float xx, yy, l, sp;
     do {
-        mX1 = static_cast<float>(rand() % Window::Instance().GetWidth());
-        mY1 = static_cast<float>(rand() % MAX_Y_START_COORD);
-        xx = mX1 - GetPosition().x;
-        yy = mY1 - GetPosition().y;
-        l = sqrtf(xx * xx + yy * yy);
-        sp = mSpeed + static_cast<float>(rand()) / RAND_MAX;
+        mX1 = static_cast<float>(std::rand() % Window::Instance().getSize().x);
+        mY1 = static_cast<float>(std::rand() % MAX_Y_START_COORD);
+        xx = mX1 - getPosition().x;
+        yy = mY1 - getPosition().y;
+        l = std::sqrtf(xx * xx + yy * yy);
+        sp = mSpeed + static_cast<float>(std::rand()) / RAND_MAX;
     } while(l < sp);
     mDX = mSpeed * xx / l;
     mDY = mSpeed * yy / l;
 }
 
 void RandomChicken::Run() {
-    if(fabs(mX1 - GetPosition().x) <= fabs(mDX) && fabs(mY1 - GetPosition().y) <= fabs(mDY))
+    if(std::fabs(mX1 - getPosition().x) <= std::fabs(mDX) && std::fabs(mY1 - getPosition().y) <= std::fabs(mDY))
         GenerateNewPoint();
-    Move(mDX, mDY);
+    move(mDX, mDY);
     Chicken::Run();
 }
 

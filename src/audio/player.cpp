@@ -52,7 +52,7 @@ public:
             throw std::logic_error("Sound resource \"sfx/" + name +
                                    "\" is empty");
         sf::SoundBuffer sb;
-        if(!sb.LoadFromMemory(&data[0], data.size()))
+        if(!sb.loadFromMemory(&data[0], data.size()))
             throw std::logic_error("Cannot load sound \"" + name + "\"");
         return sb;
     }
@@ -61,14 +61,15 @@ public:
 class ControllerImpl : public Controller {
 public:
     ControllerImpl(const sf::SoundBuffer& sb, bool autoplay, bool loop) :
-        mSound(sb, loop)
+        mSound(sb)
     {
+        mSound.setLoop(loop);
         if(autoplay)
-            mSound.Play();
+            mSound.play();
     }
 
     virtual bool IsPlaying() const override {
-        return mSound.GetStatus() == sf::Sound::Playing;
+        return mSound.getStatus() == sf::Sound::Playing;
     }
 
 private:

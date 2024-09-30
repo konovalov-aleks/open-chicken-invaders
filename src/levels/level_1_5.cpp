@@ -26,6 +26,7 @@
 #include "factory.h"
 #include <utils/cleanup_container.h>
 
+#include <cstdlib>
 #include <functional>
 #include <memory>
 
@@ -52,6 +53,7 @@ inline void CLevel_1_5::CreateParatrooper(float x, float y) {
 
 void CLevel_1_5::Init(char Step) {
     GameLevel::Init("level_1_5");
+    const Vector2u wnd_size = Window::Instance().getSize();
     switch(Step) {
     case 0:
         ShowLevelInfo("5", "paratroopers!");
@@ -59,7 +61,7 @@ void CLevel_1_5::Init(char Step) {
             float y0 = -40.0f - 150.0f * y;
             float dy = 40;
             for(int x = 0; x < 7; ++x) {
-                CreateParatrooper(x * Window::Instance().GetWidth() / 7 + 32.0f, y0);
+                CreateParatrooper(x * wnd_size.x / 7 + 32.0f, y0);
                 y0 += dy;
                 dy -= 14;
             }
@@ -68,8 +70,8 @@ void CLevel_1_5::Init(char Step) {
     case 1:
         ShowLevelInfo("6", "death from above");
         for(int n = 0; n < 16; ++n) {
-            int x = rand() % Window::Instance().GetWidth();
-            int y = -(rand() % Window::Instance().GetHeight());
+            int x = std::rand() % wnd_size.x;
+            int y = -(std::rand() % wnd_size.y);
             CreateParatrooper(x, y);
         } break;
     case 2:
@@ -77,7 +79,7 @@ void CLevel_1_5::Init(char Step) {
             ShowLevelInfo("7", "third time lucky");
             float y0 = -20;
             for(int n = 0; n < 3; ++n) {
-                float x0 = Window::Instance().GetWidth() - 30;
+                float x0 = wnd_size.x - 30;
                 for(int k = 0; k < 6; ++k) {
                     CreateParatrooper(x0, y0);
                     x0 -= 100 + rand() % 20;

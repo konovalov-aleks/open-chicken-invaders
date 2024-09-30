@@ -27,6 +27,7 @@
 #include <game/state.h>
 #include <objects/particles/smoke.h>
 
+#include <cstdlib>
 #include <memory>
 
 namespace oci {
@@ -38,34 +39,36 @@ void Paratrooper::Init(const Vector2f& position, float Speed, int p, short healt
     AnimatedCollisionObject::Init("umbrella.xml", position, health);
     MaxBombingPeriod = p;
     speed = Speed;
-    SetFrame(rand() % FramesCount());
-    time = rand() % MaxBombingPeriod;
+    SetFrame(std::rand() % FramesCount());
+    time = std::rand() % MaxBombingPeriod;
 }
 
 void Paratrooper::Run() {
-    Move(0, speed);
-    if(GetPosition().y - GetSize().y / 2 > Window::Instance().GetHeight()) {
+    move(0, speed);
+
+    const Vector2u wnd_size = Window::Instance().getSize();
+    if(getPosition().y - GetHeight() / 2 > wnd_size.y) {
         Storage().KillObject(this);
         return;
     }
 
     if(time <= 0) {
-        if(GetPosition().x > 0 && GetPosition().x < Window::Instance().GetWidth() &&
-           GetPosition().y > 0 && GetPosition().y < FloorLevel())
-            Storage().CreateObject<Egg>(GetPosition());
-        time = rand() % MaxBombingPeriod;
+        if(getPosition().x > 0 && getPosition().x < wnd_size.x &&
+           getPosition().y > 0 && getPosition().y < FloorLevel())
+            Storage().CreateObject<Egg>(getPosition());
+        time = std::rand() % MaxBombingPeriod;
     } else time--;
 }
 
 void Paratrooper::OnCollision(const CollisionObjectInfo& collisedWith) {
-    Smoke(Storage(), GetPosition(), 10);
+    Smoke(Storage(), getPosition(), 10);
     if(collisedWith.type == ctFriendBullet || CollisionType() == ctMissile) {
         power -= collisedWith.power;
         if(power <= 0) {
             State::Instance().IncScore(1000);
             std::weak_ptr<RandomChicken> chicken(
                 Storage().CreateObject<RandomChicken>(
-                    GetPosition(), MaxBombingPeriod, Chicken::tCyan, 1, CHICKEN_SPEED)
+                    getPosition(), MaxBombingPeriod, Chicken::tCyan, 1, CHICKEN_SPEED)
                 );
             if(mOnCreateRandomChickenCallback)
                 mOnCreateRandomChickenCallback(chicken);

@@ -53,10 +53,10 @@ void Asteroid::Run() {
         int angle = (atan2(mDX, mDY) * std::numbers::pi) / 180;
         int dx = std::rand() % GetWidth() - GetWidth() / 2;
         Storage().CreateObject<CSmoke>(
-            Vector2f(GetPosition().x + dx, GetPosition().y),
+            Vector2f(getPosition().x + dx, getPosition().y),
             std::rand() % 3 + 0.5f, angle);
     }
-    Move(mDX, mDY);
+    move(mDX, mDY);
 }
 
 void Asteroid::OnCollision(const CollisionObjectInfo& collisedWith) {
@@ -66,7 +66,7 @@ void Asteroid::OnCollision(const CollisionObjectInfo& collisedWith) {
         power = 0;
 
     if(power <= 0) {
-        Smoke(Storage(), GetPosition(),
+        Smoke(Storage(), getPosition(),
               mType == tRockSmall || mType == tFireSmall ? 20 : 30);
         if(collisedWith.type != ctMissile)
             Storage().CreateObject<audio::ControllerHolder>(

@@ -25,9 +25,11 @@
 #   include<SFML/Graphics/Sprite.hpp>
 #else
 #   include "drawable.h"
-#   include "image.h"
 #   include "rect.h"
+#   include "texture.h"
 #   include "vector2.h"
+
+#   include <cassert>
 #endif
 
 namespace oci {
@@ -41,18 +43,25 @@ using sf::Sprite;
 
 class Sprite : public Drawable {
 public:
-    Sprite() : mImage() {}
-    Sprite(const Image& img, const Vector2f& position = Vector2f(0, 0))
-        : Drawable(position), mImage(&img) {}
+    Sprite() = default;
+    Sprite(const Texture& tex) {
+        setTexture(tex, true);
+    }
 
-    Vector2f GetSize() const;
-    void SetImage(const Image& img) { mImage = &img; }
-    void SetSubRect(const IntRect& /*rect*/) {}
+    const Texture* getTexture() const noexcept { return mTexture; }
+    void setTexture(const Texture& texture, bool resetRect = false)
+    {
+        assert(resetRect); // resetRect == true is not used in the game and not implemented
+        (void)resetRect;
+        mTexture = &texture;
+    }
+
+    FloatRect getGlobalBounds() const noexcept;
 
     void DoDraw(SDL_Renderer* renderer) const override;
 
 private:
-    const Image* mImage;
+    const Texture* mTexture = nullptr;
 };
 
 #endif

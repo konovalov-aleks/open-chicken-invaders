@@ -94,7 +94,7 @@ private:
     public:
         BackgroundSprite() {
             Sprite::Init("background.xml");
-            SetCenter(Vector2f(0, 0));
+            setOrigin(Vector2f(0, 0));
         }
 
         virtual DrawPriority GetDrawPriority() const override {

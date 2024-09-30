@@ -39,8 +39,8 @@ public:
         Storage().CreateObject<Blinkable<Text> >(
             20, // blink period
             "game over",
-            Vector2f(Window::Instance().GetWidth() / 2,
-                     Window::Instance().GetHeight() / 2),
+            Vector2f(Window::Instance().getSize().x / 2,
+                     Window::Instance().getSize().y / 2),
             Font::GetFont("big.xml"),
             Text::haCenter, Text::vaCenter);
     }

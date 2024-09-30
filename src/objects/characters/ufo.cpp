@@ -49,18 +49,18 @@ void UFO::Run() {
         Storage().CreateObject<audio::ControllerHolder>(
             audio::Play("laserLow.wav"));
         Storage().CreateObject<Bullet>(
-            "gun4.xml", GetPosition(), UFO_BULLET_SPEED,
+            "gun4.xml", getPosition(), UFO_BULLET_SPEED,
             std::numbers::pi_v<float>, 0, 0, ctPlayerShip, ctEnemyBullet);
     }
-    Move(mSpeed, 0);
-    if(GetPosition().x >= Window::Instance().GetWidth())
+    move(mSpeed, 0);
+    if(getPosition().x >= Window::Instance().getSize().x)
         Storage().KillObject(this);
 }
 
 void UFO::OnCollision(const CollisionObjectInfo& /*collised_with*/) {
     Storage().CreateObject<audio::ControllerHolder>(audio::Play("gp82.wav"));
-    Storage().CreateObject<BonusUpgradeGun>(GetPosition());
-    Smoke(Storage(), GetPosition(), 15);
+    Storage().CreateObject<BonusUpgradeGun>(getPosition());
+    Smoke(Storage(), getPosition(), 15);
     Storage().KillObject(this);
 }
 

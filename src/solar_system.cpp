@@ -65,7 +65,7 @@ namespace {
                              Background::Instance().GetController().GetX() +
                              SolarSystem::PLANETS_X[index],
                              Background::Instance().GetController().GetY() +
-                             (Window::Instance().GetHeight() / 2)));
+                             (Window::Instance().getSize().y / 2)));
         }
     };
 
@@ -113,9 +113,9 @@ void SolarSystem::Run() {
     for(int i = 0; i < 11; ++i) {
         std::shared_ptr<objects::Sprite> planet(mPlanets[i].lock());
         if(planet) {
-            planet->SetPosition(PLANETS_X[i] + Background::Instance().GetController().GetX(),
+            planet->setPosition(PLANETS_X[i] + Background::Instance().GetController().GetX(),
                                 Background::Instance().GetController().GetY() +
-                                (Window::Instance().GetHeight() >> 1));
+                                (Window::Instance().getSize().y >> 1));
         }
     }
 }

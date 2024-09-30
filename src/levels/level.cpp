@@ -21,16 +21,15 @@
 
 #include "level.h"
 
-#include <assert.h>
-#include <constants.h>
-#include <core/event.h>
-#include <core/window.h>
 #include "manager.h"
+#include <constants.h>
+#include <core/keyboard.h>
 #include <menu/mainmenu.h>
 #include <objects/modifiers/blinking.h>
 #include <objects/modifiers/expiring.h>
 #include <objects/text/text.h>
-#include <stddef.h>
+
+#include <cassert>
 
 namespace oci {
 namespace levels {
@@ -52,7 +51,7 @@ void Level::ShowLevelInfo(const std::string& index, const std::string& name,
                           const std::string& description, bool descr_blink) {
 
     printf("show level info %s %s\n", index.c_str(), name.c_str());
-    const int window_center = Window::Instance().GetWidth() / 2;
+    const int window_center = Window::Instance().getSize().x / 2;
     Storage().CreateObject<Expiring<Text> >(
                           20,
                           "wave " + index,
@@ -85,7 +84,7 @@ void Level::ShowLevelInfo(const std::string& index, const std::string& name,
 }
 
 void Level::Run() {
-    if(Window::Instance().GetInput().IsKeyDown(Key::Escape))
+    if(Keyboard::isKeyPressed(Keyboard::Key::Escape))
         MainMenu::SwitchToMenu();
 }
 

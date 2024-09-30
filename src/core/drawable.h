@@ -44,27 +44,21 @@ namespace oci {
 
         virtual ~Drawable() = default;
 
-        const Vector2f& GetPosition() const { return mPosition; }
-        void SetPosition(float x, float y) { mPosition.x = x; mPosition.y = y; }
-        void SetPosition(const Vector2f& position) { mPosition = position; }
-        void SetX(float x) { mPosition.x = x; }
-        void SetY(float y) { mPosition.y = y; }
-        void Move(float dx, float dy) { mPosition.x += dx; mPosition.y += dy; }
-        void Move(const Vector2f& delta) { Move(delta.x, delta.y); }
+        const Vector2f& getPosition() const { return mPosition; }
+        void setPosition(float x, float y) { mPosition.x = x; mPosition.y = y; }
+        void setPosition(const Vector2f& position) { mPosition = position; }
+        void move(float dx, float dy) { mPosition.x += dx; mPosition.y += dy; }
+        void move(const Vector2f& delta) { move(delta.x, delta.y); }
 
-        const Vector2f& GetCenter() const { return mCenter; }
-        void SetCenter(float x, float y) { mCenter.x = x; mCenter.y = y; }
-        void SetCenter(const Vector2f& point) { mCenter = point; }
-
-        Vector2f TransformToLocal(const Vector2f& point) const {
-            return point - mPosition + mCenter;
-        }
+        const Vector2f& getOrigin() const { return mOrigin; }
+        void setOrigin(float x, float y) { mOrigin.x = x; mOrigin.y = y; }
+        void setOrigin(const Vector2f& point) { mOrigin = point; }
 
         virtual void DoDraw(SDL_Renderer* target) const = 0;
 
     private:
         Vector2f mPosition;
-        Vector2f mCenter;
+        Vector2f mOrigin;
     };
 
 #endif

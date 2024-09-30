@@ -30,7 +30,7 @@ namespace interface {
 
 void LivesIndicator::Init() {
     Indicator::Init("heart.xml",
-                    Vector2f(Window::Instance().GetWidth() - 110, 10));
+                    Vector2f(Window::Instance().getSize().x - 110, 10));
 }
 
 int LivesIndicator::GetValue() const {

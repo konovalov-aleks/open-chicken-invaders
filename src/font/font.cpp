@@ -22,6 +22,8 @@
 #include "font.h"
 
 #include <core/color.h>
+#include <core/image.h>
+#include <core/texture.h>
 #include <resources/loader.h>
 #include <utils/cache.h>
 
@@ -51,10 +53,10 @@ Font::Font(const std::string& name) {
     Load(name);
 }
 
-const Image& Font::operator[] (char s) const {
-    static const Image empty;
-    std::unordered_map<char, Image>::const_iterator res = mImages.find(s);
-    return res == mImages.end() ? empty : res->second;
+const Texture& Font::operator[] (char s) const {
+    static const Texture empty;
+    std::unordered_map<char, Texture>::const_iterator res = mTextures.find(s);
+    return res == mTextures.end() ? empty : res->second;
 }
 
 void Font::Load(const std::string& name) {
@@ -76,14 +78,18 @@ void Font::Load(const std::string& name) {
             LoadGlyph(*symbol, name);
         }
     }
-    if(mImages.find(' ') == mImages.end()) {
+    if(mTextures.find(' ') == mTextures.end()) {
         int sum_width = 0;
-        for(std::unordered_map<char, Image>::const_iterator iter = mImages.begin();
-           iter != mImages.end(); ++iter)
-            sum_width += iter->second.GetWidth();
-        Image img(sum_width / mImages.size(), 1, Color::Black);
-        img.CreateMaskFromColor(Color::Black);
-        mImages.insert(std::make_pair(' ', img));
+        for(std::unordered_map<char, Texture>::const_iterator iter = mTextures.begin();
+           iter != mTextures.end(); ++iter)
+            sum_width += iter->second.getSize().x;
+        Image img;
+        img.create(sum_width / mTextures.size(), 1, Color::Black);
+        img.createMaskFromColor(Color::Black);
+        Texture tex;
+        if(!tex.loadFromImage(img)) [[unlikely]]
+            throw std::logic_error("Unable to create a texture");
+        mTextures.insert(std::make_pair(' ', std::move(tex)));
     }
 }
 
@@ -91,14 +97,14 @@ void Font::LoadGlyph(char s, const std::string& filename) {
     std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
     if(data.empty())
         throw std::logic_error("Image resource \"" + filename + "\" is empty");
-    std::pair<std::unordered_map<char, Image>::iterator, bool> res =
-        mImages.insert(std::make_pair(s, Image()));
-    if(res.second) {
-        Image& img = res.first->second;
-        if(!img.LoadFromMemory(&data[0], data.size()))
+    const auto [iter, inserted] = mTextures.insert(std::make_pair(s, Texture()));
+    if(inserted) {
+        Image img;
+        if(!img.loadFromMemory(&data[0], data.size())) [[unlikely]]
             throw std::logic_error("Cannot load image \"" + filename + "\"");
-        img.SetSmooth(false);
-        img.CreateMaskFromColor(Color::Black);
+        img.createMaskFromColor(Color::Black);
+        if(!iter->second.loadFromImage(img)) [[unlikely]]
+            throw std::logic_error("Unable to create a texture");
     }
 }
 

@@ -24,7 +24,7 @@
 #include "background_controller.h"
 #include <context/manager.h>
 #include <context/object_holder.h>
-#include <core/event.h>
+#include <core/mouse.h>
 #include <core/window.h>
 #include "cursor.h"
 #include <font/font.h>
@@ -33,6 +33,7 @@
 #include <objects/effects/unshade_screen.h>
 #include <objects/text/text.h>
 
+#include <cstdlib>
 #include <functional>
 #include <memory>
 
@@ -42,7 +43,7 @@ using namespace objects;
 
 namespace {
 
-    static const char MENU_CONTEXT_NAME[] = "menu";
+    const char MENU_CONTEXT_NAME[] = "menu";
 
     class Button : public Sprite, public Active {
     public:
@@ -59,9 +60,9 @@ namespace {
         void Init(const std::string& caption, int ypos,
                   const std::function<void()>& on_press_callback) {
             Sprite::Init("menuitem.xml");
-            SetPosition(Window::Instance().GetWidth() / 2, ypos);
+            setPosition(Window::Instance().getSize().x / 2, ypos);
             mCaption = Storage().CreateObject<Text>(
-                caption, GetPosition(), Font::GetFont("medium.xml"),
+                caption, getPosition(), Font::GetFont("medium.xml"),
                 Text::haCenter, Text::vaCenter);
             mOnPressCallback = on_press_callback;
         }
@@ -71,18 +72,12 @@ namespace {
         }
 
         void Run() override {
-            Vector2f p = TransformToLocal(
-                                Vector2f(
-                                    Window::Instance().GetInput().GetMouseX(),
-                                    Window::Instance().GetInput().GetMouseY()));
-            bool mouse_in_button = p.x >= 0 && p.x < GetSize().x &&
-                                   p.y >= 0 && p.y < GetSize().y;
+            const Vector2i mouse_pos = Mouse::getPosition(Window::Instance());
+            bool mouse_in_button = getGlobalBounds().contains(Vector2f(mouse_pos));
             SetState(mouse_in_button ? sHover : sNormal);
-            if(mouse_in_button && mPressed &&
-               !Window::Instance().GetInput().IsMouseButtonDown(Mouse::Left))
+            if(mouse_in_button && mPressed && !Mouse::isButtonPressed(Mouse::Left))
                 mOnPressCallback();
-            mPressed = mouse_in_button &&
-                Window::Instance().GetInput().IsMouseButtonDown(Mouse::Left);
+            mPressed = mouse_in_button && Mouse::isButtonPressed(Mouse::Left);
         }
 
     private:
@@ -95,14 +90,12 @@ namespace {
     public:
         void Init() {
             Sprite::Init("logo.xml");
-            SetPosition(Vector2f(Window::Instance().GetWidth() / 2, 76));
+            setPosition(Vector2f(Window::Instance().getSize().x / 2, 76));
         }
     };
-}
 
-namespace {
     inline void doexit() {
-        exit(EXIT_SUCCESS);
+        std::exit(EXIT_SUCCESS);
     }
 } // namespace
 
@@ -117,7 +110,7 @@ void MainMenu::Init() {
 
     Storage().CreateObject<Text>(
         "main menu",
-        Vector2f(Window::Instance().GetWidth() / 2, 210),
+        Vector2f(Window::Instance().getSize().x / 2, 210),
         Font::GetFont("big.xml"), Text::haCenter, Text::vaCenter);
 
     Storage().CreateObject<UnshadeScreen>();

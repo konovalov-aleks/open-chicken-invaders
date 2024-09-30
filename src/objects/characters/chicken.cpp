@@ -61,7 +61,7 @@ void Chicken::Init(const Vector2f& position, int period, Type type,
 void Chicken::Run() {
     if(mTime-- <= 0) {
 //        if(GetX() > 0 && GetX() < Window::Instance().GetWidth() && GetY() > 0 && GetY() < FloorLevel)
-        Storage().CreateObject<Egg>(GetPosition());
+        Storage().CreateObject<Egg>(getPosition());
         mTime = rand() % mMaxBombingPeriod;
     }
 }
@@ -81,7 +81,7 @@ void Chicken::OnCollision(const CollisionObjectInfo& collisedWith) {
     }
     if(power <= 0) {
         State::Instance().IncScore(1000);
-        Smoke(Storage(), GetPosition(), 20);
+        Smoke(Storage(), getPosition(), 20);
         Storage().KillObject(this);
     }
 }
@@ -93,16 +93,16 @@ void Chicken::OnBang(const CollisionObjectInfo& collisedWith) {
     // теперь определимся с бонусом...
     if(rand() % 20) {
         // в 19 из 20 случаев выпадет нога
-        float dx = -(collisedWith.x - GetPosition().x) / (7.0f + 2 * (float)rand() / RAND_MAX);
+        float dx = -(collisedWith.x - getPosition().x) / (7.0f + 2 * (float)rand() / RAND_MAX);
         if(rand() % 8) // в 7 из 8 случаев выпадет нога, в 1 из 8 - тушка или монетки
-            Storage().CreateObject<BonusChickenLeg>(GetPosition(), dx, 0);
+            Storage().CreateObject<BonusChickenLeg>(getPosition(), dx, 0);
         else if(rand() % 2)
-            Storage().CreateObject<BonusChickenBody>(GetPosition(), dx, 0);
+            Storage().CreateObject<BonusChickenBody>(getPosition(), dx, 0);
         else {
             for(int i = 0; i < rand() % 5 + 5; ++i) {
                 float dx =  3.0f * (float)rand() / RAND_MAX;
                 float dy = -5.0f * (float)rand() / RAND_MAX;
-                Storage().CreateObject<BonusCoin>(GetPosition(), dx, dy);
+                Storage().CreateObject<BonusCoin>(getPosition(), dx, dy);
             }
         }
     } else {
@@ -118,10 +118,10 @@ void Chicken::OnBang(const CollisionObjectInfo& collisedWith) {
                 ct = ctGreenBonus;
                 break;
             default:
-                Storage().CreateObject<BonusUpgradeGun>(GetPosition());
+                Storage().CreateObject<BonusUpgradeGun>(getPosition());
                 return;
         }
-        Storage().CreateObject<BonusSwitchGun>(GetPosition(), t, ct);
+        Storage().CreateObject<BonusSwitchGun>(getPosition(), t, ct);
     }
 }
 

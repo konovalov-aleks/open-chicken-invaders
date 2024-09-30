@@ -1,5 +1,5 @@
 /*
- * input.cpp
+ * keyboard.cpp
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -19,51 +19,14 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "input.h"
+#include "keyboard.h"
 
 #ifndef USE_SFML
 
-#include "vector2.h"
-
-#ifdef ANDROID
-#   include "window.h"
-#endif
-
 namespace oci {
 
-bool Input::IsKeyDown(Key::Code key) const {
+bool Keyboard::isKeyPressed(Key key) {
     return SDL_GetKeyboardState(NULL)[key];
-}
-
-bool Input::IsMouseButtonDown(Mouse::Button button) const {
-    return (SDL_GetMouseState(NULL, NULL) & button) != 0;
-}
-
-namespace {
-
-    inline Vector2i GetMousePos() {
-        Vector2i result;
-        SDL_GetMouseState(&result.x, &result.y);
-        return result;
-    }
-
-    inline int Scale(int s) {
-    #ifdef ANDROID
-        return (s * Window::Instance().GetHeight()) /
-                Window::Instance().GetRealHeight();
-    #else
-        return s;
-    #endif
-    }
-
-} // namespace
-
-int Input::GetMouseX() const {
-    return Scale(GetMousePos().x);
-}
-
-int Input::GetMouseY() const {
-    return Scale(GetMousePos().y);
 }
 
 } // namespace oci

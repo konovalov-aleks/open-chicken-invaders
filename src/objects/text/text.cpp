@@ -123,7 +123,7 @@ Text::~Text() {
 
 void Text::Draw() {
     for(size_t i = 0; i < mSprites.size(); ++i)
-        Window::Instance().Draw(mSprites[i]);
+        Window::Instance().draw(mSprites[i]);
 }
 
 void Text::SetText(const std::string& text) {
@@ -133,17 +133,17 @@ void Text::SetText(const std::string& text) {
     mSprites.reserve(text.length());
     Vector2f size(0, 0);
     for(size_t i = 0; i < text.length(); ++i) {
-        const Image& glyph = (*mFont)[text[i]];
+        const Texture& glyph = (*mFont)[text[i]];
         mSprites.push_back(core::Sprite(glyph));
-        size.x += glyph.GetWidth() + 1;
-        if(glyph.GetHeight() > size.y)
-            size.y = glyph.GetHeight();
+        size.x += glyph.getSize().x + 1;
+        if(glyph.getSize().y > size.y)
+            size.y = glyph.getSize().y;
     }
     Vector2f pos = mAligner->Align(mPosition, size);
     for(std::vector<core::Sprite>::iterator glyph = mSprites.begin();
        glyph != mSprites.end(); ++glyph) {
-        glyph->SetPosition(pos);
-        pos.x += glyph->GetSize().x + 1;
+        glyph->setPosition(pos);
+        pos.x += glyph->getTexture()->getSize().x + 1;
     }
 }
 

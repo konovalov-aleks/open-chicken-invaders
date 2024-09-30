@@ -43,8 +43,7 @@ public:
     void CreateShield();
 
     static int DEFAULT_Y_POS() {
-        static const int default_y_pos = Window::Instance().GetHeight() - 80;
-        return default_y_pos;
+        return Window::Instance().getSize().y - 80;
     }
 
 protected:

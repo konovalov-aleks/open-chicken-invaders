@@ -48,7 +48,7 @@ template<>
 struct CheckAction<BoundLeft> {
     template<typename ObjT>
     void operator()(ObjT& obj) const {
-        if(obj.GetPosition().x <= -obj.GetWidth() / 2)
+        if(obj.getPosition().x <= -obj.GetWidth() / 2)
             obj.Storage().KillObject(&obj);
     }
 };
@@ -57,7 +57,7 @@ template<>
 struct CheckAction<BoundTop> {
     template<typename ObjT>
     void operator()(ObjT& obj) const {
-        if(obj.GetPosition().y <= -obj.Height() / 2)
+        if(obj.getPosition().y <= -obj.Height() / 2)
             obj.Storage().KillObject(&obj);
     }
 };
@@ -66,7 +66,7 @@ template<>
 struct CheckAction<BoundRight> {
     template<typename ObjT>
     void operator()(ObjT& obj) const {
-        if(obj.GetPosition().x >= Window::Instance().GetWidth() + obj.GetWidth() / 2)
+        if(obj.getPosition().x >= Window::Instance().getSize().x + obj.GetWidth() / 2)
             obj.Storage().KillObject(&obj);
     }
 };
@@ -75,7 +75,7 @@ template<>
 struct CheckAction<BoundBottom> {
     template<typename ObjT>
     void operator()(ObjT& obj) const {
-        if(obj.GetPosition().y >= Window::Instance().GetHeight() + obj.GetHeight() / 2)
+        if(obj.getPosition().y >= Window::Instance().getSize().y + obj.GetHeight() / 2)
             obj.Storage().KillObject(&obj);
     }
 };

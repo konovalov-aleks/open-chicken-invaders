@@ -1,5 +1,5 @@
 <sprite>
-	<animation repeat="0" reverce="0">
+	<animation repeat="0" reverse="0">
 		<frame name="gfx/crystal2_0.bmp" colorkey="0"/>
 		<frame name="gfx/crystal2_1.bmp" colorkey="0"/>
 		<frame name="gfx/crystal2_2.bmp" colorkey="0"/>
@@ -33,7 +33,7 @@
 		<frame name="gfx/crystal2_30.bmp" colorkey="0"/>
 		<frame name="gfx/crystal2_31.bmp" colorkey="0"/>
 	</animation>
-	<animation repeat="0" reverce="0">
+	<animation repeat="0" reverse="0">
 		<frame name="gfx/crystal-double_0.bmp" colorkey="0"/>
 		<frame name="gfx/crystal-double_1.bmp" colorkey="0"/>
 		<frame name="gfx/crystal-double_2.bmp" colorkey="0"/>

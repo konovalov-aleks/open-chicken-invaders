@@ -27,6 +27,7 @@
 #include <objects/characters/chicken.h>
 
 #include <chrono>
+#include <cstdlib>
 
 namespace oci {
 namespace benchmark {
@@ -38,8 +39,8 @@ namespace benchmark {
         void Init() {
             Animated::Init(
                 "chicken_red.xml",
-                Vector2f(rand() % Window::Instance().GetWidth(),
-                             rand() % Window::Instance().GetHeight())
+                Vector2f(std::rand() % Window::Instance().getSize().x,
+                         std::rand() % Window::Instance().getSize().y)
             );
         }
 
@@ -57,7 +58,8 @@ namespace benchmark {
         for(int i = 0; i < mChickensCount; ++i)
             //Storage().CreateObject<BenchmarkChicken>();
             Storage().CreateObject<objects::Chicken>(
-                Vector2f(rand() % Window::Instance().GetWidth(), rand() % Window::Instance().GetHeight()),
+                Vector2f(std::rand() % Window::Instance().getSize().x,
+                         std::rand() % Window::Instance().getSize().y),
                 100, objects::Chicken::tCyan, 10);
         mChickensCount += CHICKENS_COUNT;
     }

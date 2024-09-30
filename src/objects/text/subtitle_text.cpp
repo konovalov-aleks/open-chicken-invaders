@@ -65,7 +65,7 @@ void SubtitleText::Run() {
             mCurTaskExpireTime = mTasks[mCurTask].first;
             mText = Storage().CreateObject<Text>(
                 mTasks[mCurTask].second,
-                Vector2f(Window::Instance().GetWidth() / 2, SUBTITLE_Y_POS),
+                Vector2f(Window::Instance().getSize().x / 2, SUBTITLE_Y_POS),
                 Font::GetFont("big.xml"), Text::haCenter, Text::vaCenter);
         }
     }

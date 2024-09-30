@@ -21,7 +21,7 @@
 
 #include "cursor.h"
 
-#include <core/input.h>
+#include <core/mouse.h>
 #include <core/window.h>
 
 #include <memory>
@@ -32,22 +32,22 @@ namespace menu {
 using namespace objects;
 
 void Cursor::Init() {
-    Window::Instance().ShowMouseCursor(false);
-    Vector2f wnd_center(Window::Instance().GetWidth() / 2.0,
-                        Window::Instance().GetHeight() / 2.0);
+    Window& wnd = Window::Instance();
+    wnd.setMouseCursorVisible(false);
+    const Vector2u wnd_size = wnd.getSize();
+    Vector2i wnd_center(wnd_size.x / 2, wnd_size.y / 2);
     std::shared_ptr<CursorSpriteType> sprite = Storage().CreateObject<
                                     CommonSprite<Visible::dpForeground>
-                                >("fork.xml", wnd_center);
-    Window::Instance().SetCursorPosition(wnd_center.x, wnd_center.y);
-    sprite->SetCenter(0, 0);
+                                >("fork.xml", Vector2f(wnd_center));
+    Mouse::setPosition(wnd_center, wnd);
+    sprite->setOrigin(0, 0);
     mSprite = sprite;
 }
 
 void Cursor::Run() {
-    const Input& input = Window::Instance().GetInput();
     std::shared_ptr<CursorSpriteType> p = mSprite.get().lock();
     if(p)
-        p->SetPosition(Vector2f(input.GetMouseX(), input.GetMouseY()));
+        p->setPosition(Vector2f(Mouse::getPosition(Window::Instance())));
 }
 
 } // namespace menu

@@ -25,6 +25,7 @@
 #include "factory.h"
 #include <objects/modifiers/auto_killable.h>
 
+#include <cstdlib>
 #include <memory>
 
 namespace oci {
@@ -43,13 +44,13 @@ void Level_1_4::Init() {
 }
 
 std::weak_ptr<objects::Asteroid> Level_1_4::CreateAsteroid() {
-    int x = Window::Instance().GetWidth() + 10;
+    const Vector2u wndSize = Window::Instance().getSize();
+    int x = wndSize.x + 10;
     int y = -10;
     if(rand() % 3)
-        x = rand() % Window::Instance().GetWidth() * 3 / 4 +
-            Window::Instance().GetWidth() / 4;
+        x = std::rand() % wndSize.x * 3 / 4 + wndSize.x / 4;
     else
-        y = rand() % (Window::Instance().GetHeight() / 2);
+        y = std::rand() % (wndSize.y / 2);
     bool big = rand() & 1;
     return Storage().CreateObject<AutoKillable<Asteroid, BoundLeft, BoundBottom> >(
                 Vector2f(x, y), // position

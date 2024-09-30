@@ -32,19 +32,19 @@ void AnimatedCollisionObject::Init(const char* sprite_name,
 }
 
 float AnimatedCollisionObject::DoGetX() const {
-    return GetPosition().x;
+    return getPosition().x;
 }
 
 float AnimatedCollisionObject::DoGetY() const {
-    return GetPosition().y;
+    return getPosition().y;
 }
 
 int AnimatedCollisionObject::DoGetFrameWidth() const {
-    return GetSize().x;
+    return getTexture()->getSize().x;
 }
 
 int AnimatedCollisionObject::DoGetFrameHeight() const {
-    return GetSize().y;
+    return getTexture()->getSize().y;
 }
 
 } // namespace objects

@@ -1,5 +1,5 @@
 <sprite>
-	<animation repeat="1" reverce="1">
+	<animation repeat="1" reverse="1">
 		<frame name="gfx/chicken-green_0.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-green_1.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-green_2.bmp" colorkey="0"/>

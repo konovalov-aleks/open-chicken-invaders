@@ -1,5 +1,5 @@
 /*
- * vector2.h
+ * keyboard.h
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -22,50 +22,30 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include<SFML/System/Vector2.hpp>
+#   include <SFML/Window/Keyboard.hpp>
+#else
+#   include "event.h"
 #endif
 
 namespace oci {
 
 #ifdef USE_SFML
 
-using sf::Vector2f;
-using sf::Vector2i;
-using sf::Vector2u;
+using sf::Keyboard;
 
 #else
 
-template<typename T>
-class Vector2 {
+class Keyboard {
 public:
-    Vector2() : x(), y() {}
+    enum Key {
+        Left   = SDL_SCANCODE_LEFT,
+        Right  = SDL_SCANCODE_RIGHT,
+        Return = SDL_SCANCODE_RETURN,
+        Escape = SDL_SCANCODE_ESCAPE,
+    };
 
-    Vector2(T x, T y) : x(x), y(y) {}
-
-    template<typename T2>
-    Vector2(const Vector2<T2>& other) : x(other.x), y(other.y) {}
-
-    template<typename T2>
-    Vector2& operator += (const Vector2<T2>& other) {
-        x += other.x;
-        y += other.y;
-        return *this;
-    }
-
-    Vector2 operator+ (const Vector2& other) const {
-        return Vector2(x + other.x, y + other.y);
-    }
-
-    Vector2 operator- (const Vector2& other) const {
-        return Vector2(x - other.x, y - other.y);
-    }
-
-    T x, y;
+    static bool isKeyPressed(Key);
 };
-
-using Vector2f = Vector2<float>;
-using Vector2i = Vector2<int>;
-using Vector2u = Vector2<unsigned>;
 
 #endif
 

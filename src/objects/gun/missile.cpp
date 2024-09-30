@@ -52,10 +52,11 @@ void Missile::Init(const Vector2f& position) {
 }
 
 void Missile::Run() {
-    Move(mDX, mDY);
+    move(mDX, mDY);
 
-    float delta_x = (Window::Instance().GetWidth() / 2.0f) - GetPosition().x;
-    float delta_y = GetPosition().y - (Window::Instance().GetHeight() / 2.0f);
+    const Vector2u wnd_size = Window::Instance().getSize();
+    float delta_x = (wnd_size.x / 2.0f) - getPosition().x;
+    float delta_y = getPosition().y - (wnd_size.y / 2.0f);
 
     if(--mLifeTime < 0 ||
        (std::fabsf(delta_x) < mSpeed && std::fabsf(delta_y) < mSpeed)) {
@@ -65,8 +66,8 @@ void Missile::Run() {
             context::Manager::Instance().GetActiveContext();
         if(context)
             context->ColliseAll(ctMissile, MISSILE_POWER);
-        Spark(Storage(), GetPosition(), 50);
-        Smoke(Storage(), GetPosition(), 20);
+        Spark(Storage(), getPosition(), 50);
+        Smoke(Storage(), getPosition(), 20);
         Storage().KillObject(this);
     } else {
         float ideal_angle = std::atan2f(delta_x, delta_y);

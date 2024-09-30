@@ -47,9 +47,9 @@ void Egg::NextFrame() {
 
 void Egg::Run() {
     if(speed) {
-        Move(0, speed);
-        if(GetPosition().y > FloorLevel()) {
-            SetY(FloorLevel());
+        move(0, speed);
+        if(getPosition().y > FloorLevel()) {
+            setPosition(getPosition().x, FloorLevel());
             SetAnimationSpeed(1.0f);
             speed = 0;
 

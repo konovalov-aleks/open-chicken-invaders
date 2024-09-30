@@ -23,6 +23,10 @@
 
 #ifdef USE_SFML
 #   include<SFML/Graphics/Rect.hpp>
+#else
+#   include "vector2.h"
+
+#   include <algorithm>
 #endif
 
 namespace oci {
@@ -30,20 +34,47 @@ namespace oci {
 #ifdef USE_SFML
 
 using sf::IntRect;
+using sf::FloatRect;
 
 #else
 
 template<typename T>
 class Rect {
 public:
-    Rect() : Left(), Top(), Right(), Bottom() {}
-    Rect(T left, T top, T right, T bottom)
-        : Left(left), Top(top), Right(right), Bottom(bottom) {}
+    Rect() = default;
+    Rect(T rectLeft, T rectTop, T rectWidth, T rectHeight)
+        : left(rectLeft)
+        , top(rectTop)
+        , width(rectWidth)
+        , height(rectHeight)
+    {}
 
-    T Left, Top, Right, Bottom;
+    Rect(const Vector2<T>& position, const Vector2<T>& size)
+        : left(position.x)
+        , top(position.y)
+        , width(size.x)
+        , height(size.y)
+    {}
+
+    bool contains(const Vector2<T>& point) const noexcept
+    {
+        T minX = std::min(left, static_cast<T>(left + width));
+        T maxX = std::max(left, static_cast<T>(left + width));
+        T minY = std::min(top, static_cast<T>(top + height));
+        T maxY = std::max(top, static_cast<T>(top + height));
+
+        return (point.x >= minX) && (point.x < maxX) &&
+               (point.y >= minY) && (point.y < maxY);
+    }
+
+    T left = 0;
+    T top = 0;
+    T width = 0;
+    T height = 0;
 };
 
-typedef Rect<int> IntRect;
+using IntRect = Rect<int>;
+using FloatRect = Rect<float>;
 
 #endif
 

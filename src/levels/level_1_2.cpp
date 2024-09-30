@@ -23,8 +23,9 @@
 
 #include <core/window.h>
 #include "factory.h"
-#include <math.h>
 #include <utils/for_each.h>
+
+#include <cmath>
 
 namespace oci {
 namespace levels {
@@ -56,7 +57,7 @@ void Level_1_2::Init(char Step) {
         for(int x = 0; x < 8; ++x) {
             mChickens.push_back(
                 Storage().CreateObject<LevelChicken>(
-                    y % 2 ? CellSize : Window::Instance().GetWidth() - CellSize,
+                    y % 2 ? CellSize : Window::Instance().getSize().x - CellSize,
                     LINE_CELL_HEIGHT * (1 + y), x, y, 0, -(x * CreateDX + y * CreateDY)
                 )
             );
@@ -76,10 +77,10 @@ namespace {
         void operator() (Level_1_2::LevelChicken& enemy) {
             if(enemy.mode < 2) {
                 ++count;
-                enemy.Move((enemy.X - enemy.GetPosition().x) / 8,
-                           (enemy.Y - enemy.GetPosition().y) / 8);
-                if(fabsf(enemy.X - enemy.GetPosition().x) < 1 &&
-                   fabsf(enemy.Y - enemy.GetPosition().y) < 1) {
+                enemy.move((enemy.X - enemy.getPosition().x) / 8,
+                           (enemy.Y - enemy.getPosition().y) / 8);
+                if(std::fabsf(enemy.X - enemy.getPosition().x) < 1 &&
+                   std::fabsf(enemy.Y - enemy.getPosition().y) < 1) {
                     enemy.Y = enemy.yPos * CellSize + CellOffset;
                     enemy.X = enemy.xPos * CellSize + CellOffset;
                     enemy.mode++;
@@ -95,10 +96,10 @@ namespace {
             : xmax(xmax), xmin(xmin) {}
 
         void operator() (Level_1_2::LevelChicken& enemy) {
-            if(enemy.GetPosition().x > xmax)
-                xmax = enemy.GetPosition().x;
-            if(enemy.GetPosition().x < xmin)
-                xmin = enemy.GetPosition().x;
+            if(enemy.getPosition().x > xmax)
+                xmax = enemy.getPosition().x;
+            if(enemy.getPosition().x < xmin)
+                xmin = enemy.getPosition().x;
         }
     };
 
@@ -107,7 +108,7 @@ namespace {
     public:
         MoveChickenFunctor(float dx) : dx(dx) {}
         void operator() (Level_1_2::LevelChicken& chicken) {
-            chicken.Move(dx, 0);
+            chicken.move(dx, 0);
         }
     };
 } // namespace
@@ -129,10 +130,11 @@ void Level_1_2::Run() {
         } break;
     case 1:
         {
-            float xmin = Window::Instance().GetWidth() * 2.0f;
-            float xmax = -static_cast<float>(Window::Instance().GetWidth());
+            const Vector2u wnd_size = Window::Instance().getSize();
+            float xmin = wnd_size.x * 2.0f;
+            float xmax = -static_cast<float>(wnd_size.x);
             for_each(mChickens, DetermineFlockBoundsFunctor(xmax, xmin));
-            if(xmax + dx > Window::Instance().GetWidth() - CellSize || xmin + dx < CellSize)
+            if(xmax + dx > wnd_size.x - CellSize || xmin + dx < CellSize)
                 dx = -dx;
             for_each(mChickens, MoveChickenFunctor(dx));
         } break;

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <core/image.h>
+#include <core/texture.h>
 
 #include <string>
 #include <unordered_map>
@@ -32,7 +32,7 @@ class Font {
 public:
     static const Font& GetFont(const std::string& name);
 
-    const Image& operator[] (char s) const;
+    const Texture& operator[] (char s) const;
 
 private:
     Font(const std::string& name);
@@ -40,7 +40,7 @@ private:
     void Load(const std::string& name);
     void LoadGlyph(char s, const std::string& filename);
 
-    std::unordered_map<char, Image> mImages;
+    std::unordered_map<char, Texture> mTextures;
 
     friend struct FontLoader;
 };

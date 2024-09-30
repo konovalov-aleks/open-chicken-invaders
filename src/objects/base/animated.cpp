@@ -28,7 +28,7 @@ void Animated::Init(const char* spritename, const Vector2f& position,
                     float animation_speed) {
     Sprite::Init(spritename);
     mAnimationSpeed = animation_speed;
-    SetPosition(position);
+    setPosition(position);
 }
 
 void Animated::NextFrame() {

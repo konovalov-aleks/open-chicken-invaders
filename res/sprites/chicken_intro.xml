@@ -1,5 +1,5 @@
 <sprite>
-	<animation repeat="1" reverce="1">
+	<animation repeat="1" reverse="1">
 		<frame name="gfx/chicken-intro40Left_0.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro40Left_1.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro40Left_2.bmp" colorkey="0"/>
@@ -9,7 +9,7 @@
 		<frame name="gfx/chicken-intro40Left_6.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro40Left_7.bmp" colorkey="0"/>
 	</animation>
-	<animation repeat="1" reverce="1">
+	<animation repeat="1" reverse="1">
 		<frame name="gfx/chicken-intro40_0.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro40_1.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro40_2.bmp" colorkey="0"/>
@@ -19,7 +19,7 @@
 		<frame name="gfx/chicken-intro40_6.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro40_7.bmp" colorkey="0"/>
 	</animation>
-	<animation repeat="1" reverce="1">
+	<animation repeat="1" reverse="1">
 		<frame name="gfx/chicken-intro80_0.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro80_1.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro80_2.bmp" colorkey="0"/>
@@ -29,7 +29,7 @@
 		<frame name="gfx/chicken-intro80_6.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro80_7.bmp" colorkey="0"/>
 	</animation>
-	<animation repeat="1" reverce="1">
+	<animation repeat="1" reverse="1">
 		<frame name="gfx/chicken-intro160_0.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro160_1.bmp" colorkey="0"/>
 		<frame name="gfx/chicken-intro160_2.bmp" colorkey="0"/>

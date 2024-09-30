@@ -25,6 +25,7 @@
 #include "factory.h"
 #include <utils/cleanup_container.h>
 
+#include <cstdlib>
 #include <functional>
 
 namespace oci {
@@ -39,7 +40,7 @@ void CLevel_1_8::Init(int Step) {
     GameLevel::Init("level_1_4");
     mAsteroids.push_front(
         Storage().CreateObject<objects::JumpingAsteroid>(
-            Vector2f(static_cast<float>(rand() % Window::Instance().GetWidth()),
+            Vector2f(static_cast<float>(std::rand() % Window::Instance().getSize().x),
                      INITIAL_POS_Y),     // position
             1,                           // angle
             ASTEROID_SPEED,              // speed

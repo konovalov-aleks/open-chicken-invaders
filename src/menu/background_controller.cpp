@@ -21,7 +21,7 @@
 
 #include "background_controller.h"
 
-#include <core/input.h>
+#include <core/mouse.h>
 #include <core/window.h>
 
 namespace oci {
@@ -30,12 +30,11 @@ namespace menu {
 static const float BACKGROUND_MAX_SPEED = 3;
 
 void BackgroundController::Run() {
-    const int window_width = Window::Instance().GetWidth();
-    const int window_height = Window::Instance().GetHeight();
-    const Input& input = Window::Instance().GetInput();
+    const Vector2u window_size = Window::Instance().getSize();
+    const Vector2i mouse_pos = Mouse::getPosition(Window::Instance());
     SetSpeed(Vector2f(
-        ((input.GetMouseX() * 2 * BACKGROUND_MAX_SPEED) / window_width - BACKGROUND_MAX_SPEED),
-        ((input.GetMouseY() * 2 * BACKGROUND_MAX_SPEED) / window_height - BACKGROUND_MAX_SPEED)));
+        ((mouse_pos.x * 2 * BACKGROUND_MAX_SPEED) / window_size.x - BACKGROUND_MAX_SPEED),
+        ((mouse_pos.y * 2 * BACKGROUND_MAX_SPEED) / window_size.y - BACKGROUND_MAX_SPEED)));
     SimpleController::Run();
 }
 

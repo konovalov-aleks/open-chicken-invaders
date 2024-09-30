@@ -21,13 +21,14 @@
 
 #pragma once
 
-#include <assert.h>
-#include <core/image.h>
+#include "visible.h"
 #include <core/sprite.h>
+#include <core/texture.h>
 #include <core/vector2.h>
+
+#include <cassert>
 #include <string>
 #include <vector>
-#include "visible.h"
 
 //#define DEBUG_SPRITE
 
@@ -43,7 +44,7 @@ public:
 
     struct Animation {
         struct AnimationInfo info;
-        std::vector<Image> images;
+        std::vector<Texture> images;
     };
 
     typedef std::vector<Animation> SpriteData;

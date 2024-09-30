@@ -26,7 +26,6 @@
 #else
 #   include "drawable.h"
 #   include "event.h"
-#   include "input.h"
 #   include "video_mode.h"
 
 #   include <SDL.h>
@@ -49,30 +48,27 @@ public:
     WindowImpl();
     ~WindowImpl();
 
-    void Create(VideoMode mode, const std::string& title, unsigned int style);
-    void Close();
-    void Display();
-    void Draw(const Drawable& obj);
-    void Clear();
+    void create(VideoMode mode, const std::string& title, unsigned int style);
+    void close();
+    void display();
+    void draw(const Drawable& obj);
+    void clear();
 
-    void ShowMouseCursor(bool show);
-    void SetCursorPosition(unsigned int x, unsigned int y);
+    void setMouseCursorVisible(bool);
 
-    bool GetEvent(Event& event_received);
+    bool pollEvent(Event& event_received);
 
-    bool IsOpened() const;
+    bool isOpen() const;
 
-    unsigned int GetWidth() const { return mSize.x; }
-    unsigned int GetHeight() const { return mSize.y; }
+    Vector2u getSize() const noexcept { return mSize; }
 
     unsigned int GetRealWidth() const;
     unsigned int GetRealHeight() const;
 
-    const Input& GetInput() const { return mInput; }
-
+    SDL_Window* SDLHandle() const noexcept { return mWindow.get(); }
     SDL_Renderer* GetRenderer() { return mRenderer.get(); }
 
-    void SetFramerateLimit(unsigned int limit);
+    void setFramerateLimit(unsigned int limit);
 
 private:
     struct WindowDeleter {
@@ -96,11 +92,10 @@ private:
         }
     };
 
-    Input mInput;
     std::unique_ptr<SDL_Window, WindowDeleter> mWindow;
     std::unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
     std::chrono::steady_clock::time_point mLastFrameTime;
-    Vector2<unsigned int> mSize;
+    Vector2u mSize;
     int mFrameMinTime;
 };
 

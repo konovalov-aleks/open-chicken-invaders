@@ -1,5 +1,5 @@
 /*
- * vector2.h
+ * rectangle_shape.h
  * This file is part of OCI (Open Chicken Invaders)
  *
  * Copyright (C) 2010-2014 - Aleksey Konovalov (konovalov.aleks@gmail.com)
@@ -22,50 +22,32 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include<SFML/System/Vector2.hpp>
+#   include<SFML/Graphics/RectangleShape.hpp>
+#else
+#   include "color.h"
+#   include "drawable.h"
 #endif
 
 namespace oci {
 
 #ifdef USE_SFML
-
-using sf::Vector2f;
-using sf::Vector2i;
-using sf::Vector2u;
-
+using sf::RectangleShape;
 #else
 
-template<typename T>
-class Vector2 {
+class RectangleShape : public Drawable {
 public:
-    Vector2() : x(), y() {}
+    RectangleShape(Vector2f size = Vector2f(0, 0))
+        : mSize(size)
+    {}
 
-    Vector2(T x, T y) : x(x), y(y) {}
+    void setFillColor(Color color) { mFillColor = color; }
 
-    template<typename T2>
-    Vector2(const Vector2<T2>& other) : x(other.x), y(other.y) {}
+    void DoDraw(SDL_Renderer* renderer) const override;
 
-    template<typename T2>
-    Vector2& operator += (const Vector2<T2>& other) {
-        x += other.x;
-        y += other.y;
-        return *this;
-    }
-
-    Vector2 operator+ (const Vector2& other) const {
-        return Vector2(x + other.x, y + other.y);
-    }
-
-    Vector2 operator- (const Vector2& other) const {
-        return Vector2(x - other.x, y - other.y);
-    }
-
-    T x, y;
+private:
+    Vector2f mSize;
+    Color mFillColor = Color::Black;
 };
-
-using Vector2f = Vector2<float>;
-using Vector2i = Vector2<int>;
-using Vector2u = Vector2<unsigned>;
 
 #endif
 

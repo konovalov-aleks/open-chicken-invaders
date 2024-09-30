@@ -4,6 +4,8 @@ project(OpenChickenInvaders)
 
 file(GLOB_RECURSE headers "src/*.h")
 
+option(USE_SFML "use SFML (otherwise SDL will be used" OFF)
+
 set(sources
     src/audio/controller_holder.cpp
     src/audio/player.cpp
@@ -13,9 +15,11 @@ set(sources
     src/context/manager.cpp
     src/core/color.cpp
     src/core/image.cpp
-    src/core/input.cpp
-    src/core/shape.cpp
+    src/core/keyboard.cpp
+    src/core/mouse.cpp
+    src/core/rectangle_shape.cpp
     src/core/sprite.cpp
+    src/core/texture.cpp
     src/core/window.cpp
     src/diagnostics/benchmark/benchmark.cpp
     src/diagnostics/fps.cpp
@@ -135,6 +139,10 @@ add_custom_command(
 
 include(GNUInstallDirs)
 if (EMSCRIPTEN)
+    if (${USE_SFML})
+        message(FATAL_ERROR "Only SDL build is supported for WASM target")
+    endif ()
+
     target_compile_options(oci PRIVATE "-sUSE_SDL=2" "-fexceptions")
     target_link_options(oci PRIVATE
         "-fexceptions"
@@ -151,10 +159,23 @@ if (EMSCRIPTEN)
     target_link_options(oci PRIVATE "--embed-file=${CMAKE_CURRENT_SOURCE_DIR}/res/@/res/")
     target_link_options(oci PRIVATE "--embed-file=${CMAKE_CURRENT_BINARY_DIR}/ChickenInvaders2.dat@/ChickenInvaders2.dat")
 else()
-    find_package(SDL2 CONFIG REQUIRED)
-    find_package(SDL2_mixer REQUIRED)
-
-    target_link_libraries(oci PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer)
+    if (${USE_SFML})
+        # https://github.com/SFML/cmake-sfml-project/blob/master/CMakeLists.txt
+        include(FetchContent)
+        FetchContent_Declare(SFML
+            GIT_REPOSITORY https://github.com/SFML/SFML.git
+            GIT_TAG 2.6.x
+            GIT_SHALLOW ON
+            EXCLUDE_FROM_ALL
+            SYSTEM)
+        FetchContent_MakeAvailable(SFML)
+        target_link_libraries(oci PRIVATE sfml-graphics sfml-audio)
+        target_compile_definitions(oci PRIVATE "USE_SFML")
+    else ()
+        find_package(SDL2 CONFIG REQUIRED)
+        find_package(SDL2_mixer REQUIRED)
+        target_link_libraries(oci PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer)
+    endif()
 
     install(TARGETS oci RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
     install(FILES

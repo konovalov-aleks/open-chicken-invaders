@@ -21,7 +21,7 @@
 
 #include "ship.h"
 
-#include <assert.h>
+#include <cassert>
 
 namespace oci {
 namespace objects {
@@ -50,8 +50,8 @@ void Ship::Init(const Vector2f& pos) {
 
 void Ship::Run() {
     // пересчитываем координаты "выхлопа" двигателей
-    e1->SetPosition(GetPosition().x + EnginePosX + dx_e, GetPosition().y + EnginePosY);
-    e2->SetPosition(GetPosition().x - EnginePosX - dx_e, GetPosition().y + EnginePosY);
+    e1->setPosition(getPosition().x + EnginePosX + dx_e, getPosition().y + EnginePosY);
+    e2->setPosition(getPosition().x - EnginePosX - dx_e, getPosition().y + EnginePosY);
 }
 
 void Ship::SetEngineState(int st) {

@@ -47,8 +47,8 @@ private:
 
     std::shared_ptr<Sprite> mTrafficLights;
     std::shared_ptr<Animated> mUFO;
-//    s32 ufosound;            /// çâóê ÍËÎ
-    std::shared_ptr<Ship> mShip;              /// êîðàáëü
+//    s32 ufosound;
+    std::shared_ptr<Ship> mShip;
 //    const CSound enginesound;
 
     int mMode;
@@ -59,54 +59,53 @@ static Factory::Registrator<Intro_1> reg("intro_1", "intro");
 void Intro_1::Init() {
     IntroLevel::Init("intro1");
     mMode = 0;
+    const Vector2u wndSize = Window::Instance().getSize();
     mTrafficLights = Storage().CreateObject<CommonSprite<Visible::dpBonus> >(
-        "trafficlight.xml", Vector2f(Window::Instance().GetWidth() / 2,
-                                     Window::Instance().GetHeight() / 2 - 50));
+        "trafficlight.xml", Vector2f(wndSize.x / 2, wndSize.y / 2 - 50));
     mUFO = Storage().CreateObject<CommonAnimated<Visible::dpChicken> >(
         "flyingsaucer.xml", Vector2f(-100, 140));
     mShip = Storage().CreateObject<Ship>(
-        Vector2f(Window::Instance().GetWidth() / 2 - 80,
-                 Window::Instance().GetHeight() + 20));
+        Vector2f(wndSize.x / 2 - 80, wndSize.y + 20));
     //ufosound(0),
     //enginesound("ufo.wav", true)
 //    background->dx = background->dy = 0;
-//    trafficlights.frame = 1; // æåëòûé
+//    trafficlights.frame = 1; // yellow
 }
 
 #define INTRO1_UFOSPEED 6
 
 void Intro_1::RunIntro() {
     if(mMode < 20)
-        ++mMode; // mode = 0..19 - æåëòûé ñâåò
-    else if(mMode == 20) {       // mode = 20 - êðàñíûé ñâåò
+        ++mMode; // mode = 0..19 - yellow traffic light
+    else if(mMode == 20) {       // mode = 20 - red
         mTrafficLights->SetState(1);
         ++mMode;
-    } else if(mMode < 30) {   // êîðàáëü ëåòèò ê ñâåòîôîðó
-                       // âñòàåì íà ïîçèöèè (120;140)
-        float sp = mShip->GetPosition().x < 340 ?
-            -6.0f + (340.0f - mShip->GetPosition().y) / 10.0f : -6.0f;// çàìåäëÿåìñÿ ïðè ïîäëåòå ê ñâåòîôîðó
-        mShip->Move(0, sp);
-        if(fabsf(mShip->GetPosition().y - 310.0f) < 10.0f) {
-            mMode = 30; // âñòàåì - ñåé÷àñ ïîåäåò òàðåëêà
-            mShip->SetEngineState(0); // âûêëþ÷àåì äâèãàòåëè
+    } else if(mMode < 30) {   // the ship flies up the the traffic light
+                              // stay in the position (120;140)
+        float sp = mShip->getPosition().x < 340 ?
+            -6.0f + (340.0f - mShip->getPosition().y) / 10.0f : -6.0f; // slow down when approaching the traffic light
+        mShip->move(0, sp);
+        if(fabsf(mShip->getPosition().y - 310.0f) < 10.0f) {
+            mMode = 30; // stop - the UFO is about to flight
+            mShip->SetEngineState(0); // stop the engine
         }
-    } else if(mMode == 30) { // òàðåëêà âëåòàåò - âêëþ÷àåì çâóê
+    } else if(mMode == 30) { // UFO flies onto the screen - turn on the sound
         ++mMode;
 //        ufosound = PLAYER.PlaySound(enginesound);
-    } else if(mMode == 31) { // ëåòèò òàðåëêà!
-        mUFO->Move(INTRO1_UFOSPEED, 0);
-        if(mUFO->GetPosition().x > Window::Instance().GetWidth() + 30) { // òàðåëêà óëåòåëà - âêëþ÷àåì çåëåíûé è âûêëþ÷àåì åå çâóê
+    } else if(mMode == 31) { // the UFO is flying
+        mUFO->move(INTRO1_UFOSPEED, 0);
+        if(mUFO->getPosition().x > Window::Instance().getSize().x + 30) { // the UFO flew away - switch the green light and turn of UFO sound
             //speaker.channel(ufosound)->stop();
 //            ufosound = 0;
             mTrafficLights->SetState(2);
-//            mShip->SetEngineState(1); // è çàïóñêàåì äâèãàòåëè
+//            mShip->SetEngineState(1); // start engine
             ++mMode;
         }
-    } else {    // ïîñëåäíåå äåéñòâèå: óëåòàåì ñ ýêðàíà
-        float sp = mShip->GetPosition().y > 240 ?
-            (mShip->GetPosition().y - 320.0f) / 6.7f : -6.0f; // óñêîðÿåìñÿ íà ñòàðòå
-        mShip->Move(0, sp);
-        if(mShip->GetPosition().y < -80) // óëåòåëè - çàâåðøàåìñÿ
+    } else {    // last action: fly away from the screen
+        float sp = mShip->getPosition().y > 240 ?
+            (mShip->getPosition().y - 320.0f) / 6.7f : -6.0f; // acceleration on start
+        mShip->move(0, sp);
+        if(mShip->getPosition().y < -80) // flew away => finish the level
             EndLevel();
     }
 }
