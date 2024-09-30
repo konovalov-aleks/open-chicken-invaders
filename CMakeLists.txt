@@ -178,8 +178,11 @@ else()
 
     install(TARGETS oci RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
     install(FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/res/
         ${CMAKE_CURRENT_BINARY_DIR}/ChickenInvaders2.dat
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+    install(DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}/res/
         DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
