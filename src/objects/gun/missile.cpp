@@ -59,7 +59,7 @@ void Missile::Run() {
     float delta_y = getPosition().y - (wnd_size.y / 2.0f);
 
     if(--mLifeTime < 0 ||
-       (std::fabsf(delta_x) < mSpeed && std::fabsf(delta_y) < mSpeed)) {
+       (std::abs(delta_x) < mSpeed && std::abs(delta_y) < mSpeed)) {
         Storage().CreateObject<audio::ControllerHolder>(
             audio::Play("fx113.wav"));
         std::shared_ptr<context::Context> context =
@@ -70,10 +70,10 @@ void Missile::Run() {
         Smoke(Storage(), getPosition(), 20);
         Storage().KillObject(this);
     } else {
-        float ideal_angle = std::atan2f(delta_x, delta_y);
+        float ideal_angle = std::atan2(delta_x, delta_y);
         mAngle = (mAngle * 10.0f + ideal_angle) / 11.0f;
-        mDX = sinf(mAngle) * mSpeed;
-        mDY = -cosf(mAngle) * mSpeed;
+        mDX = std::sin(mAngle) * mSpeed;
+        mDY = -std::cos(mAngle) * mSpeed;
 
         mSpeed += MISSILE_ACCELERATION;
         if(mSpeed > MISSILE_MAX_SPEED)

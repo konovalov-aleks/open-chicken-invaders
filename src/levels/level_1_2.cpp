@@ -79,8 +79,8 @@ namespace {
                 ++count;
                 enemy.move((enemy.X - enemy.getPosition().x) / 8,
                            (enemy.Y - enemy.getPosition().y) / 8);
-                if(std::fabsf(enemy.X - enemy.getPosition().x) < 1 &&
-                   std::fabsf(enemy.Y - enemy.getPosition().y) < 1) {
+                if(std::abs(enemy.X - enemy.getPosition().x) < 1 &&
+                   std::abs(enemy.Y - enemy.getPosition().y) < 1) {
                     enemy.Y = enemy.yPos * CellSize + CellOffset;
                     enemy.X = enemy.xPos * CellSize + CellOffset;
                     enemy.mode++;

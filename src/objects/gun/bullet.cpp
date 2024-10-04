@@ -37,8 +37,8 @@ void Bullet::Init(const std::string& sprite_name, const Vector2f& pos,
     collision_type = collisionType;
     collision_with = collisionWith;
     SetState(_state);
-    dx0 =  speed * static_cast<float>(sin(angle));
-    dy0 = -speed * static_cast<float>(cos(angle));
+    dx0 =  speed * std::sin(angle);
+    dy0 = -speed * std::cos(angle);
     dx = 0.4f * dx0;
     dy = 0.4f * dy0;
 
@@ -56,9 +56,9 @@ void Bullet::OnCollision(const CollisionObjectInfo& /*collisedWith*/) {
 void Bullet::Run() {
     dx += 0.03f * dx0;
     dy += 0.03f * dy0;
-    if(std::fabsf(dx) > std::fabsf(dx0))
+    if(std::abs(dx) > std::abs(dx0))
         dx = dx0;
-    if(std::fabsf(dy) > std::fabsf(dy0))
+    if(std::abs(dy) > std::abs(dy0))
         dy = dy0;
 
     move(dx, dy);

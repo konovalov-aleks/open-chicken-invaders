@@ -66,10 +66,10 @@ public:
             {
                 float deltaX = chicken.X - chicken.xPos;
                 // подлетаем со скоростью 10, когда подлетаем - замедляемся
-                chicken.xPos += std::fabs(deltaX) < 80 ? deltaX / 4 : utils::sgn(deltaX) * 20;
+                chicken.xPos += std::abs(deltaX) < 80 ? deltaX / 4 : utils::sgn(deltaX) * 20;
                 float deltaY = chicken.Y - chicken.yPos;
-                chicken.yPos += std::fabsf(deltaY) < 80 ? deltaY / 4 : utils::sgn(deltaY) * 20;
-                if(std::fabsf(deltaX) < 2 && std::fabsf(deltaY) < 2) {
+                chicken.yPos += std::abs(deltaY) < 80 ? deltaY / 4 : utils::sgn(deltaY) * 20;
+                if(std::abs(deltaX) < 2 && std::abs(deltaY) < 2) {
                     chicken.yPos = chicken.Y;
                     chicken.xPos = chicken.X;
                     ++(chicken.mode);
@@ -93,8 +93,8 @@ public:
                 // куре стукнуло в голову порезвиться - летим к точке...
                 chicken.move((chicken.xPos - chicken.getPosition().x) / 20,
                              (chicken.yPos - chicken.getPosition().y) / 20);
-                if(std::fabsf(chicken.xPos - chicken.getPosition().x) < 2 &&
-                   std::fabsf(chicken.yPos - chicken.getPosition().y) < 2) {
+                if(std::abs(chicken.xPos - chicken.getPosition().x) < 2 &&
+                   std::abs(chicken.yPos - chicken.getPosition().y) < 2) {
                     chicken.mode = 0;
                     chicken.xPos = chicken.getPosition().x - mFlockXPos; // теперь кура будет болтаться
                     chicken.yPos = chicken.getPosition().y;            // со всеми, поэтому восстанавливаем ее координаты

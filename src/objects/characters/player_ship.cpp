@@ -94,7 +94,7 @@ namespace {
                 (PlayerShip::DEFAULT_Y_POS() - mShip->getPosition().y) / 8.0f,
                 -1.0f);
             mShip->move(0, speed);
-            if(std::fabs(mShip->getPosition().y - PlayerShip::DEFAULT_Y_POS()) < 1.0f) {
+            if(std::abs(mShip->getPosition().y - PlayerShip::DEFAULT_Y_POS()) < 1.0f) {
                 mShip->StartFire();
                 Storage().KillObject(this);
                 mShip->setPosition(mShip->getPosition().x, PlayerShip::DEFAULT_Y_POS());
@@ -230,14 +230,14 @@ void PlayerShip::Run() {
     }
     fit_value_to_range(mDY, -Constants::MaxSpeedDY(), Constants::MaxSpeedDY());
 
-    if(std::fabsf(mTargetX - x) < std::fabsf(mDX)) {
+    if(std::abs(mTargetX - x) < std::abs(mDX)) {
         x = mTargetX;
         mFDX = mDX = 0;
     } else
         x += mDX;
     fit_value_to_range(x, 0, Window::Instance().getSize().x);
 
-    if(std::fabsf(mTargetY - y) < std::fabsf(mDY)) {
+    if(std::abs(mTargetY - y) < std::abs(mDY)) {
         y = mTargetY;
         mFDY = mDY = 0;
     } else

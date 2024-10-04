@@ -27,6 +27,7 @@
 #include <objects/particles/smoke.h>
 
 #include <cstdlib>
+#include <cmath>
 #include <numbers>
 
 namespace oci {
@@ -42,15 +43,15 @@ void Asteroid::Init(const Vector2f& position, float angle, float speed,
                   "for each element in enumeration Asteroid::Type must "
                   "exists string in array SPRITE_NAMES");
     AnimatedCollisionObject::Init(SPRITE_NAMES[type], position, health),
-    mDX = speed * static_cast<float>(sin(angle));
-    mDY = speed * static_cast<float>(cos(angle));
+    mDX = speed * std::sin(angle);
+    mDY = speed * std::cos(angle);
     mType = type;
 }
 
 void Asteroid::Run() {
     if(std::rand() % 3 == 0) {
         // FIXME
-        int angle = (atan2(mDX, mDY) * std::numbers::pi) / 180;
+        int angle = (std::atan2(mDX, mDY) * std::numbers::pi) / 180;
         int dx = std::rand() % GetWidth() - GetWidth() / 2;
         Storage().CreateObject<CSmoke>(
             Vector2f(getPosition().x + dx, getPosition().y),

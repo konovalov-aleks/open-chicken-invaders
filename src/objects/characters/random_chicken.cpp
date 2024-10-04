@@ -45,7 +45,7 @@ void RandomChicken::Init(const Vector2f& position, int period, Type type,
     mY1 = Y0;
     float xx = mX1 - getPosition().x;
     float yy = mY1 - getPosition().y;
-    float l = sqrtf(xx * xx + yy * yy);
+    float l = std::sqrt(xx * xx + yy * yy);
     mDX = mSpeed * xx / l;
     mDY = mSpeed * yy / l;
 }
@@ -57,7 +57,7 @@ void RandomChicken::GenerateNewPoint() {
         mY1 = static_cast<float>(std::rand() % MAX_Y_START_COORD);
         xx = mX1 - getPosition().x;
         yy = mY1 - getPosition().y;
-        l = std::sqrtf(xx * xx + yy * yy);
+        l = std::sqrt(xx * xx + yy * yy);
         sp = mSpeed + static_cast<float>(std::rand()) / RAND_MAX;
     } while(l < sp);
     mDX = mSpeed * xx / l;
@@ -65,7 +65,7 @@ void RandomChicken::GenerateNewPoint() {
 }
 
 void RandomChicken::Run() {
-    if(std::fabs(mX1 - getPosition().x) <= std::fabs(mDX) && std::fabs(mY1 - getPosition().y) <= std::fabs(mDY))
+    if(std::abs(mX1 - getPosition().x) <= std::abs(mDX) && std::abs(mY1 - getPosition().y) <= std::abs(mDY))
         GenerateNewPoint();
     move(mDX, mDY);
     Chicken::Run();

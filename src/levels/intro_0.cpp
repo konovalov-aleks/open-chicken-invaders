@@ -153,14 +153,14 @@ void Intro_0::RunIntro() {
         break;
 
     case 1:
-        if(std::fabsf(ship->getPosition().x - SHIP_SHOT_POS) <= SHIP_SPEED) {
+        if(std::abs(ship->getPosition().x - SHIP_SHOT_POS) <= SHIP_SPEED) {
             ++mMode;
             Storage().CreateObject<CPlayerBullet>(
                 "gun1.xml", ship->getPosition(), BULLET_SPEED, std::numbers::pi_v<float> * 1.5f, 0, 0);
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("tr3_239.wav"));
         }
-        // break тут не должно быть!
+        [[fallthrough]];
     case 2:
         ship->move(-SHIP_SPEED, 0);
         exhaust->setPosition(ship->getPosition().x + EXHAUST_DELTA_X, exhaust->getPosition().y);
