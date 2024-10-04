@@ -116,15 +116,13 @@ set_property(TARGET oci PROPERTY CXX_STANDARD 20)
 
 option(tinyxml2_BUILD_TESTING "" OFF)
 include(FetchContent)
-FetchContent_Declare(tinyxml
+FetchContent_Declare(tinyxml2
     GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
     GIT_TAG v10.0.0
-    GIT_SHALLOW ON
-    EXCLUDE_FROM_ALL
-    SYSTEM)
-FetchContent_MakeAvailable(tinyxml)
-set_property(TARGET tinyxml2 PROPERTY CXX_STANDARD 20)
+    GIT_SHALLOW ON)
+FetchContent_MakeAvailable(tinyxml2)
 target_link_libraries(oci PRIVATE tinyxml2)
+target_include_directories(oci PRIVATE ${tinyxml2_SOURCE_DIR})
 
 #
 # Download the resource file of the original game
@@ -169,10 +167,10 @@ else()
             GIT_REPOSITORY https://github.com/SFML/SFML.git
             GIT_TAG 2.6.x
             GIT_SHALLOW ON
-            EXCLUDE_FROM_ALL
             SYSTEM)
         FetchContent_MakeAvailable(SFML)
         target_link_libraries(oci PRIVATE sfml-graphics sfml-audio)
+        target_include_directories(oci PRIVATE ${sfml_SOURCE_DIR}/include)
         target_compile_definitions(oci PRIVATE "USE_SFML")
     else ()
         find_package(SDL2 CONFIG REQUIRED)
