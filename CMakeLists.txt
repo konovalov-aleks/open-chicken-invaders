@@ -174,8 +174,20 @@ else()
         target_compile_definitions(oci PRIVATE "USE_SFML")
     else ()
         find_package(SDL2 CONFIG REQUIRED)
-        find_package(SDL2_mixer REQUIRED)
-        target_link_libraries(oci PRIVATE SDL2::SDL2 SDL2_mixer::SDL2_mixer)
+        target_link_libraries(oci PRIVATE SDL2::SDL2)
+
+        find_package(SDL2_mixer QUIET)
+        if (SDL2_mixer_FOUND)
+            target_link_libraries(oci PRIVATE ${SDL2_mixer}::SDL2_mixer)
+        else ()
+            # cmake can't find the system SDL2-mixer package in Ubuntu 22.04
+            # try to use pkgconfig in this case
+            find_package(PkgConfig REQUIRED)
+            pkg_check_modules(SDL2_mixer REQUIRED SDL2_mixer)
+            target_link_libraries(oci PRIVATE ${SDL2_mixer_LIBRARIES})
+            target_include_directories(oci PRIVATE ${SDL2_mixer_INCLUDE_DIRS})
+            target_compile_options(oci PRIVATE ${SDL2_mixer_CFLAGS_OTHER})
+        endif()
     endif()
 
     install(TARGETS oci RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
