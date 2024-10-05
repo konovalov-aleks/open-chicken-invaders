@@ -25,11 +25,16 @@
 #   include <SFML/Audio/Sound.hpp>
 #   include <SFML/Audio/SoundBuffer.hpp>
 #elif __EMSCRIPTEN__
+#   include <SDL/SDL_audio.h>
+#   include <SDL/SDL_mixer.h>
 #   include <SDL/SDL_mixer.h>
 #else
+#   include <SDL_audio.h>
 #   include <SDL_mixer.h>
+#   include <SDL_rwops.h>
 #endif
 
+#include "controller.h"
 #include <core/critical_error.h>
 #include <resources/loader.h>
 #include <utils/cache.h>

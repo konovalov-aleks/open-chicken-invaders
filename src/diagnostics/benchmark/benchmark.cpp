@@ -21,13 +21,21 @@
 
 #include "benchmark.h"
 
+#include <context/context.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <levels/factory.h>
 #include <objects/base/animated.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/characters/chicken.h>
 
 #include <chrono>
+#include <compare>
+#include <cstdio>
 #include <cstdlib>
+#include <ratio>
+#include <string>
 
 namespace oci {
 namespace benchmark {
@@ -72,7 +80,7 @@ namespace benchmark {
         Storage().GetContext().ColliseAll(ctFriendBullet, 100500);
         if(time >= std::chrono::seconds(1)) {
             float FPS = mFramesCount / std::chrono::duration_cast<std::chrono::seconds>(time).count();
-            printf("[%d chickens] FPS: %f\n", mChickensCount, FPS);
+            std::printf("[%d chickens] FPS: %f\n", mChickensCount, FPS);
             mFramesCount = 0;
             mLastStatisticTime = Clock::now();
         }

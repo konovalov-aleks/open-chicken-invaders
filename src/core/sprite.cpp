@@ -23,6 +23,12 @@
 
 #ifndef USE_SFML
 
+#include "rect.h"
+#include "texture.h"
+#include "vector2.h"
+
+#include <SDL_rect.h>      // for SDL_Rect
+
 #ifdef ANDROID
 #   include "window.h"
 #endif
@@ -49,7 +55,7 @@ void Sprite::DoDraw(SDL_Renderer* renderer) const {
         dstrect.y = (getPosition().y - getOrigin().y) * scale;
         dstrect.w = tex_size.x * scale;
         dstrect.h = tex_size.y * scale;
-        SDL_RenderCopy(renderer, mTexture->SDLObject(), NULL, &dstrect);
+        SDL_RenderCopy(renderer, mTexture->SDLObject(), nullptr, &dstrect);
     }
 }
 

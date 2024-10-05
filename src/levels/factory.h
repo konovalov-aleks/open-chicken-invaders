@@ -25,7 +25,6 @@
 
 #include <memory>
 #include <string>
-#include <type_traits>
 #include <tuple>
 #include <unordered_map>
 #include <utility>

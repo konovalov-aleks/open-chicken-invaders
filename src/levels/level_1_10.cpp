@@ -21,8 +21,15 @@
 
 #include "level_1_10.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <objects/characters/boss1.h>
+
+#include <string>
 
 namespace oci {
 namespace levels {

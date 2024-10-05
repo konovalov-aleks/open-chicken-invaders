@@ -21,7 +21,12 @@
 
 #include "manager.h"
 
+#include "context.h"
 #include <core/critical_error.h>
+
+// IWYU pragma: no_include <__hash_table>
+#include <memory>
+#include <utility>
 
 namespace oci {
 namespace context {

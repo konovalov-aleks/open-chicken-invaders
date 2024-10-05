@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(OpenChickenInvaders)
 
 option(USE_SFML "use SFML (otherwise SDL will be used" OFF)
+option(USE_IWYU "enable include-what-you-use tool" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -231,3 +232,12 @@ else()
 endif()
 
 target_include_directories(oci PRIVATE ${CMAKE_SOURCE_DIR}/src)
+
+if (${USE_IWYU})
+    find_program(iwyu_path NAMES include-what-you-use iwyu REQUIRED)
+    if (NOT iwyu_path)
+        message("WARNING: include-what-you-use tool was not found - will build without include validation")
+    else()
+        set_property(TARGET oci PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path};-Xiwyu;--cxx17ns)
+    endif()
+endif ()

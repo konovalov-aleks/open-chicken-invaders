@@ -21,7 +21,11 @@
 
 #include "animated.h"
 
+#include "sprite.h"
 #include <context/object_storage.h>
+#include <core/vector2.h>
+
+#include <string>
 
 namespace oci {
 namespace objects {

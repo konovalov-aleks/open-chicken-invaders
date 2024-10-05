@@ -19,12 +19,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <core/window.h>
 #include "factory.h"
 #include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <font/font.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/modifiers/blinking.h>
 #include <objects/text/text.h>
+
+#include <string>
 
 namespace oci {
 namespace levels {

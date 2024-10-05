@@ -21,8 +21,12 @@
 
 #include "lives_indicator.h"
 
+#include "indicator.h"
+#include <core/vector2.h>
 #include <core/window.h>
 #include <game/state.h>
+
+#include <string>
 
 namespace oci {
 namespace levels {

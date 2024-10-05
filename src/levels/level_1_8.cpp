@@ -21,12 +21,19 @@
 
 #include "level_1_8.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <objects/characters/asteroid.h>
+#include <objects/characters/jumping_asteroid.h>
 #include <utils/cleanup_container.h>
 
 #include <cstdlib>
 #include <functional>
+#include <string>
 
 namespace oci {
 namespace levels {

@@ -21,7 +21,6 @@
 
 #include "context/context.h"
 #include "context/manager.h"
-#include "levels/manager.h"
 #include "menu/mainmenu.h"
 #include <background/background.h>
 #include <core/event.h>
@@ -29,9 +28,11 @@
 #include <core/window.h>
 #include <core/window_style.h>
 #include <diagnostics/benchmark/benchmark.h>
-#include <diagnostics/fps.h>
 
+#include <cstdlib>
 #include <cstring>
+#include <memory>
+#include <string>
 
 int main(int argc, char* argv[]) {
     using namespace oci;

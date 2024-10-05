@@ -21,16 +21,20 @@
 
 #pragma once
 
-#include <background/background.h>
 #include "intro_level.h"
+#include <background/background.h>
+#include <core/vector2.h>
 #include <objects/base/active.h>
+#include <objects/base/animated.h>
 #include <objects/base/animated_collision_object.h>
-#include <objects/base/sprite.h>
-#include <objects/text/subtitle_text.h>
-#include <solar_system.h>
+#include <objects/base/collision_object_types.h>
 
 #include <list>
 #include <memory>
+
+namespace oci::objects { class Sprite; }
+namespace oci::objects { class SubtitleText; }
+namespace oci::objects { struct CollisionObjectInfo; }
 
 namespace oci {
 namespace levels {

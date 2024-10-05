@@ -21,7 +21,11 @@
 
 #include "collision_object.h"
 
-#include <math.h>
+#include "sprite.h"
+#include <core/vector2.h>
+
+#include <cmath>
+#include <cstdlib>
 
 namespace oci {
 namespace objects {
@@ -38,7 +42,7 @@ CollisionObjectInfo ICollisionObject::CollisionInfo() {
 bool ICollisionObject::DetectCollision(ICollisionObject& obj) {
     int w = (DoGetFrameWidth() + obj.DoGetFrameWidth()) / 2;
     int h = (DoGetFrameHeight() + obj.DoGetFrameHeight()) / 2;
-    return (fabs(DoGetX() - obj.DoGetX()) < w && fabs(DoGetY() - obj.DoGetY()) < h);
+    return (std::abs(DoGetX() - obj.DoGetX()) < w && std::abs(DoGetY() - obj.DoGetY()) < h);
 }
 
 void CCollisionObject::Init(const std::string& sprite_name,

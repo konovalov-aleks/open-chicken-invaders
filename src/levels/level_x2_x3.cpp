@@ -21,12 +21,16 @@
 
 #include "level_x2_x3.h"
 
+#include "game_level.h"
+#include "level.h"
+#include <core/vector2.h>
 #include <core/window.h>
 #include <utils/for_each.h>
 #include <utils/math.h>
 
 #include <cstdlib>
 #include <cmath>
+#include <string>
 
 namespace oci {
 namespace levels {

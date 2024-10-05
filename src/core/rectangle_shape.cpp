@@ -23,6 +23,10 @@
 
 #ifndef USE_SFML
 
+#include "color.h"
+
+#include <SDL_rect.h>
+
 namespace oci {
 
 void RectangleShape::DoDraw(SDL_Renderer* renderer) const

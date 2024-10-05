@@ -22,6 +22,7 @@
 #pragma once
 
 #include "game_level.h"
+#include <core/vector2.h>
 #include <objects/characters/chicken.h>
 
 #include <list>

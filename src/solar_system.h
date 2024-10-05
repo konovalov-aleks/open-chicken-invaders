@@ -22,11 +22,14 @@
 #pragma once
 
 #include <objects/base/active.h>
-#include <objects/base/sprite.h>
 
 #include <memory>
 
 namespace oci {
+
+namespace objects {
+    class Sprite;
+} // namespace objects
 
 enum TPlanet
 {

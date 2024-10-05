@@ -21,12 +21,17 @@
 
 #include "manager.h"
 
-#include <core/critical_error.h>
-#include <context/manager.h>
-#include <game/state.h>
-#include <objects/text/text.h>
 #include "factory.h"
 #include "interface/interface.h"
+#include <context/context.h>
+#include <context/manager.h>
+#include <context/object_storage.h>
+#include <core/critical_error.h>
+#include <game/state.h>
+#include <objects/characters/player_ship.h>
+
+#include <cstdio>
+#include <string>
 
 namespace oci {
 namespace levels {
@@ -70,11 +75,11 @@ void Manager::NewGame() {
 }
 
 void Manager::SelectLevel(int level_index) {
-    printf("SelectLevel %d\n", level_index);
+    std::printf("SelectLevel %d\n", level_index);
     Factory::Instance().Build(levels[level_index]);
     current_level_index = level_index;
 /*    ObjectsStorage& storage = LevelLocalStorage();
-printf("select level %llx\n", (long long)&storage);
+std::printf("select level %llx\n", (long long)&storage);
     switch(level_index) {
 //        case 0: new CWarp(10); break;
 //        case 1: new CWarp(9); break;

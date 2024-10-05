@@ -28,6 +28,15 @@ namespace oci {
 #ifndef USE_SFML
 
 #include "critical_error.h"
+#include "drawable.h"
+#include "event.h"
+#include "vector2.h"
+#include "video_mode.h"
+
+#include <SDL.h>
+#include <SDL_error.h>
+#include <SDL_events.h>
+#include <SDL_timer.h>
 
 namespace oci {
 
@@ -96,7 +105,7 @@ bool WindowImpl::pollEvent(Event& event_received) {
 }
 
 bool WindowImpl::isOpen() const {
-    return mWindow.get() != NULL;
+    return mWindow.get() != nullptr;
 }
 
 inline Vector2i GetWindowSize(SDL_Window* wnd) {

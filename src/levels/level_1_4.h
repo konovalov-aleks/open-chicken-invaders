@@ -23,6 +23,8 @@
 
 #include "level_x4.h"
 
+#include <objects/characters/asteroid.h>
+
 #include <memory>
 
 namespace oci {

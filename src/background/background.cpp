@@ -21,7 +21,8 @@
 
 #include "background.h"
 
-#include <core/rect.h>
+#include <core/texture.h>
+#include <core/vector2.h>
 #include <core/window.h>
 
 #include <cassert>

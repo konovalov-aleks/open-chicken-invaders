@@ -21,14 +21,21 @@
 
 #include "level_1_1.h"
 
-#include <constants.h>
-#include <core/window.h>
 #include "factory.h"
-#include <objects/characters/player_ship.h>
+#include "game_level.h"
+#include "level.h"
+#include <constants.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <font/font.h>
+#include <objects/characters/chicken.h>
+#include <objects/characters/random_chicken.h>
 #include <objects/modifiers/expiring.h>
 #include <objects/text/text.h>
 
 #include <cstdlib>
+#include <string>
 
 namespace oci {
 namespace levels {

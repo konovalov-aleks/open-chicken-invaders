@@ -21,7 +21,9 @@
 
 #include "factory.h"
 
+#include <context/context.h>
 #include <context/manager.h>
+#include <context/object_storage.h>
 #include <core/critical_error.h>
 
 namespace oci {

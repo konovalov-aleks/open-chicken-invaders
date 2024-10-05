@@ -24,9 +24,13 @@
 #include <background/background.h>
 #include <context/object_storage.h>
 #include <core/critical_error.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 
 #include <cassert>
+#include <string>
 #include <memory>
 
 namespace oci {

@@ -22,6 +22,8 @@
 #pragma once
 
 #include "chicken_part.h"
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
 
 namespace oci {
 namespace objects {
@@ -31,8 +33,8 @@ class BonusChickenLeg : public BonusChickenPart {
 public:
     void Init(const Vector2f& position, float xspeed, float yspeed);
 
-    virtual CollisionType GetCollisionType() const override { return ctLegBonus; }
-    virtual void OnBonus() override;
+    CollisionType GetCollisionType() const override { return ctLegBonus; }
+    void OnBonus() override;
 };
 
 } // namespace objects

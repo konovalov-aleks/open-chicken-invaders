@@ -23,13 +23,17 @@
 
 #include "manager.h"
 #include <constants.h>
+#include <context/object_storage.h>
 #include <core/keyboard.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <font/font.h>
 #include <menu/mainmenu.h>
 #include <objects/modifiers/blinking.h>
 #include <objects/modifiers/expiring.h>
 #include <objects/text/text.h>
 
-#include <cassert>
+#include <cstdio>
 
 namespace oci {
 namespace levels {
@@ -42,7 +46,7 @@ void Level::Init(const std::string& levelname) {
 }
 
 void Level::EndLevel() {
-    puts("End level");
+    std::puts("End level");
     Storage().KillObject(this);
     levels::Manager::Instance().CreateNextLevel();
 }
@@ -50,7 +54,7 @@ void Level::EndLevel() {
 void Level::ShowLevelInfo(const std::string& index, const std::string& name,
                           const std::string& description, bool descr_blink) {
 
-    printf("show level info %s %s\n", index.c_str(), name.c_str());
+    std::printf("show level info %s %s\n", index.c_str(), name.c_str());
     const int window_center = Window::Instance().getSize().x / 2;
     Storage().CreateObject<Expiring<Text> >(
                           20,

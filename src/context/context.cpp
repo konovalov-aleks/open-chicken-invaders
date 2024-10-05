@@ -21,17 +21,19 @@
 
 #include "context.h"
 
+// IWYU pragma: no_include <__hash_table>
 #include <context/object_storage.h>
-#include <core/window.h>
 #include <objects/base/active.h>
 #include <objects/base/animated.h>
 #include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/base/visible.h>
-#include <utils/for_each.h>
 
-#include <cassert>
 #include <list>
 #include <map>
+#include <memory>
+#include <unordered_map>
+#include <utility>
 
 namespace oci {
 namespace context {

@@ -23,6 +23,8 @@
 
 #include "level.h"
 
+#include <string>
+
 namespace oci {
 namespace levels {
 

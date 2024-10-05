@@ -21,11 +21,12 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/sprite.h>
 
-#include <cstdlib>
 #include <list>
 #include <memory>
+#include <string>
 
 namespace oci {
 

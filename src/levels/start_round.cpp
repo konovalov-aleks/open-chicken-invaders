@@ -21,9 +21,13 @@
 
 #include "start_round.h"
 
+#include "level.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <background/background.h>
+#include <background/simple_controller.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <levels/factory.h>
 #include <levels/manager.h>

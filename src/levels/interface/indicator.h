@@ -21,10 +21,12 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/active.h>
-#include <objects/base/sprite.h>
-#include <objects/modifiers/hidden.h>
-#include <objects/text/text.h>
+#include <objects/base/sprite.h> // IWYU pragma: keep
+#include <objects/base/visible.h>
+#include <objects/modifiers/hidden.h> // IWYU pragma: keep
+#include <objects/text/text.h> // IWYU pragma: keep
 
 #include <string>
 #include <memory>

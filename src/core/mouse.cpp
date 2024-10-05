@@ -23,15 +23,13 @@
 
 #ifndef USE_SFML
 
-#include <SDL.h>
-
 #include "vector2.h"
 #include "window.h"
 
 namespace oci {
 
 bool Mouse::isButtonPressed(Mouse::Button button) {
-    return (SDL_GetMouseState(NULL, NULL) & button) != 0;
+    return (SDL_GetMouseState(nullptr, nullptr) & button) != 0;
 }
 
 inline Vector2i GetMousePos() {

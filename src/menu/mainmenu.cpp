@@ -23,13 +23,19 @@
 
 #include "background_controller.h"
 #include "cursor.h"
+#include <background/background.h>
+#include <context/context.h>
 #include <context/manager.h>
 #include <context/object_holder.h>
+#include <context/object_storage.h>
 #include <core/mouse.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <font/font.h>
 #include <levels/manager.h>
+#include <objects/base/active.h>
 #include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/text/text.h>
 

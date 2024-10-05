@@ -22,9 +22,12 @@
 #pragma once
 
 #include "game_level.h"
-#include <objects/characters/random_chicken.h>
 
 #include <memory>
+
+namespace oci::objects {
+    class RandomChicken;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {

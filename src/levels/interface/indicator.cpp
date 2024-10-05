@@ -19,9 +19,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "lives_indicator.h"
+#include "indicator.h"
 
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <font/font.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
+#include <objects/modifiers/hidden.h>
+#include <objects/text/text.h>
 
 namespace oci {
 namespace levels {

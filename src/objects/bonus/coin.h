@@ -22,11 +22,13 @@
 #pragma once
 
 #include "bonus.h"
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
 
 namespace oci {
 namespace objects {
 
-/// бонус - монетка
+// A coin bonus
 class BonusCoin : public Bonus {
 public:
     void Init(const Vector2f& position, float xspeed, float yspeed);

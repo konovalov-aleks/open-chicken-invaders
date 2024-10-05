@@ -24,6 +24,7 @@
 #include <context/object_holder.h>
 #include <objects/base/active.h>
 #include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 
 namespace oci {
 namespace menu {

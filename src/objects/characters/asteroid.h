@@ -21,13 +21,17 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/active.h>
 #include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object_types.h>
 
 namespace oci {
 namespace objects {
 
-/// Простой падающий астероид
+struct CollisionObjectInfo;
+
+// Simple falling asteroid
 class Asteroid : public AnimatedCollisionObject, public Active {
 public:
     enum Type {

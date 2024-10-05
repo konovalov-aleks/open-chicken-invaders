@@ -21,13 +21,15 @@
 
 #pragma once
 
-#include "../gun/gun.h"
 #include "bonus.h"
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
+#include <objects/gun/gun.h>
 
 namespace oci {
 namespace objects {
 
-/// бонус смены оружия
+// Bonus that changes the gun
 class BonusSwitchGun : public Bonus {
 public:
     void Init(const Vector2f& position, TGunType type, CollisionType collision_type);

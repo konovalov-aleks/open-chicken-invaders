@@ -21,9 +21,13 @@
 
 #include "cursor.h"
 
+#include <context/object_holder.h>
 #include <context/object_storage.h>
 #include <core/mouse.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 
 #include <memory>
 

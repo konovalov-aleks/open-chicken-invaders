@@ -21,8 +21,11 @@
 
 #include "intro_level.h"
 
+#include "level.h"
 #include <context/object_storage.h>
 #include <core/keyboard.h>
+
+#include <string>
 
 namespace oci {
 namespace levels {

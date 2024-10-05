@@ -26,20 +26,25 @@
 #else
 #   include "drawable.h"
 #   include "rect.h"
-#   include "texture.h"
-#   include "vector2.h"
+
+#   include <SDL_render.h>
 
 #   include <cassert>
 #endif
 
-namespace oci {
-namespace core {
-
 #ifdef USE_SFML
 
-using sf::Sprite;
+namespace oci::core {
+    using sf::Sprite;
+} // namespace oci::core
 
 #else
+
+namespace oci {
+    class Texture;
+} // namespace oci
+
+namespace oci::core {
 
 class Sprite : public Drawable {
 public:
@@ -64,7 +69,6 @@ private:
     const Texture* mTexture = nullptr;
 };
 
-#endif
+} // namespace oci::core
 
-} // namespace core
-} // namespace oci
+#endif

@@ -27,6 +27,7 @@
 #include <core/vector2.h>
 
 #include <cassert>
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -53,12 +54,12 @@ public:
     void Init(const std::string& filename, const Vector2f& pos);
 
     virtual ~Sprite();
-    size_t StatesCount() const;
-    size_t CurrentState() const;
-    bool SetState(size_t state);
-    size_t FramesCount() const;
-    size_t CurrentFrame() const;
-    bool SetFrame(size_t frame);
+    std::size_t StatesCount() const;
+    std::size_t CurrentState() const;
+    bool SetState(std::size_t state);
+    std::size_t FramesCount() const;
+    std::size_t CurrentFrame() const;
+    bool SetFrame(std::size_t frame);
 
     AnimationInfo AnimationInfo() const { assert(mData); return (*mData)[mCurrentState].info; }
     bool AnimationRepeated() const;
@@ -72,8 +73,8 @@ protected:
 
 private:
     const SpriteData* mData;
-    size_t mCurrentState;
-    size_t mCurrentFrame;
+    std::size_t mCurrentState;
+    std::size_t mCurrentFrame;
 };
 
 template<Visible::DrawPriority draw_priority>

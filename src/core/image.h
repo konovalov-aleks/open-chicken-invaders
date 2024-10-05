@@ -25,9 +25,8 @@
 #   include<SFML/Graphics/Image.hpp>
 #else
 #   include "color.h"
-#   include "vector2.h"
 
-#   include <SDL.h>
+#   include <SDL_Surface.h>
 
 #   include <cstddef>
 #   include <memory>

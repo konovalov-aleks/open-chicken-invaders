@@ -23,6 +23,7 @@
 
 #include <context/object_storage.h>
 #include <core/window.h>
+#include <objects/characters/asteroid.h>
 #include <objects/particles/smoke.h>
 
 #include <cmath>

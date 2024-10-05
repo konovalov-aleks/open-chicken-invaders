@@ -21,11 +21,17 @@
 
 #include "level_1_2.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
 #include <utils/for_each.h>
 
 #include <cmath>
+#include <cstdlib>
+#include <string>
 
 namespace oci {
 namespace levels {

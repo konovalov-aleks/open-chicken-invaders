@@ -24,7 +24,12 @@
 #ifndef USE_SFML
 
 #include "critical_error.h"
+#include "image.h"
+#include "vector2.h"
 #include "window.h"
+
+#include <SDL_error.h>
+#include <SDL_surface.h>
 
 #include <cassert>
 

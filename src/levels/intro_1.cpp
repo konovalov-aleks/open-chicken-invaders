@@ -19,15 +19,20 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <core/window.h>
-#include "intro_level.h"
 #include "factory.h"
+#include "intro_level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
 #include <objects/base/animated.h>
 #include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 #include <objects/characters/ship.h>
 
-#include <math.h>
+#include <cstdlib>
+#include <cmath>
 #include <memory>
+#include <string>
 
 namespace oci {
 namespace levels {
@@ -85,7 +90,7 @@ void Intro_1::RunIntro() {
         float sp = mShip->getPosition().x < 340 ?
             -6.0f + (340.0f - mShip->getPosition().y) / 10.0f : -6.0f; // slow down when approaching the traffic light
         mShip->move(0, sp);
-        if(fabsf(mShip->getPosition().y - 310.0f) < 10.0f) {
+        if(std::abs(mShip->getPosition().y - 310.0f) < 10.0f) {
             mMode = 30; // stop - the UFO is about to flight
             mShip->SetEngineState(0); // stop the engine
         }

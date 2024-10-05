@@ -20,11 +20,14 @@
  */
 
 #include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
 #include <core/critical_error.h>
 #include <levels/factory.h>
 #include <objects/characters/ufo.h>
 
 #include <memory>
+#include <string>
 
 namespace oci {
 namespace levels {

@@ -21,11 +21,15 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/active.h>
 #include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object_types.h>
 
 namespace oci {
 namespace objects {
+
+struct CollisionObjectInfo;
 
 /// Босс из уровней 1-10 и 3-10
 class Boss1 : public AnimatedCollisionObject, public Active {

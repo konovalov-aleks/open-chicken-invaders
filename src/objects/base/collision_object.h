@@ -24,6 +24,9 @@
 #include "collision_object_types.h"
 #include "object.h"
 #include "sprite.h"
+#include <core/vector2.h>
+
+#include <string>
 
 namespace oci {
 namespace objects {
@@ -41,8 +44,6 @@ struct CollisionObjectInfo
     CollisionType type;
     short power;
 };
-
-class CollisionObjectHolder;
 
 class ICollisionObject : virtual public Object {
 public:

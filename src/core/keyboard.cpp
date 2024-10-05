@@ -23,10 +23,12 @@
 
 #ifndef USE_SFML
 
+#include <SDL_keyboard.h>
+
 namespace oci {
 
 bool Keyboard::isKeyPressed(Key key) {
-    return SDL_GetKeyboardState(NULL)[key];
+    return SDL_GetKeyboardState(nullptr)[key];
 }
 
 } // namespace oci

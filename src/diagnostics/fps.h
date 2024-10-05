@@ -22,10 +22,13 @@
 #pragma once
 
 #include <objects/base/active.h>
-#include <objects/text/text.h>
 
 #include <chrono>
 #include <memory>
+
+namespace oci::objects {
+    class Text;
+} // namespace oci::objects
 
 namespace oci {
 namespace diagnostics {

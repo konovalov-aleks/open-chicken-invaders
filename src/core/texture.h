@@ -24,10 +24,9 @@
 #ifdef USE_SFML
 #   include<SFML/Graphics/Texture.hpp>
 #else
-#   include "image.h"
 #   include "vector2.h"
 
-#   include <SDL.h>
+#   include <SDL_render.h>
 
 #   include <memory>
 #endif
@@ -39,6 +38,8 @@ namespace oci {
 using Texture = sf::Texture;
 
 #else
+
+class Image;
 
 class Texture {
 public:

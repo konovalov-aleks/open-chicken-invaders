@@ -24,12 +24,17 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
-#include <core/window.h>
+#include <core/vector2.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/particles/smoke.h>
 
-#include <cstdlib>
 #include <cmath>
+#include <cstdlib>
+#include <iterator>
 #include <numbers>
+#include <string>
 
 namespace oci {
 namespace objects {

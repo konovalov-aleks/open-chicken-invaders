@@ -22,8 +22,13 @@
 #include "fps.h"
 
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <font/font.h>
+#include <objects/text/text.h>
 
 #include <iterator>
+#include <cstdio>
+#include <string>
 
 namespace oci {
 namespace diagnostics {
@@ -43,7 +48,7 @@ void FPSViewer::Run() {
             Clock::now() - mLastFrameTime).count());
     char buf[128] = "Inf";
     if(frame_time != 0)
-        snprintf(buf, std::size(buf), "%.2f", 1000.0f / frame_time);
+        std::snprintf(buf, std::size(buf), "%.2f", 1000.0f / frame_time);
     mText->SetText(buf);
 }
 

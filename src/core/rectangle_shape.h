@@ -26,6 +26,9 @@
 #else
 #   include "color.h"
 #   include "drawable.h"
+#   include "vector2.h"
+
+#   include <SDL_render.h>
 #endif
 
 namespace oci {

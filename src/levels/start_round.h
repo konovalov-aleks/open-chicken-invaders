@@ -21,12 +21,15 @@
 
 #pragma once
 
-#include <background/simple_controller.h>
 #include "level.h"
 
 #include <memory>
+#include <string>
 
 namespace oci {
+
+class SimpleController;
+
 namespace levels {
 
 class StartRound : public Level {

@@ -21,12 +21,17 @@
 
 #include "level_1_4.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "level_x4.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <objects/characters/asteroid.h>
 #include <objects/modifiers/auto_killable.h>
 
 #include <cstdlib>
 #include <memory>
+#include <string>
 
 namespace oci {
 namespace levels {

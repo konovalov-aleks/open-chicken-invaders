@@ -21,7 +21,9 @@
 
 #include "game_level.h"
 
+#include "level.h"
 #include "manager.h"
+#include <objects/characters/player_ship.h>
 
 namespace oci {
 namespace levels {

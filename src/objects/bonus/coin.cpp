@@ -21,11 +21,15 @@
 
 #include "coin.h"
 
+#include "bonus.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <game/state.h>
+
+#include <string>
 
 namespace oci {
 namespace objects {

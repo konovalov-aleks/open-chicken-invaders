@@ -22,9 +22,12 @@
 #pragma once
 
 #include "loader.h"
-#include <objects/characters/player_ship.h>
 
 #include <memory>
+
+namespace oci::objects {
+    class PlayerShip;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {

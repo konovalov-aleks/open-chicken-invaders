@@ -21,7 +21,9 @@
 
 #include "background_controller.h"
 
+#include <background/simple_controller.h>
 #include <core/mouse.h>
+#include <core/vector2.h>
 #include <core/window.h>
 
 namespace oci {

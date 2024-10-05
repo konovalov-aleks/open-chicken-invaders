@@ -24,7 +24,11 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/bonus/chicken_leg.h>
 #include <objects/gun/bullet.h>
 #include <objects/particles/smoke.h>
@@ -32,6 +36,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <numbers>
+#include <string>
 
 namespace oci {
 namespace objects {
@@ -53,8 +58,8 @@ void Boss1::Init(const Vector2f& position, const Vector2f& destination,
 void Boss1::Run() {
     if(!mode) {
         mRealPosition += mSpeed;
-        if(std::fabs(mDestination.x - mRealPosition.x) <= std::fabs(mSpeed.x) &&
-           std::fabs(mDestination.y - mRealPosition.y) <= std::fabs(mSpeed.y))
+        if(std::abs(mDestination.x - mRealPosition.x) <= std::abs(mSpeed.x) &&
+           std::abs(mDestination.y - mRealPosition.y) <= std::abs(mSpeed.y))
             mode = 1;
     } else if (mode > 9) {
         Fire();

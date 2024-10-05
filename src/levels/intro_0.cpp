@@ -27,7 +27,9 @@
 #include <audio/player.h>
 #include <context/object_storage.h>
 #include <core/critical_error.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/animated.h>
 #include <objects/base/animated_collision_object.h>
 #include <objects/base/sprite.h>
 #include <objects/base/visible.h>

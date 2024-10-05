@@ -24,8 +24,9 @@
 #ifdef USE_SFML
 #   include <SFML/Window/Mouse.hpp>
 #else
+#   include <SDL_mouse.h>
+
 #   include "vector2.h"
-#   include "window.h"
 #endif
 
 namespace oci {
@@ -35,6 +36,8 @@ namespace oci {
 using sf::Mouse;
 
 #else
+
+class Window;
 
 class Mouse {
 public:

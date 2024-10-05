@@ -24,8 +24,8 @@
 #include <core/color.h>
 #include <core/critical_error.h>
 #include <core/image.h>
-#include <core/rect.h>
 #include <core/texture.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <resources/loader.h>
 #include <utils/cache.h>
@@ -33,10 +33,16 @@
 #include <tinyxml2.h>
 
 #include <cassert>
-#include <fstream>
-#include <stdio.h>
+#include <cstdlib>
 #include <string>
 #include <string_view>
+#include <utility>
+
+#ifdef USE_SFML
+#   include <core/rect.h>
+
+#   include <fstream>
+#endif // USE_SFML
 
 namespace oci {
 namespace objects {
@@ -62,7 +68,7 @@ namespace {
         Sprite::SpriteData operator()(const std::string& name) {
             Sprite::SpriteData data;
 
-            printf("Loading sprite \"%s\"\n", name.c_str());
+            std::printf("Loading sprite \"%s\"\n", name.c_str());
             std::ifstream f(std::string("res/images/") + name, std::ios_base::binary);
             if(!f) [[unlikely]]
                 CriticalError("file \"", name, "\" not found");
@@ -70,7 +76,7 @@ namespace {
             char c[2];
             while(f.read(c, 2) && c[0])
                 image_name += c[0];
-            puts(image_name.c_str());
+            std::puts(image_name.c_str());
             Image img;
             if(!img.loadFromFile("res/images/" + image_name)) [[unlikely]]
                 CriticalError("cannot load image \"", image_name, '"');
@@ -78,7 +84,7 @@ namespace {
             unsigned char draw_type;
             f.read((char*)&draw_type, 1);
             #ifdef DEBUG_SPRITE
-            printf("Draw type: %hhd\n", draw_type);
+            std::printf("Draw type: %hhd\n", draw_type);
             #endif
             switch(draw_type) {
                 case bdtCOPY:
@@ -97,7 +103,7 @@ namespace {
             f.read(&statescount, 1);
 
             #ifdef DEBUG_SPRITE
-            printf("States count: %hhd\n", statescount);
+            std::printf("States count: %hhd\n", statescount);
             #endif
             int top = 0;
             for(int i = 0; i < statescount; ++i) {
@@ -105,7 +111,7 @@ namespace {
                 char framescount = 0;
                 f.read(&framescount, 1);
                 #ifdef DEBUG_SPRITE
-                printf("\tFrames count: %hhd\n", framescount);
+                std::printf("\tFrames count: %hhd\n", framescount);
                 #endif
                 Sprite::Animation anim;
                 char mode;
@@ -127,7 +133,7 @@ namespace {
                         CriticalError("unknown animation mode (", mode, ')');
                 };
                 #ifdef DEBUG_SPRITE
-                printf("\tAnimation mode: %hhd\n", anim.mode);
+                std::printf("\tAnimation mode: %hhd\n", anim.mode);
                 #endif
                 for(int k = 0; k < framescount;) {
                     char n = 0;
@@ -137,7 +143,7 @@ namespace {
                     f.read((char*)&width, 2);
                     f.read((char*)&height, 2);
                     #ifdef DEBUG_SPRITE
-                    printf("\tFrame[%d x %hhd]: width = %hd, height = %hd\n", k, n, width, height);
+                    std::printf("\tFrame[%d x %hhd]: width = %hd, height = %hd\n", k, n, width, height);
                     #endif
                     for(int t = 0; t < n; ++t) {
                         anim.images.emplace_back();
@@ -145,7 +151,7 @@ namespace {
                         if(!tex.loadFromImage(img, IntRect(left, top, width, height))) [[unlikely]]
                             CriticalError("Unable to create a texture");
                         #ifdef DEBUG_SPRITE
-                        printf("\t\t[%d, %d, %d, %d]\n", left, top, left + width, top + height);
+                        std::printf("\t\t[%d, %d, %d, %d]\n", left, top, left + width, top + height);
                         #endif
                         left += width;
                         if(height > max_height)
@@ -185,7 +191,7 @@ namespace {
                             CriticalError("Could not open image resource \"", filename, '"');
                         const char* colorkey = frame->Attribute("colorkey");
                         if(colorkey) {
-                            int ck = atoi(colorkey);
+                            int ck = std::atoi(colorkey);
                             img.createMaskFromColor(Color(ck >> 16 & 0xFF,
                                                           ck >> 8  & 0xFF,
                                                           ck & 0xFF));
@@ -227,8 +233,8 @@ namespace {
 void Sprite::Init(const std::string& filename, const Vector2f& pos) {
     Init(filename);
     #ifdef DEBUG_SPRITE
-    printf("[%x] Sprite(\"%s\", %f, %f)\n", (unsigned int)this,
-           filename.c_str(), pos.x, pos.y);
+    std::printf("[%x] Sprite(\"%s\", %f, %f)\n", (unsigned int)this,
+                filename.c_str(), pos.x, pos.y);
     #endif
     setPosition(pos);
 }
@@ -236,13 +242,13 @@ void Sprite::Init(const std::string& filename, const Vector2f& pos) {
 void Sprite::Init(const std::string& filename) {
     mCurrentState = mCurrentFrame = 0;
     #ifdef DEBUG_SPRITE
-    printf("[%x] Sprite (\"%s\")\n", (unsigned int)this, filename);
+    std::printf("[%x] Sprite (\"%s\")\n", (unsigned int)this, filename);
     #endif
 #ifdef USE_SFML
     if(strstr(filename.c_str(), ".sprite")) {
         static Cache<SpriteData, OldSpriteLoader> old_cache;
         mData = &old_cache.Get(filename);
-        printf("Old loader: loaded \"%s\"\n", filename.c_str());
+        std::printf("Old loader: loaded \"%s\"\n", filename.c_str());
     } else
 #endif
     {
@@ -259,7 +265,7 @@ void Sprite::Init(const std::string& filename) {
 
 Sprite::~Sprite() {
     #ifdef DEBUG_SPRITE
-    printf("[%x] ~Sprite\n", (unsigned int)this);
+    std::printf("[%x] ~Sprite\n", (unsigned int)this);
     #endif
 }
 

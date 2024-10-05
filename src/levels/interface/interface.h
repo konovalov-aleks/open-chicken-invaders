@@ -22,10 +22,12 @@
 #pragma once
 
 #include <objects/base/active.h>
-#include <objects/base/sprite.h>
-#include <objects/text/text.h>
 
 #include <memory>
+
+namespace oci::objects {
+    class Text;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {

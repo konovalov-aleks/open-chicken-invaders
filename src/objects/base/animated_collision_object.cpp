@@ -21,6 +21,11 @@
 
 #include "animated_collision_object.h"
 
+#include "animated.h"
+#include "collision_object.h"
+#include <core/texture.h>
+#include <core/vector2.h>
+
 namespace oci {
 namespace objects {
 

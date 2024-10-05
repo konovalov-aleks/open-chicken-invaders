@@ -24,9 +24,15 @@
 #include "lives_indicator.h"
 #include "missiles_indicator.h"
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <font/font.h>
 #include <game/state.h>
 #include <objects/base/sprite.h>
+#include <objects/base/visible.h>
+#include <objects/text/text.h>
+
+#include <string>
 
 namespace oci {
 namespace levels {

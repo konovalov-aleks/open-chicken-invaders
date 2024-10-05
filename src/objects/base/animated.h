@@ -23,6 +23,8 @@
 
 #include "object.h"
 #include "sprite.h"
+#include "visible.h"
+#include <core/vector2.h>
 
 namespace oci {
 namespace objects {

@@ -25,10 +25,12 @@
 #   include <SFML/Graphics/RenderWindow.hpp>
 #else
 #   include "drawable.h"
-#   include "event.h"
-#   include "video_mode.h"
+#   include "vector2.h"
 
-#   include <SDL.h>
+#   include <SDL_mouse.h>
+#   include <SDL_render.h>
+#   include <SDL_stdinc.h>
+#   include <SDL_video.h>
 
 #   include <memory>
 #   include <string>
@@ -41,6 +43,9 @@ namespace oci {
 typedef sf::RenderWindow WindowImpl;
 
 #else
+
+class Event;
+class VideoMode;
 
 class WindowImpl {
 public:

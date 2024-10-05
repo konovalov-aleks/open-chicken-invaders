@@ -21,15 +21,21 @@
 
 #include "switch_gun.h"
 
+#include "bonus.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
+#include <objects/gun/gun.h>
+
+#include <iterator>
+#include <string>
 
 namespace oci {
 namespace objects {
 
 namespace {
 
-static const char* const SPRITE_NAMES[] = {
+const char* const SPRITE_NAMES[] = {
     "giftbox_red.xml",      // gtRed
     "giftbox_green.xml",    // gtGreen
     "giftbox_yellow.xml"    // gtYellow

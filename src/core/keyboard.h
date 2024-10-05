@@ -24,7 +24,7 @@
 #ifdef USE_SFML
 #   include <SFML/Window/Keyboard.hpp>
 #else
-#   include "event.h"
+#   include <SDL_scancode.h>
 #endif
 
 namespace oci {

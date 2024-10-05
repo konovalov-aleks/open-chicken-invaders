@@ -23,8 +23,12 @@
 
 #ifndef USE_SFML
 
+#include "color.h"
 #include "critical_error.h"
-#include "window.h"
+
+#include <SDL_error.h>
+#include <SDL_pixels.h>
+#include <SDL_rwops.h>
 
 #include <string>
 
