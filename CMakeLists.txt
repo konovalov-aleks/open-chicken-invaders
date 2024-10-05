@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.20)
 
 project(OpenChickenInvaders)
 
-file(GLOB_RECURSE headers "src/*.h")
-
 option(USE_SFML "use SFML (otherwise SDL will be used" OFF)
+
+set(CMAKE_CXX_STANDARD 20)
+
+file(GLOB_RECURSE headers "src/*.h")
 
 set(sources
     src/audio/controller_holder.cpp
@@ -108,8 +110,6 @@ GroupSources(src)
 
 add_executable(oci ${sources} ${headers})
 
-set_property(TARGET oci PROPERTY CXX_STANDARD 20)
-
 #
 # Build tinyxml2
 #
@@ -178,7 +178,7 @@ else()
 
         find_package(SDL2_mixer QUIET)
         if (SDL2_mixer_FOUND)
-            target_link_libraries(oci PRIVATE ${SDL2_mixer}::SDL2_mixer)
+            target_link_libraries(oci PRIVATE SDL2_mixer::SDL2_mixer)
         else ()
             # cmake can't find the system SDL2-mixer package in Ubuntu 22.04
             # try to use pkgconfig in this case
