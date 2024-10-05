@@ -30,7 +30,6 @@
 
 #   include <SDL.h>
 
-#   include <chrono>
 #   include <memory>
 #   include <string>
 #endif
@@ -94,9 +93,9 @@ private:
 
     std::unique_ptr<SDL_Window, WindowDeleter> mWindow;
     std::unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
-    std::chrono::steady_clock::time_point mLastFrameTime;
+    Uint32 mLastFrameTimeMs = 0;
     Vector2u mSize;
-    int mFrameMinTime;
+    Uint32 mFrameMinTimeMs;
 };
 
 #endif

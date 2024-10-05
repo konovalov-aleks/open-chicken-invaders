@@ -29,12 +29,9 @@ namespace oci {
 
 #include "critical_error.h"
 
-#include <chrono>
-#include <thread>
-
 namespace oci {
 
-WindowImpl::WindowImpl() : mFrameMinTime(0) {
+WindowImpl::WindowImpl() : mFrameMinTimeMs(0) {
     SDL_Init(SDL_INIT_EVERYTHING);
 }
 
@@ -62,19 +59,16 @@ void WindowImpl::close() {
 }
 
 void WindowImpl::display() {
-    SDL_RenderPresent(mRenderer.get());
 #ifndef ANDROID
-    if(mFrameMinTime > 0) {
-        std::chrono::steady_clock::time_point current_time =
-            std::chrono::steady_clock::now();
-        std::chrono::nanoseconds delta = current_time - mLastFrameTime;
-        if(delta < std::chrono::microseconds(mFrameMinTime)) {
-            std::this_thread::sleep_for(
-                std::chrono::microseconds(mFrameMinTime) - delta);
-        }
-        mLastFrameTime = current_time;
+    if(mFrameMinTimeMs > 0) {
+        Uint64 now = SDL_GetTicks64();
+        Uint64 elapsed = now - mLastFrameTimeMs;
+        if(elapsed < mFrameMinTimeMs)
+            SDL_Delay(static_cast<Uint32>(mFrameMinTimeMs - elapsed));
+        mLastFrameTimeMs = SDL_GetTicks64();
     }
 #endif
+    SDL_RenderPresent(mRenderer.get());
 }
 
 void WindowImpl::draw(const Drawable& obj) {
@@ -117,7 +111,7 @@ unsigned int WindowImpl::GetRealHeight() const {
 }
 
 void WindowImpl::setFramerateLimit(unsigned int limit) {
-    mFrameMinTime = limit > 0 ? 1000000 / limit : 0;
+    mFrameMinTimeMs = limit > 0 ? 1000 / limit : 0;
 }
 
 } // namespace oci
