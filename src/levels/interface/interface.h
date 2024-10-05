@@ -21,7 +21,6 @@
 
 #pragma once
 
-#include <context/object_holder.h>
 #include <objects/base/active.h>
 #include <objects/base/sprite.h>
 #include <objects/text/text.h>

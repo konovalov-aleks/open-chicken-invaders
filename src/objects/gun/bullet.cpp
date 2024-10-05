@@ -21,6 +21,7 @@
 
 #include "bullet.h"
 
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <objects/particles/spark.h>
 

@@ -21,6 +21,7 @@
 
 #include "unshade_screen.h"
 
+#include <context/object_storage.h>
 #include <core/color.h>
 #include <core/critical_error.h>
 #include <core/image.h>
@@ -71,8 +72,8 @@ void UnshadeScreen::Draw() {
     Window& window = Window::Instance();
     const Vector2u tex_size = gradient.getSize();
     const int tilesize = static_cast<int>(tex_size.y);
-    int x = mPosition;
-    unsigned int y = 0;
+    int x = static_cast<int>(mPosition);
+    unsigned y = 0;
     const Vector2u wnd_size = window.getSize();
     for(; x > 0 && y < wnd_size.y; x -= tilesize, y += tilesize) {
         gradient.setPosition(x - static_cast<int>(tex_size.x), y);
@@ -92,7 +93,8 @@ void UnshadeScreen::Draw() {
 
 void UnshadeScreen::Run() {
     mPosition += Gradient::Instance().getSize().y;
-    if(++mPosition > Window::Instance().getSize().x + Gradient::Instance().getSize().x)
+    unsigned boundary = Window::Instance().getSize().x + Gradient::Instance().getSize().x;
+    if(++mPosition > boundary)
         Storage().KillObject(this);
 }
 

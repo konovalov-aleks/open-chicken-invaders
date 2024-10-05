@@ -21,19 +21,23 @@
 
 #include "spark.h"
 
+#include <context/object_storage.h>
+
+#include <cstdlib>
+
 namespace oci {
 namespace objects {
 
 static int counter = 0;
 
-void Spark(context::ObjectsStorage& storage, const Vector2f& pos, int size) {
-    int count = rand() % (size / 2) + 3;
+void Spark(context::ObjectStorage& storage, const Vector2f& pos, int size) {
+    int count = std::rand() % (size / 2) + 3;
     if(counter + count > 20)
         count /= 4;
     for (int i = 0; i < count; ++i) {
-        trigonometry::Degree angle(rand() % 360);
-        float speed = (float)rand() / RAND_MAX * (size / 5.0f);
-        float animation_speed = 1.5f / (1.0f + rand() % (size / 4));
+        trigonometry::Degree angle(std::rand() % 360);
+        float speed = static_cast<float>(std::rand()) / RAND_MAX * (size / 5.0f);
+        float animation_speed = 1.5f / (1.0f + std::rand() % (size / 4));
         storage.CreateObject<CSpark>(pos, speed, angle, animation_speed);
     }
 }

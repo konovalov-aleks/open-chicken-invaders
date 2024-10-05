@@ -97,12 +97,8 @@ private:
             setOrigin(Vector2f(0, 0));
         }
 
-        virtual DrawPriority GetDrawPriority() const override {
+        DrawPriority GetDrawPriority() const override {
             return dpForeground;
-        }
-
-        virtual context::ObjectsStorage& Storage() override {
-            std::abort(); // unreachable
         }
     } mSprite;
 

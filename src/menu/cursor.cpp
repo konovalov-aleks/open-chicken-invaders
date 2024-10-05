@@ -21,6 +21,7 @@
 
 #include "cursor.h"
 
+#include <context/object_storage.h>
 #include <core/mouse.h>
 #include <core/window.h>
 

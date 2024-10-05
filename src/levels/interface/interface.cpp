@@ -21,10 +21,11 @@
 
 #include "interface.h"
 
-#include <core/window.h>
-#include <game/state.h>
 #include "lives_indicator.h"
 #include "missiles_indicator.h"
+#include <context/object_storage.h>
+#include <core/window.h>
+#include <game/state.h>
 #include <objects/base/sprite.h>
 
 namespace oci {

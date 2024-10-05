@@ -21,6 +21,7 @@
 
 #include "subtitle_text.h"
 
+#include <context/object_storage.h>
 #include <core/critical_error.h>
 #include <core/window.h>
 #include <font/font.h>
@@ -29,6 +30,7 @@
 
 #include <cassert>
 #include <string_view>
+#include <utility>
 
 namespace oci {
 namespace objects {

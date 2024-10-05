@@ -21,18 +21,30 @@
 
 #pragma once
 
-#include <context/objects_storage.h>
+#include <cassert>
 
-namespace oci {
-namespace objects {
-
-/// базовый класс всех игровых объектов
-class Object {
-public:
-    virtual ~Object() {}
-    virtual context::ObjectsStorage& Storage() = 0;
-    void Init() {}
+namespace oci::context {
+    class ObjectStorage;
 };
 
-} // namespace objects
-} // namespace oci
+namespace oci::objects {
+
+// The base class of all game objects
+class Object {
+public:
+    bool IsOrphan() const noexcept { return !mStorage; }
+
+    context::ObjectStorage& Storage() const noexcept
+    {
+        assert(!IsOrphan());
+        return *mStorage;
+    }
+
+    void Init() {}
+
+private:
+    context::ObjectStorage* mStorage = nullptr;
+    friend class context::ObjectStorage;
+};
+
+} // namespace oci::objects

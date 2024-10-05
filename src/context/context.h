@@ -38,7 +38,7 @@ class ICollisionObject;
 
 namespace context {
 
-class ObjectsStorage;
+class ObjectStorage;
 
 class Context {
 public:
@@ -61,7 +61,7 @@ public:
     /// "Столкнуть" все повреждающиеся объекты с данным объектом
     void ColliseAll(CollisionType CollisionType, int power);
 
-    ObjectsStorage& GetStorage(const std::string& name);
+    ObjectStorage& GetStorage(const std::string& name);
 
 private:
     class Impl;

@@ -44,9 +44,6 @@ typedef sf::RenderWindow WindowImpl;
 
 class WindowImpl {
 public:
-    WindowImpl();
-    ~WindowImpl();
-
     void create(VideoMode mode, const std::string& title, unsigned int style);
     void close();
     void display();
@@ -91,11 +88,18 @@ private:
         }
     };
 
+    struct SDLInit {
+        SDLInit();
+        ~SDLInit();
+    };
+
+    SDLInit mSdlInit;
+
     std::unique_ptr<SDL_Window, WindowDeleter> mWindow;
     std::unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
     Uint32 mLastFrameTimeMs = 0;
-    Vector2u mSize;
-    Uint32 mFrameMinTimeMs;
+    Vector2u mSize = {};
+    Uint32 mFrameMinTimeMs = 0;
 };
 
 #endif

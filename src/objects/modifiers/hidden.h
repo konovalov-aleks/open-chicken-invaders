@@ -33,7 +33,7 @@ template<std::derived_from<objects::Visible> T>
 class Hidden : public T {
 public:
 
-    virtual void Draw() override {
+    void Draw() override {
         if(mVisible)
             T::Draw();
     }
@@ -43,10 +43,8 @@ public:
     void Hide() { SetVisible(false); }
     void Show() { SetVisible(true); }
 
-protected:
-    Hidden() : mVisible(true) {}
-
-    bool mVisible;
+private:
+    bool mVisible = true;
 };
 
 } // namespace modifiers

@@ -27,7 +27,7 @@
 namespace oci {
 namespace objects {
 
-void Bang(context::ObjectsStorage& storage, const Vector2f& pos, int size) {
+void Bang(context::ObjectStorage& storage, const Vector2f& pos, int size) {
     Smoke(storage, pos, size);
     Spark(storage, pos, size);
 }

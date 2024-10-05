@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <context/objects_storage.h>
+#include <context/object_storage.h>
 
 #include <memory>
 #include <string>
@@ -76,7 +76,7 @@ private:
         void Build();
 
     protected:
-        virtual void DoBuild(context::ObjectsStorage& storage) = 0;
+        virtual void DoBuild(context::ObjectStorage& storage) = 0;
 
     private:
         std::string mContextName;
@@ -90,10 +90,10 @@ private:
             , mArgs(args...)
         {}
     protected:
-        virtual void DoBuild(context::ObjectsStorage& storage) override {
+        virtual void DoBuild(context::ObjectStorage& storage) override {
             const auto args =
                 std::tuple_cat(std::tuple(&storage), mArgs);
-            std::apply(&context::ObjectsStorage::CreateObject<T, Args...>, args);
+            std::apply(&context::ObjectStorage::CreateObject<T, Args...>, args);
         }
     private:
         std::tuple<Args...> mArgs;

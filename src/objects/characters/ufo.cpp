@@ -22,6 +22,7 @@
 #include "ufo.h"
 
 #include <audio/player.h>
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <objects/bonus/upgrade_gun.h>
 #include <objects/gun/bullet.h>

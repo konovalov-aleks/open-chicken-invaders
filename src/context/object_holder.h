@@ -60,7 +60,7 @@ private:
 
     void reset() {
         std::shared_ptr<T> obj = get_ptr(mObject);
-        if(obj)
+        if(obj && !obj->IsOrphan())
             obj->Storage().KillObject(mObject);
     }
 

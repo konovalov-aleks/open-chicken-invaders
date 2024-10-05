@@ -21,13 +21,13 @@
 
 #pragma once
 
-#include <context/objects_storage.h>
+#include <context/object_storage.h>
 #include <core/vector2.h>
 
 namespace oci {
 namespace objects {
 
-void Bang(context::ObjectsStorage& storage, const Vector2f& pos, int size);
+void Bang(context::ObjectStorage& storage, const Vector2f& pos, int size);
 
 } // namespace objects
 } // namespace oci

@@ -21,10 +21,11 @@
 
 #include "context.h"
 
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <objects/base/active.h>
-#include <objects/base/collision_object.h>
 #include <objects/base/animated.h>
+#include <objects/base/collision_object.h>
 #include <objects/base/visible.h>
 #include <utils/for_each.h>
 
@@ -82,7 +83,7 @@ public:
     > CollisionObjectsList;
     CollisionObjectsList mCollisionObjects;
 
-    typedef std::unordered_map<std::string, std::unique_ptr<ObjectsStorage> > ObjectsMap;
+    typedef std::unordered_map<std::string, std::unique_ptr<ObjectStorage> > ObjectsMap;
     ObjectsMap mObjectStorages;
 };
 
@@ -157,12 +158,12 @@ void Context::ColliseAll(CollisionType collision_type, int power) {
     }
 }
 
-ObjectsStorage& Context::GetStorage(const std::string& name) {
+ObjectStorage& Context::GetStorage(const std::string& name) {
     Context::Impl::ObjectsMap& storages = mImpl->mObjectStorages;
     Context::Impl::ObjectsMap::const_iterator iter = storages.find(name);
     if(iter == storages.end())
         iter = storages.insert(
-                   std::make_pair(name, std::unique_ptr<ObjectsStorage>(new ObjectsStorage(*this)))
+                   std::make_pair(name, std::unique_ptr<ObjectStorage>(new ObjectStorage(*this)))
                ).first;
     return *iter->second;
 }

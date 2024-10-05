@@ -47,8 +47,10 @@ int main(int argc, char* argv[]) {
     while(Window::Instance().isOpen()) {
         Event event;
         while(Window::Instance().pollEvent(event)) {
-            if (event.type == Event::Closed)
+            if (event.type == Event::Closed) {
                 Window::Instance().close();
+                return EXIT_SUCCESS;
+            }
         }
         Window::Instance().clear();
         std::shared_ptr<context::Context> context =

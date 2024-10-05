@@ -21,6 +21,8 @@
 
 #include "ship.h"
 
+#include <context/object_storage.h>
+
 #include <cassert>
 
 namespace oci {

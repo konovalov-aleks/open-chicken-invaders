@@ -25,7 +25,7 @@
 #include "intro_level.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <context/objects_storage.h>
+#include <context/object_storage.h>
 #include <core/critical_error.h>
 #include <core/window.h>
 #include <objects/base/animated_collision_object.h>

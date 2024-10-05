@@ -61,7 +61,7 @@ namespace {
 void Manager::NewGame() {
     context::Manager::Instance().KillContext("game");
     context::Manager::Instance().KillContext("intro");
-    context::ObjectsStorage& game_global_storage =
+    context::ObjectStorage& game_global_storage =
         context::Manager::Instance().GetContext("game")->GetStorage("global");
     mPlayerShip = game_global_storage.CreateObject<objects::PlayerShip>();
     game_global_storage.CreateObject<Interface>();

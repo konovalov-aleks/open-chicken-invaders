@@ -23,6 +23,7 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <objects/bonus/chicken_leg.h>
 #include <objects/gun/bullet.h>

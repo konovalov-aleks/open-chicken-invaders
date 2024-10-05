@@ -21,10 +21,13 @@
 
 #pragma once
 
-#include <context/object_holder.h>
-#include <fstream>
-#include <objects/base/active.h>
 #include "text.h"
+#include <context/object_holder.h>
+#include <objects/base/active.h>
+
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace oci {
 namespace objects {

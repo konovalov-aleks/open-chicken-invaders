@@ -27,7 +27,7 @@
 namespace oci {
 namespace objects {
 
-void Smoke(context::ObjectsStorage& storage, const Vector2f& pos, int size);
+void Smoke(context::ObjectStorage& storage, const Vector2f& pos, int size);
 
 /// Дым
 class CSmoke : public Particle {

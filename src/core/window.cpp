@@ -31,11 +31,14 @@ namespace oci {
 
 namespace oci {
 
-WindowImpl::WindowImpl() : mFrameMinTimeMs(0) {
-    SDL_Init(SDL_INIT_EVERYTHING);
+WindowImpl::SDLInit::SDLInit()
+{
+    if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS)) [[unlikely]]
+        CriticalError("SDL_Init failed. ", SDL_GetError());
 }
 
-WindowImpl::~WindowImpl() {
+WindowImpl::SDLInit::~SDLInit()
+{
     SDL_Quit();
 }
 

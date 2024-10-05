@@ -24,7 +24,7 @@
 #include <assert.h>
 #include <objects/base/sprite.h>
 #include <context/manager.h>
-#include <context/objects_storage.h>
+#include <context/object_storage.h>
 
 namespace oci {
 namespace objects {
@@ -51,7 +51,7 @@ protected:
     */
     Gun(short lev, TGunType gun_type);
 
-    context::ObjectsStorage& Storage() {
+    context::ObjectStorage& Storage() {
         std::shared_ptr<context::Context> game_context(
             context::Manager::Instance().GetContext("game"));
         assert(game_context.get());

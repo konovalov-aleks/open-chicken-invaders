@@ -21,6 +21,7 @@
 
 #include "intro_level.h"
 
+#include <context/object_storage.h>
 #include <core/keyboard.h>
 
 namespace oci {

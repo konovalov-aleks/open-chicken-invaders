@@ -22,6 +22,7 @@
 #include "solar_system.h"
 
 #include <background/background.h>
+#include <context/object_storage.h>
 #include <core/critical_error.h>
 #include <core/window.h>
 
@@ -69,7 +70,7 @@ namespace {
         }
     };
 
-    inline std::weak_ptr<objects::Sprite> CreatePlanet(context::ObjectsStorage& storage, const char* name, int ind) {
+    inline std::weak_ptr<objects::Sprite> CreatePlanet(context::ObjectStorage& storage, const char* name, int ind) {
         return storage.CreateObject<Planet>(name, ind);
     }
 } // namespace

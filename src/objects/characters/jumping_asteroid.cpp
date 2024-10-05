@@ -21,6 +21,7 @@
 
 #include "jumping_asteroid.h"
 
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <objects/particles/smoke.h>
 

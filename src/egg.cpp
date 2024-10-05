@@ -24,7 +24,7 @@
 #include "audio/controller_holder.h"
 #include "audio/player.h"
 #include "constants.h"
-#include "context/objects_storage.h"
+#include "context/object_storage.h"
 #include "core/vector2.h"
 #include "objects/base/animated_collision_object.h"
 

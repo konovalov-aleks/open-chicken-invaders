@@ -29,13 +29,11 @@ namespace objects {
 
 class UnshadeScreen : public Visible, public Active {
 public:
-    UnshadeScreen() : mPosition(0) {}
-
     void Draw() override;
     void Run() override;
     DrawPriority GetDrawPriority() const override { return dpScreenEffect; }
 private:
-    int mPosition;
+    unsigned mPosition = 0;
 };
 
 } // namespace objects

@@ -21,6 +21,8 @@
 
 #include "animated.h"
 
+#include <context/object_storage.h>
+
 namespace oci {
 namespace objects {
 

@@ -22,7 +22,7 @@
 #include "controller_holder.h"
 
 #include "controller.h"
-#include <context/objects_storage.h>
+#include <context/object_storage.h>
 
 namespace oci {
 namespace audio {

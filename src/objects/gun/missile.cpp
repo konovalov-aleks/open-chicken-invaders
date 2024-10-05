@@ -24,6 +24,7 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/manager.h>
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <objects/particles/smoke.h>
 #include <objects/particles/spark.h>
@@ -36,11 +37,11 @@ namespace oci {
 namespace objects {
 
 namespace {
-    static const float MISSILE_MAX_SPEED = 10;
-    static const float MISSILE_ACCELERATION = 1.0f;
-    static const int MISSILE_POWER = 35;
-    static const int MISSILE_MAX_LIFE_TIME = 30;
-}
+    constexpr float MISSILE_MAX_SPEED = 10;
+    constexpr float MISSILE_ACCELERATION = 1.0f;
+    constexpr int MISSILE_POWER = 35;
+    constexpr int MISSILE_MAX_LIFE_TIME = 30;
+} // namespace
 
 Missile::Missile() :
     mDX(0), mDY(-1), mAngle(0), mSpeed(1), mLifeTime(MISSILE_MAX_LIFE_TIME) {}

@@ -22,16 +22,14 @@
 #pragma once
 
 #include "context.h"
+#include <objects/base/object.h>
 
+#include <cassert>
 #include <concepts>
 #include <memory>
-#include <unordered_map>
+#include <unordered_set>
 
 namespace oci {
-
-namespace objects {
-    class Object;
-} // namespace objects
 
 namespace context {
 
@@ -39,60 +37,58 @@ namespace storage {
     const char LOCAL[] = "local";
 } // namespace storage
 
-class ObjectsStorage {
+class ObjectStorage {
 public:
-    ObjectsStorage(const ObjectsStorage&) = delete;
-    ObjectsStorage& operator= (const ObjectsStorage&) = delete;
+    ~ObjectStorage() { Clean(); }
+
+    ObjectStorage(const ObjectStorage&) = delete;
+    ObjectStorage& operator= (const ObjectStorage&) = delete;
 
     template<std::derived_from<objects::Object> T, typename... Values>
     std::shared_ptr<T> CreateObject(const Values&... args) {
-        std::shared_ptr<T> obj(std::make_shared<StorageSetter<T>>(*this));
+        std::shared_ptr<T> obj(std::make_shared<T>());
+        obj->mStorage = this;
         obj->Init(args...);
-        mObjects.insert({obj.get(), obj});
+        [[maybe_unused]] bool ok = mObjects.insert(obj).second;
+        assert(ok);
         RegisterObject(obj);
         return obj;
     }
 
     void KillObject(objects::Object* obj) {
-        mObjects.erase(obj);
+        if (auto iter = mObjects.find(obj); iter != mObjects.end())
+            mObjects.erase(iter);
     }
 
     template<typename T>
     void KillObject(const std::weak_ptr<T>& obj) {
-        if(!obj.expired())
-            mObjects.erase(obj.lock().get());
+        if (auto iter = mObjects.find(obj.lock()); iter != mObjects.end())
+            mObjects.erase(iter);
     }
 
     void Clean() {
+        for (const std::shared_ptr<objects::Object>& obj : mObjects) {
+            assert(obj);
+            obj->mStorage = nullptr;
+        }
         mObjects.clear();
     }
 
     Context& GetContext() const { return *mContext; }
 
 private:
-    template<typename Parent>
-    class StorageSetter : public Parent {
-    public:
-        StorageSetter(ObjectsStorage& storage) : mStorage(storage) {}
-
-        virtual ~StorageSetter() {}
-        virtual ObjectsStorage& Storage() override { return mStorage; }
-    private:
-        ObjectsStorage& mStorage;
-    };
-
-    ObjectsStorage(Context& context) : mContext(&context) {}
+    ObjectStorage(Context& context) : mContext(&context) {}
 
     template<typename Func, typename T>
-    inline void do_register(std::integral_constant<bool, false>, Func, T) {}
+    void do_register(std::integral_constant<bool, false>, Func, const T&) {}
 
     template<typename Func, typename T>
-    inline void do_register(std::integral_constant<bool, true>, Func f, T obj) {
+    void do_register(std::integral_constant<bool, true>, Func f, const T& obj) {
         (mContext->*f)(obj);
     }
 
     template<typename T>
-    void RegisterObject(std::shared_ptr<T> obj) {
+    void RegisterObject(const std::shared_ptr<T>& obj) {
         do_register(typename std::is_convertible<T*, objects::Visible*>::type(),
                     &Context::RegisterVisible, obj);
         do_register(typename std::is_convertible<T*, objects::Active*>::type(),
@@ -103,7 +99,25 @@ private:
                     &Context::RegisterAnimated, obj);
     }
 
-    std::unordered_map<objects::Object*, std::shared_ptr<objects::Object> > mObjects;
+    struct Hash {
+        using is_transparent = void;
+
+        template <typename T>
+        std::size_t operator() (const T& ptr) const {
+            return std::hash<objects::Object*>()(&*ptr);
+        }
+    };
+
+    struct Equal {
+        using is_transparent = void;
+
+        template <typename T1, typename T2>
+        bool operator() (const T1& a, const T2& b) const {
+            return &*a == &*b;
+        }
+    };
+
+    std::unordered_set<std::shared_ptr<objects::Object>, Hash, Equal> mObjects;
     Context* mContext;
 
     friend class Context;

@@ -22,6 +22,7 @@
 #include "chicken_part.h"
 
 #include <constants.h>
+#include <context/object_storage.h>
 #include <core/window.h>
 
 namespace oci {

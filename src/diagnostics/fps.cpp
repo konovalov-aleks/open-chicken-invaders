@@ -21,6 +21,8 @@
 
 #include "fps.h"
 
+#include <context/object_storage.h>
+
 #include <iterator>
 
 namespace oci {

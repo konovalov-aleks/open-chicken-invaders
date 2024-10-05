@@ -21,6 +21,8 @@
 
 #include "lives_indicator.h"
 
+#include <context/object_storage.h>
+
 namespace oci {
 namespace levels {
 namespace interface {

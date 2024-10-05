@@ -22,11 +22,11 @@
 #include "mainmenu.h"
 
 #include "background_controller.h"
+#include "cursor.h"
 #include <context/manager.h>
 #include <context/object_holder.h>
 #include <core/mouse.h>
 #include <core/window.h>
-#include "cursor.h"
 #include <font/font.h>
 #include <levels/manager.h>
 #include <objects/base/sprite.h>
@@ -36,6 +36,7 @@
 #include <cstdlib>
 #include <functional>
 #include <memory>
+#include <string>
 
 namespace oci {
 
@@ -95,6 +96,7 @@ namespace {
     };
 
     inline void doexit() {
+        Window::Instance().close();
         std::exit(EXIT_SUCCESS);
     }
 } // namespace

@@ -21,18 +21,23 @@
 
 #include "smoke.h"
 
+#include <context/object_storage.h>
+
+#include <cstddef>
+#include <cstdlib>
+
 namespace oci {
 namespace objects {
 
 static int counter = 0;
 
-void Smoke(context::ObjectsStorage& storage, const Vector2f& pos, int size) {
-    size_t count = rand() % (size - 4) + 4;
+void Smoke(context::ObjectStorage& storage, const Vector2f& pos, int size) {
+    std::size_t count = std::rand() % (size - 4) + 4;
     if(counter + count > 25)
         count /= 4;
-    for(size_t i = 0; i < count; ++i) {
-        trigonometry::Degree angle(rand() % 360);
-        float speed = (float)rand() / RAND_MAX * ((float)size / 20.0f);
+    for(std::size_t i = 0; i < count; ++i) {
+        trigonometry::Degree angle(std::rand() % 360);
+        float speed = static_cast<float>(rand()) / RAND_MAX * (static_cast<float>(size) / 20.0f);
         storage.CreateObject<CSmoke>(pos, speed, angle, 1.5f);
     }
 }

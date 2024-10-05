@@ -23,6 +23,7 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
 #include <game/state.h>
 
 namespace oci {

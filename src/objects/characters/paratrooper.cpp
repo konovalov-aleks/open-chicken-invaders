@@ -22,6 +22,7 @@
 #include "paratrooper.h"
 
 #include <constants.h>
+#include <context/object_storage.h>
 #include <core/window.h>
 #include <egg.h>
 #include <game/state.h>
