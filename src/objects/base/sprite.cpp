@@ -221,7 +221,7 @@ namespace {
     public:
         Sprite::SpriteData operator()(std::string_view name) {
             tinyxml2::XMLDocument xml;
-            if(xml.LoadFile((std::filesystem::path("res/sprites/") / name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+            if(xml.LoadFile((std::filesystem::path("res/sprites/") / name).string().c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
                 CriticalError("sprite \"", name, "\" not found");
             const tinyxml2::XMLNode* root = xml.FirstChildElement("sprite");
             if(!root)

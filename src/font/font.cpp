@@ -65,7 +65,7 @@ const Texture& Font::operator[] (char s) const {
 
 void Font::Load(std::string_view name) {
     tinyxml2::XMLDocument xml;
-    if(xml.LoadFile((std::filesystem::path("res/fonts/") / name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+    if(xml.LoadFile((std::filesystem::path("res/fonts/") / name).string().c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
         CriticalError("font \"", name, "\" not found");
     const tinyxml2::XMLNode* root = xml.FirstChildElement("font");
     if(!root) [[unlikely]]

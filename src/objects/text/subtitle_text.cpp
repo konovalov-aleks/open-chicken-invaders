@@ -47,7 +47,7 @@ SubtitleText::SubtitleText() : mCurTask(-1), mCurTaskExpireTime(0) {}
 
 void SubtitleText::Init(std::string_view filename) {
     tinyxml2::XMLDocument xml;
-    if(xml.LoadFile((std::filesystem::path("res/subtitle/") / filename).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+    if(xml.LoadFile((std::filesystem::path("res/subtitle/") / filename).string().c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
         CriticalError("subtitle \"", filename, "\" not found");
     const tinyxml2::XMLNode* root = xml.FirstChildElement("subtitle");
     if(!root) [[unlikely]]
