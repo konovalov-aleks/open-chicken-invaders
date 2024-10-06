@@ -26,7 +26,7 @@
 #else
 #   include "color.h"
 
-#   include <SDL_Surface.h>
+#   include <SDL_surface.h>
 
 #   include <cstddef>
 #   include <memory>
