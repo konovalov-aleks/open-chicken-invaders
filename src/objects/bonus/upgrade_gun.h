@@ -22,6 +22,8 @@
 #pragma once
 
 #include "bonus.h"
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
 
 namespace oci {
 namespace objects {

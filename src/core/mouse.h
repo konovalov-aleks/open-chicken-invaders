@@ -22,7 +22,7 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include <SFML/Window/Mouse.hpp>
+#   include <SFML/Window/Mouse.hpp> // IWYU pragma: export
 #else
 #   include <SDL_mouse.h>
 

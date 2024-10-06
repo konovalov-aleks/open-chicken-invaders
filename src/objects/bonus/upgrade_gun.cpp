@@ -24,6 +24,10 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <objects/bonus/bonus.h>
+
+#include <string>
 
 namespace oci {
 namespace objects {

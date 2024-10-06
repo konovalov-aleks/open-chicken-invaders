@@ -21,20 +21,31 @@
 
 #include "player_ship.h"
 
+#include "shield.h"
+#include "ship.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
 #include <core/critical_error.h>
 #include <core/keyboard.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <game/state.h>
 #include <levels/manager.h>
+#include <objects/base/active.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/gun/green_gun.h>
-#include <objects/gun/red_gun.h>
+#include <objects/gun/gun.h>
 #include <objects/gun/missile.h>
+#include <objects/gun/red_gun.h>
 #include <objects/particles/bang.h>
 
+#include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <memory>
+#include <string>
 
 namespace oci {
 namespace objects {

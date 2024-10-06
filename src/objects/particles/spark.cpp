@@ -21,7 +21,10 @@
 
 #include "spark.h"
 
+#include "particle.h"
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <utils/fast_trigonometry.h>
 
 #include <cstdlib>
 

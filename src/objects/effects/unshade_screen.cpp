@@ -25,12 +25,13 @@
 #include <core/color.h>
 #include <core/critical_error.h>
 #include <core/image.h>
-#include <core/rect.h>
 #include <core/rectangle_shape.h>
 #include <core/sprite.h>
 #include <core/texture.h>
 #include <core/vector2.h>
 #include <core/window.h>
+
+#include <string>
 
 namespace oci {
 namespace objects {

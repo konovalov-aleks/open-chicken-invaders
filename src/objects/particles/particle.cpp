@@ -21,6 +21,10 @@
 
 #include "particle.h"
 
+#include <core/vector2.h>
+#include <objects/base/animated.h>
+#include <utils/fast_trigonometry.h>
+
 namespace oci {
 namespace objects {
 

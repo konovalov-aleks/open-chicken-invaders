@@ -21,14 +21,17 @@
 
 #include "subtitle_text.h"
 
+#include "text.h"
+#include <context/object_holder.h>
 #include <context/object_storage.h>
 #include <core/critical_error.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <font/font.h>
 
 #include <tinyxml2.h>
 
-#include <cassert>
+#include <memory>
 #include <string_view>
 #include <utility>
 

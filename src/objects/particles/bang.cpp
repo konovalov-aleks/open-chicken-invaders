@@ -23,14 +23,17 @@
 
 #include "smoke.h"
 #include "spark.h"
+#include <core/vector2.h>
 
-namespace oci {
-namespace objects {
+namespace oci::context {
+    class ObjectStorage;
+} // namespace oci::context
+
+namespace oci::objects {
 
 void Bang(context::ObjectStorage& storage, const Vector2f& pos, int size) {
     Smoke(storage, pos, size);
     Spark(storage, pos, size);
 }
 
-} // namespace objects
-} // namespace oci
+} // namespace oci::objects

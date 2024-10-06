@@ -21,13 +21,14 @@
 
 #pragma once
 
-#include <context/object_storage.h>
 #include <core/vector2.h>
 
-namespace oci {
-namespace objects {
+namespace oci::context {
+    class ObjectStorage;
+} // namespace oci::context
 
-void Bang(context::ObjectStorage& storage, const Vector2f& pos, int size);
+namespace oci::objects {
 
-} // namespace objects
-} // namespace oci
+void Bang(context::ObjectStorage&, const Vector2f& pos, int size);
+
+} // namespace oci::objects

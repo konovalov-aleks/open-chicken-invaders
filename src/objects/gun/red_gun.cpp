@@ -21,11 +21,14 @@
 
 #include "red_gun.h"
 
+#include "gun.h"
+#include "player_bullet.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include "player_bullet.h"
+#include <context/object_storage.h>
 
 #include <numbers>
+#include <string>
 
 namespace oci {
 namespace objects {

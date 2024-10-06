@@ -22,8 +22,10 @@
 #include "smoke.h"
 
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <objects/particles/particle.h>
+#include <utils/fast_trigonometry.h>
 
-#include <cstddef>
 #include <cstdlib>
 
 namespace oci {

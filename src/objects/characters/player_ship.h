@@ -21,16 +21,18 @@
 
 #pragma once
 
+#include "ship.h"
 #include <core/window.h>
 #include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/gun/gun.h>
-#include "shield.h"
-#include "ship.h"
 
 #include <memory>
 
 namespace oci {
 namespace objects {
+
+class Shield;
 
 class PlayerShip : public Ship, public ICollisionObject,
                    public std::enable_shared_from_this<PlayerShip> {

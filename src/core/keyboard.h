@@ -22,7 +22,7 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include <SFML/Window/Keyboard.hpp>
+#   include <SFML/Window/Keyboard.hpp> // IWYU pragma: export
 #else
 #   include <SDL_scancode.h>
 #endif

@@ -22,11 +22,17 @@
 #include "text.h"
 
 #include <core/critical_error.h>
+#include <core/sprite.h>
+#include <core/texture.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <font/font.h>
 
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cstddef>
+#include <utility>
 
 namespace oci {
 namespace objects {
@@ -122,7 +128,7 @@ Text::~Text() {
 }
 
 void Text::Draw() {
-    for(size_t i = 0; i < mSprites.size(); ++i)
+    for(std::size_t i = 0; i < mSprites.size(); ++i)
         Window::Instance().draw(mSprites[i]);
 }
 
@@ -132,7 +138,7 @@ void Text::SetText(const std::string& text) {
     mSprites.clear();
     mSprites.reserve(text.length());
     Vector2f size(0, 0);
-    for(size_t i = 0; i < text.length(); ++i) {
+    for(std::size_t i = 0; i < text.length(); ++i) {
         const Texture& glyph = (*mFont)[text[i]];
         mSprites.push_back(core::Sprite(glyph));
         size.x += glyph.getSize().x + 1;

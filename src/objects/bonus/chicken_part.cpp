@@ -23,7 +23,9 @@
 
 #include <constants.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/bonus/bonus.h>
 
 namespace oci {
 namespace objects {

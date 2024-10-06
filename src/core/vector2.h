@@ -22,7 +22,7 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include<SFML/System/Vector2.hpp>
+#   include <SFML/System/Vector2.hpp> // IWYU pragma: export
 #endif
 
 namespace oci {

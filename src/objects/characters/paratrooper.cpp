@@ -21,11 +21,17 @@
 
 #include "paratrooper.h"
 
+#include "chicken.h"
+#include "random_chicken.h"
 #include <constants.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <egg.h>
 #include <game/state.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/particles/smoke.h>
 
 #include <cstdlib>

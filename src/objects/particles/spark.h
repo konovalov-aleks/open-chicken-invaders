@@ -22,6 +22,12 @@
 #pragma once
 
 #include "particle.h"
+#include <core/vector2.h>
+#include <utils/fast_trigonometry.h>
+
+namespace oci::context {
+    class ObjectStorage;
+} // namespace oci::context
 
 namespace oci {
 namespace objects {
@@ -29,7 +35,7 @@ namespace objects {
 /// Функция создаёт несколько искр с разными скоростями и направлениями
 /**     \param pos  Координаты точки, в которой будут создаваться искры
         \param size  Размер взрыва, чем больше это число, тем больше искр будет создано */
-void Spark(context::ObjectStorage& storage, const Vector2f& pos, int size);
+void Spark(context::ObjectStorage&, const Vector2f& pos, int size);
 
 /// Анимированный объект, который движется с определенной скоростью под определенным углом.
 /// Когда пролистываются все кадры анимации объект удаляется

@@ -21,46 +21,41 @@
 
 #include "loader.h"
 
+#include <core/critical_error.h>
+
+#include <tinyxml2.h>
+
 #include <cassert>
+#include <cstdio>
 #include <set>
 #include <string>
 
 namespace oci {
 namespace levels {
 
-namespace {
-    void FatalError(const char* description) {
-        fprintf(stderr, "Error while loading \"description.xml\": %s\n",
-                description);
-        exit(1);
-    }
-
-    void LevelLoadFatalError(const std::string& levelname,
-                             const char* description) {
-        fprintf(stderr, "Error while loading level \"%s\": %s\n",
-                levelname.c_str(), description);
-        exit(1);
-    }
-} // namespace
+[[noreturn]] inline void LevelLoadFatalError(const std::string& levelname,
+                                             const char* description) {
+    CriticalError("Error while loading level \"", levelname, "\": ", description);
+}
 
 Loader::Loader() {
     if(xml_file.LoadFile("res/description.xml") != tinyxml2::XML_SUCCESS) [[unlikely]]
-        FatalError(xml_file.ErrorStr());
+        CriticalError(xml_file.ErrorStr());
     tinyxml2::XMLNode* node = xml_file.FirstChildElement("ResourcesList");
-    if(!node)
-        FatalError("cannot find node \"ResourceList\"");
+    if(!node) [[unlikely]]
+        CriticalError("cannot find node \"ResourceList\"");
     ResourcesList = node->ToElement();
-    if(!ResourcesList)
-        FatalError("node \"ResourceList\" is not xml element");
+    if(!ResourcesList) [[unlikely]]
+        CriticalError("node \"ResourceList\" is not xml element");
 }
 
 void Loader::LoadLevel(const std::string& levelname) {
     assert(ResourcesList);
     tinyxml2::XMLNode* level_node = ResourcesList->FirstChildElement(levelname.c_str());
-    if(!level_node)
+    if(!level_node) [[unlikely]]
         LevelLoadFatalError(levelname, "cannot find level element");
     tinyxml2::XMLElement* level = level_node->ToElement();
-    if(!level)
+    if(!level) [[unlikely]]
         LevelLoadFatalError(levelname, "level node is not xml element");
 
     std::set<std::string> sprites_list, sounds_list;

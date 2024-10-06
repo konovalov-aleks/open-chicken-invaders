@@ -21,6 +21,10 @@
 
 #include "random_chicken.h"
 
+#include "chicken.h"
+#include <core/vector2.h>
+
+// IWYU pragma: no_include <__math/roots.h>
 #include <cmath>
 #include <core/window.h>
 #include <cstdlib>

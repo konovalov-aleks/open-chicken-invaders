@@ -21,14 +21,16 @@
 
 #pragma once
 
-#include <objects/base/sprite.h>
+#include <core/vector2.h>
 #include <objects/base/active.h>
-#include <objects/particles/exhaust.h>
+#include <objects/base/sprite.h>
 
 #include <memory>
 
 namespace oci {
 namespace objects {
+
+class Exhaust;
 
 class Ship : public Sprite, public Active {
 public:

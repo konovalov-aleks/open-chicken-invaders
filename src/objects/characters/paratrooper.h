@@ -21,15 +21,19 @@
 
 #pragma once
 
-#include <objects/base/animated_collision_object.h>
-#include <objects/base/active.h>
 #include "random_chicken.h"
+#include <core/vector2.h>
+#include <objects/base/active.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object_types.h>
 
 #include <functional>
 #include <memory>
 
 namespace oci {
 namespace objects {
+
+struct CollisionObjectInfo;
 
 class Paratrooper : public AnimatedCollisionObject, public Active {
 public:

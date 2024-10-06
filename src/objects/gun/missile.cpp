@@ -23,15 +23,24 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/context.h>
 #include <context/manager.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/collision_object_types.h>
+#include <objects/base/sprite.h>
 #include <objects/particles/smoke.h>
 #include <objects/particles/spark.h>
 
+// IWYU pragma: no_include <__math/inverse_trigonometric_functions.h>
+// IWYU pragma: no_include <__math/rounding_functions.h>
+// IWYU pragma: no_include <__math/trigonometric_functions.h>
 #include <cmath>
+#include <cstdlib>
 #include <memory>
 #include <numbers>
+#include <string>
 
 namespace oci {
 namespace objects {

@@ -22,6 +22,7 @@
 #pragma once
 
 #include "chicken.h"
+#include <core/vector2.h>
 
 namespace oci {
 namespace objects {

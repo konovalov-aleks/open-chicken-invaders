@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/animated.h>
 
 namespace oci {

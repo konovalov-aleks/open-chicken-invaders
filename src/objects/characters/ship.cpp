@@ -22,8 +22,12 @@
 #include "ship.h"
 
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <objects/base/sprite.h>
+#include <objects/particles/exhaust.h>
 
 #include <cassert>
+#include <string>
 
 namespace oci {
 namespace objects {

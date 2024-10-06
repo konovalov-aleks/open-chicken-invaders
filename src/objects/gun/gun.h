@@ -21,10 +21,14 @@
 
 #pragma once
 
-#include <assert.h>
-#include <objects/base/sprite.h>
+#include <context/context.h>
 #include <context/manager.h>
-#include <context/object_storage.h>
+#include <context/object_storage.h> // IWYU pragma: keep
+#include <core/vector2.h>
+
+#include <cassert>
+#include <memory>
+#include <string>
 
 namespace oci {
 namespace objects {

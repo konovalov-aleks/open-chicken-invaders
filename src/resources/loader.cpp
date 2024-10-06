@@ -23,9 +23,11 @@
 
 #include <core/critical_error.h>
 
+// IWYU pragma: no_include <__fwd/fstream.h>
+// IWYU pragma: no_include <__fwd/ios.h>
+#include <cstdio>
+#include <cstdlib>
 #include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -43,12 +45,12 @@ namespace resources {
         Impl() {
             mFile.open("ChickenInvaders2.dat", std::ios_base::in | std::ios_base::binary);
             if(!mFile) {
-                fputs("FATAL ERROR: Could not open resource file \"ChickenInvaders2.dat\"\n", stderr);
-                exit(1);
+                std::fputs("FATAL ERROR: Could not open resource file \"ChickenInvaders2.dat\"\n", stderr);
+                std::exit(1);
             }
             if(!ReadTOC()) {
-                fputs("FATAL ERROR: file \"ChickenInvaders2.dat\" corrupted\n", stderr);
-                exit(1);
+                std::fputs("FATAL ERROR: file \"ChickenInvaders2.dat\" corrupted\n", stderr);
+                std::exit(1);
             }
         }
 
@@ -88,7 +90,7 @@ namespace resources {
                    !mFile.read(reinterpret_cast<char*>(&len), 4) ||
                    len < 0 || pos < 0 || len + pos > file_size)
                     return false;
-                for(size_t i = 0; i < sizeof(buffer); ++i)
+                for(std::size_t i = 0; i < sizeof(buffer); ++i)
                     buffer[i] = TRANSLATION_TABLE[static_cast<unsigned char>(buffer[i])];
                 buffer[sizeof(buffer) - 1] = '\0';
                 mTOC.insert(std::make_pair(buffer, std::make_pair(pos, len)));

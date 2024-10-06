@@ -21,13 +21,18 @@
 
 #pragma once
 
-#include <core/vector2.h>
 #include "particle.h"
+#include <core/vector2.h>
+#include <utils/fast_trigonometry.h>
+
+namespace oci::context {
+    class ObjectStorage;
+} // namespace oci::context
 
 namespace oci {
 namespace objects {
 
-void Smoke(context::ObjectStorage& storage, const Vector2f& pos, int size);
+void Smoke(context::ObjectStorage&, const Vector2f& pos, int size);
 
 /// Дым
 class CSmoke : public Particle {

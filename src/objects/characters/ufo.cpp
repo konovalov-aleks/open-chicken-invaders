@@ -21,17 +21,25 @@
 
 #include "ufo.h"
 
+#include <audio/controller.h>
+#include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/bonus/upgrade_gun.h>
 #include <objects/gun/bullet.h>
 #include <objects/particles/smoke.h>
 
 #include <numbers>
+#include <string>
 
 namespace oci {
 namespace objects {
+
+struct CollisionObjectInfo;
 
 static const int UFO_ATTACK_TIME = 15;
 static const float UFO_BULLET_SPEED = 8.0f;

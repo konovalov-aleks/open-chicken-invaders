@@ -24,10 +24,12 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <egg.h>
 #include <game/state.h>
 #include <objects/base/animated_collision_object.h>
 #include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/bonus/chicken_body.h>
 #include <objects/bonus/chicken_leg.h>
 #include <objects/bonus/coin.h>

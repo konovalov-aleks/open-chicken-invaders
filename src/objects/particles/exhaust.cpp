@@ -21,6 +21,9 @@
 
 #include "exhaust.h"
 
+#include <core/vector2.h>
+#include <objects/base/animated.h>
+
 namespace oci {
 namespace objects {
 

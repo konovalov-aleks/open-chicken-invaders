@@ -21,10 +21,12 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/active.h>
 #include <objects/base/collision_object.h>
-#include <objects/base/sprite.h>
-#include <objects/base/visible.h>
+#include <objects/base/collision_object_types.h>
+
+#include <string>
 
 namespace oci {
 namespace objects {

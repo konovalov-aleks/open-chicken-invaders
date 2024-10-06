@@ -22,10 +22,13 @@
 #include "jumping_asteroid.h"
 
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/characters/asteroid.h>
 #include <objects/particles/smoke.h>
 
+// IWYU pragma: no_include <__math/inverse_trigonometric_functions.h>
 #include <cmath>
 #include <cstdlib>
 #include <numbers>

@@ -30,6 +30,8 @@
 #include <objects/base/collision_object_types.h>
 #include <objects/particles/smoke.h>
 
+// IWYU pragma: no_include <__math/inverse_trigonometric_functions.h>
+// IWYU pragma: no_include <__math/trigonometric_functions.h>
 #include <cmath>
 #include <cstdlib>
 #include <iterator>

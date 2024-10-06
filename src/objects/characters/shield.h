@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include "../base/animated.h"
-#include "../modifiers/expiring.h"
+#include <core/vector2.h>
+#include <objects/base/animated.h>
+#include <objects/modifiers/expiring.h>
 
 namespace oci {
 namespace objects {

@@ -25,6 +25,8 @@
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <context/object_storage.h>
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/gun/gun.h>
 
 #include <iterator>

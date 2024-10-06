@@ -22,7 +22,9 @@
 #include "bonus.h"
 
 #include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/animated_collision_object.h>
 
 #include <cstdlib>
 

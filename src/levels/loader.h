@@ -22,7 +22,8 @@
 #pragma once
 
 #include <tinyxml2.h>
-#include "level.h"
+
+#include <string>
 
 namespace oci {
 namespace levels {
