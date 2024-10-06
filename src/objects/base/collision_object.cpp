@@ -45,7 +45,7 @@ bool ICollisionObject::DetectCollision(ICollisionObject& obj) {
     return (std::abs(DoGetX() - obj.DoGetX()) < w && std::abs(DoGetY() - obj.DoGetY()) < h);
 }
 
-void CCollisionObject::Init(const std::string& sprite_name,
+void CCollisionObject::Init(std::string_view sprite_name,
                             const Vector2f& pos, short power) {
     ICollisionObject::Init(power);
     Sprite::Init(sprite_name, pos);

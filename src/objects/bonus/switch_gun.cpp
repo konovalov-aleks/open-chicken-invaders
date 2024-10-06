@@ -30,7 +30,7 @@
 #include <objects/gun/gun.h>
 
 #include <iterator>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

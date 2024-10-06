@@ -31,11 +31,11 @@ namespace audio {
 
 class ControllerHolder : public objects::Active {
 public:
-    void Init(const std::shared_ptr<Controller>& sc);
+    void Init(std::unique_ptr<Controller>&&);
     void Run() override;
 
 private:
-    std::shared_ptr<Controller> mController;
+    std::unique_ptr<Controller> mController;
 };
 
 } // namespace audio

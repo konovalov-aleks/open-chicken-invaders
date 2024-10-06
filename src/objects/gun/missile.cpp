@@ -38,9 +38,8 @@
 // IWYU pragma: no_include <__math/trigonometric_functions.h>
 #include <cmath>
 #include <cstdlib>
-#include <memory>
 #include <numbers>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -72,10 +71,9 @@ void Missile::Run() {
        (std::abs(delta_x) < mSpeed && std::abs(delta_y) < mSpeed)) {
         Storage().CreateObject<audio::ControllerHolder>(
             audio::Play("fx113.wav"));
-        std::shared_ptr<context::Context> context =
-            context::Manager::Instance().GetActiveContext();
+        context::Context* context = context::Manager::Instance().GetActiveContext();
         if(context)
-            context->ColliseAll(ctMissile, MISSILE_POWER);
+            context->CollideAll(ctMissile, MISSILE_POWER);
         Spark(Storage(), getPosition(), 50);
         Smoke(Storage(), getPosition(), 20);
         Storage().KillObject(this);

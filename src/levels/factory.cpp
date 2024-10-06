@@ -34,7 +34,7 @@ Factory& Factory::Instance() {
     return instance;
 }
 
-void Factory::Build(const std::string& obj_name) {
+void Factory::Build(std::string_view obj_name) {
     ObjectsMap::iterator iter = mObjects.find(obj_name);
     if(iter == mObjects.end()) [[unlikely]]
         CriticalError("Cannot find level object by name \"", obj_name, '"');
@@ -42,9 +42,9 @@ void Factory::Build(const std::string& obj_name) {
 }
 
 void Factory::IGenerator::Build() {
-    std::shared_ptr<context::Context> context =
+    context::Context& context =
         context::Manager::Instance().GetContext(mContextName);
-    DoBuild(context->GetStorage(context::storage::LOCAL));
+    DoBuild(context.GetStorage(context::storage::LOCAL));
     context::Manager::Instance().SetActiveContext(context);
 }
 

@@ -39,10 +39,11 @@
 #include <objects/effects/unshade_screen.h>
 #include <objects/text/text.h>
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <cstdlib>
 #include <functional>
 #include <memory>
-#include <string>
+#include <string_view>
 
 namespace oci {
 
@@ -64,7 +65,7 @@ namespace {
 
         Button() : mPressed(false) {}
 
-        void Init(const std::string& caption, int ypos,
+        void Init(std::string_view caption, int ypos,
                   const std::function<void()>& on_press_callback) {
             Sprite::Init("menuitem.xml");
             setPosition(Window::Instance().getSize().x / 2, ypos);
@@ -134,9 +135,9 @@ void MainMenu::SwitchToMenu() {
 }
 
 void MainMenu::InitMenu() {
-    std::shared_ptr<context::Context> context =
+    context::Context& context =
         context::Manager::Instance().GetContext(MENU_CONTEXT_NAME);
-    context->GetStorage(context::storage::LOCAL).CreateObject<MainMenu>();
+    context.GetStorage(context::storage::LOCAL).CreateObject<MainMenu>();
     context::Manager::Instance().SetActiveContext(context);
 }
 

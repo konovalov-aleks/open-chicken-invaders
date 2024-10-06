@@ -24,11 +24,13 @@
 #include "controller.h"
 #include <context/object_storage.h>
 
+#include <utility>
+
 namespace oci {
 namespace audio {
 
-void ControllerHolder::Init(const std::shared_ptr<Controller>& controller) {
-    mController = controller;
+void ControllerHolder::Init(std::unique_ptr<Controller>&& controller) {
+    mController = std::move(controller);
 }
 
 void ControllerHolder::Run() {

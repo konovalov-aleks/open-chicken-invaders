@@ -29,6 +29,9 @@
 #include <objects/modifiers/hidden.h>
 #include <objects/text/text.h>
 
+#include <string>
+#include <string_view>
+
 namespace oci {
 namespace levels {
 namespace interface {
@@ -36,7 +39,7 @@ namespace interface {
 using namespace objects;
 using namespace modifiers;
 
-void Indicator::Init(const std::string& sprite_name,
+void Indicator::Init(std::string_view sprite_name,
                      const Vector2f& position) {
     mText = Storage().CreateObject<Hidden<Text> >(
         "", Vector2f(position.x + 17, position.y),

@@ -29,8 +29,9 @@
 #include <objects/base/sprite.h>
 #include <objects/base/visible.h>
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <cassert>
-#include <string>
+#include <string_view>
 #include <memory>
 
 namespace oci {
@@ -64,7 +65,7 @@ const int SolarSystem::PLANETS_X [] = {
 namespace {
     class Planet : public objects::CommonSprite<objects::Visible::dpPlanet> {
     public:
-        void Init(const std::string& name, int index) {
+        void Init(std::string_view name, int index) {
             Sprite::Init(name,
                          Vector2f(
                              Background::Instance().GetController().GetX() +

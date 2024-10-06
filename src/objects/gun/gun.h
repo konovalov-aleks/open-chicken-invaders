@@ -26,9 +26,7 @@
 #include <context/object_storage.h> // IWYU pragma: keep
 #include <core/vector2.h>
 
-#include <cassert>
-#include <memory>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -56,10 +54,7 @@ protected:
     Gun(short lev, TGunType gun_type);
 
     context::ObjectStorage& Storage() {
-        std::shared_ptr<context::Context> game_context(
-            context::Manager::Instance().GetContext("game"));
-        assert(game_context.get());
-        return game_context->GetStorage("level");
+        return context::Manager::Instance().GetContext("game").GetStorage("level");
     }
 
     template<typename T>

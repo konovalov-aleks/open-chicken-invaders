@@ -39,6 +39,9 @@
 #include <resources/loader.h>
 #include <utils/cache.h>
 
+#include <filesystem>
+#include <string>
+#include <string_view>
 #include <vector>
 
 namespace oci {
@@ -50,9 +53,10 @@ namespace {
 
 class Loader {
 public:
-    sf::SoundBuffer operator()(const std::string& name) {
+    sf::SoundBuffer operator()(std::string_view name) {
+        std::filesystem::path path = std::filesystem::path("sfx/") / name;
         std::vector<char> data =
-            resources::ResourceLoader::Instance().GetData("sfx/" + name);
+            resources::ResourceLoader::Instance().GetData(path.string());
         if(data.empty()) [[unlikely]]
             CriticalError("Sound resource \"sfx/", name, "\" is empty");
         sf::SoundBuffer sb;
@@ -82,11 +86,11 @@ private:
 
 } // namespace
 
-std::shared_ptr<Controller> Play(const std::string& name, bool autoplay,
+std::unique_ptr<Controller> Play(std::string_view name, bool autoplay,
                                  bool loop) {
     static Cache<sf::SoundBuffer, Loader> cache;
     const sf::SoundBuffer& sb = cache.Get(name);
-    return std::make_shared<ControllerImpl>(sb, autoplay, loop);
+    return std::make_unique<ControllerImpl>(sb, autoplay, loop);
 }
 
 #else
@@ -103,9 +107,10 @@ public:
 
 class Loader {
 public:
-    std::shared_ptr<Mix_Chunk> operator()(const std::string& name) {
+    std::shared_ptr<Mix_Chunk> operator()(std::string_view name) {
+        std::filesystem::path path = std::filesystem::path("sfx/") / name;
         std::vector<char> data =
-            resources::ResourceLoader::Instance().GetData("sfx/" + name);
+            resources::ResourceLoader::Instance().GetData(path.string());
         if(data.empty()) [[unlikely]]
             CriticalError("Sound resource \"sfx/", name, "\" is empty");
         std::shared_ptr<Mix_Chunk> res = std::shared_ptr<Mix_Chunk>(
@@ -119,10 +124,10 @@ public:
 
 class ControllerImpl : public Controller {
 public:
-    ControllerImpl(std::shared_ptr<Mix_Chunk> mix, bool autoplay, bool loop)
-        : mMixChunk(mix), mChannel(-1) {
+    ControllerImpl(Mix_Chunk& mix, bool autoplay, bool loop)
+        : mChannel(-1) {
         if(autoplay)
-            mChannel = Mix_PlayChannel(-1, mMixChunk.get(), loop ? -1 : 0);
+            mChannel = Mix_PlayChannel(-1, &mix, loop ? -1 : 0);
     }
 
     virtual ~ControllerImpl() {
@@ -135,7 +140,6 @@ public:
     }
 
 private:
-    std::shared_ptr<Mix_Chunk> mMixChunk;
     int mChannel;
 };
 
@@ -155,11 +159,10 @@ static SDLMixerInitializer sdl_mixer_initializer;
 
 } // namespace
 
-std::shared_ptr<Controller> Play(const std::string& name, bool autoplay,
-                                 bool loop) {
+std::unique_ptr<Controller> Play(std::string_view name, bool autoplay, bool loop) {
     static Cache<std::shared_ptr<Mix_Chunk>, Loader> cache;
     const std::shared_ptr<Mix_Chunk>& mix = cache.Get(name);
-    return make_shared<ControllerImpl>(mix, autoplay, loop);
+    return std::make_unique<ControllerImpl>(*mix, autoplay, loop);
 }
 
 #endif

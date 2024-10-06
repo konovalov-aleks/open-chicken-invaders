@@ -35,7 +35,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ratio>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace benchmark {
@@ -77,7 +77,7 @@ namespace benchmark {
         std::chrono::nanoseconds time = Clock::now() - mLastStatisticTime;
 //        for(int i = 0; i < mChickensCount; ++i)
 //            Storage().KillObject(Storage().CreateObject<BenchmarkChicken>());
-        Storage().GetContext().ColliseAll(ctFriendBullet, 100500);
+        Storage().GetContext().CollideAll(ctFriendBullet, 100500);
         if(time >= std::chrono::seconds(1)) {
             float FPS = mFramesCount / std::chrono::duration_cast<std::chrono::seconds>(time).count();
             std::printf("[%d chickens] FPS: %f\n", mChickensCount, FPS);

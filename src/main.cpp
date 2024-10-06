@@ -29,9 +29,9 @@
 #include <core/window_style.h>
 #include <diagnostics/benchmark/benchmark.h>
 
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
-#include <memory>
 #include <string>
 
 int main(int argc, char* argv[]) {
@@ -54,9 +54,9 @@ int main(int argc, char* argv[]) {
             }
         }
         Window::Instance().clear();
-        std::shared_ptr<context::Context> context =
-            context::Manager::Instance().GetActiveContext();
         Background::Instance().Draw();
+        context::Context* context = context::Manager::Instance().GetActiveContext();
+        assert(context);
         context->Run();
         context->ProcessCollisions();
         context->Animate();

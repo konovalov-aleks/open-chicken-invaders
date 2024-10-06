@@ -23,13 +23,14 @@
 
 #include "controller.h"
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <memory>
-#include <string>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace audio {
 
-std::shared_ptr<Controller> Play(const std::string& filename,
+std::unique_ptr<Controller> Play(std::string_view filename,
                                  bool autoplay = true,
                                  bool loop = false);
 

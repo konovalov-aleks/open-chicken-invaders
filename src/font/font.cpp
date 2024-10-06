@@ -31,6 +31,8 @@
 #include <tinyxml2.h>
 
 #include <cstring>
+#include <filesystem>
+#include <string>
 #include <string_view>
 #include <unordered_map>
 #include <utility>
@@ -41,17 +43,17 @@ namespace oci {
 using namespace std::literals;
 
 struct FontLoader {
-    Font operator()(const std::string& name) {
+    Font operator()(std::string_view name) {
         return Font(name);
     }
 };
 
-const Font& Font::GetFont(const std::string& name) {
+const Font& Font::GetFont(std::string_view name) {
     static Cache<Font, FontLoader> cache;
     return cache.Get(name);
 }
 
-Font::Font(const std::string& name) {
+Font::Font(std::string_view name) {
     Load(name);
 }
 
@@ -61,9 +63,9 @@ const Texture& Font::operator[] (char s) const {
     return res == mTextures.end() ? empty : res->second;
 }
 
-void Font::Load(const std::string& name) {
+void Font::Load(std::string_view name) {
     tinyxml2::XMLDocument xml;
-    if(xml.LoadFile(("res/fonts/" + name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+    if(xml.LoadFile((std::filesystem::path("res/fonts/") / name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
         CriticalError("font \"", name, "\" not found");
     const tinyxml2::XMLNode* root = xml.FirstChildElement("font");
     if(!root) [[unlikely]]
@@ -95,7 +97,7 @@ void Font::Load(const std::string& name) {
     }
 }
 
-void Font::LoadGlyph(char s, const std::string& filename) {
+void Font::LoadGlyph(char s, std::string_view filename) {
     std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
     if(data.empty()) [[unlikely]]
         CriticalError("Image resource \"", filename, "\" is empty");

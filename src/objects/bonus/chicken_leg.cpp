@@ -28,7 +28,7 @@
 #include <core/vector2.h>
 #include <game/state.h>
 
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

@@ -21,17 +21,21 @@
 
 #include "context.h"
 
-// IWYU pragma: no_include <__hash_table>
 #include <context/object_storage.h>
 #include <objects/base/active.h>
 #include <objects/base/animated.h>
 #include <objects/base/collision_object.h>
 #include <objects/base/collision_object_types.h>
 #include <objects/base/visible.h>
+#include <utils/transparent_equal.h>
+#include <utils/transparent_string_hash.h>
 
+// IWYU pragma: no_include <__hash_table>
 #include <list>
 #include <map>
 #include <memory>
+#include <string>
+#include <string_view>
 #include <unordered_map>
 #include <utility>
 
@@ -85,7 +89,10 @@ public:
     > CollisionObjectsList;
     CollisionObjectsList mCollisionObjects;
 
-    typedef std::unordered_map<std::string, std::unique_ptr<ObjectStorage> > ObjectsMap;
+    using ObjectsMap = std::unordered_map<
+        std::string, std::unique_ptr<ObjectStorage>,
+        TransparentStrHash, TransparentEqual
+    >;
     ObjectsMap mObjectStorages;
 };
 
@@ -146,7 +153,7 @@ void Context::Animate() {
     process<objects::Animated>(mImpl->mAnimatedObjects, &objects::Animated::NextFrame);
 }
 
-void Context::ColliseAll(CollisionType collision_type, int power) {
+void Context::CollideAll(CollisionType collision_type, int power) {
     for(Context::Impl::CollisionObjectsList::iterator iter =
        mImpl->mCollisionObjects.begin();
        iter != mImpl->mCollisionObjects.end(); ++iter) {
@@ -160,7 +167,7 @@ void Context::ColliseAll(CollisionType collision_type, int power) {
     }
 }
 
-ObjectStorage& Context::GetStorage(const std::string& name) {
+ObjectStorage& Context::GetStorage(std::string_view name) {
     Context::Impl::ObjectsMap& storages = mImpl->mObjectStorages;
     Context::Impl::ObjectsMap::const_iterator iter = storages.find(name);
     if(iter == storages.end())

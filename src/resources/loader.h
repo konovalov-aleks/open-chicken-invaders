@@ -21,8 +21,9 @@
 
 #pragma once
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <memory>
-#include <string>
+#include <string_view> // IWYU pragma: keep
 #include <vector>
 
 namespace oci {
@@ -32,7 +33,7 @@ namespace resources {
     public:
         static ResourceLoader& Instance() { return mInstance; }
 
-        std::vector<char> GetData(const std::string& resource_name);
+        std::vector<char> GetData(std::string_view resource_name);
 
     private:
         ResourceLoader();

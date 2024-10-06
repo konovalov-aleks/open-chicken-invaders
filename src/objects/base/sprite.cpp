@@ -34,6 +34,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <filesystem>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -41,6 +42,7 @@
 #ifdef USE_SFML
 #   include <core/rect.h>
 
+#   include <iostream>
 #   include <fstream>
 #endif // USE_SFML
 
@@ -65,11 +67,11 @@ namespace {
     }
 
     struct OldSpriteLoader {
-        Sprite::SpriteData operator()(const std::string& name) {
+        Sprite::SpriteData operator()(std::string_view name) {
             Sprite::SpriteData data;
 
-            std::printf("Loading sprite \"%s\"\n", name.c_str());
-            std::ifstream f(std::string("res/images/") + name, std::ios_base::binary);
+            std::cout << "Loading sprite \"" << name << '"' << std::endl;
+            std::ifstream f(std::filesystem::path("res/images/") / name, std::ios_base::binary);
             if(!f) [[unlikely]]
                 CriticalError("file \"", name, "\" not found");
             std::string image_name;
@@ -217,9 +219,9 @@ namespace {
         }
 
     public:
-        Sprite::SpriteData operator()(const std::string& name) {
+        Sprite::SpriteData operator()(std::string_view name) {
             tinyxml2::XMLDocument xml;
-            if(xml.LoadFile(("res/sprites/" + name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+            if(xml.LoadFile((std::filesystem::path("res/sprites/") / name).c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
                 CriticalError("sprite \"", name, "\" not found");
             const tinyxml2::XMLNode* root = xml.FirstChildElement("sprite");
             if(!root)
@@ -230,7 +232,7 @@ namespace {
 
 } // namespace
 
-void Sprite::Init(const std::string& filename, const Vector2f& pos) {
+void Sprite::Init(std::string_view filename, const Vector2f& pos) {
     Init(filename);
     #ifdef DEBUG_SPRITE
     std::printf("[%x] Sprite(\"%s\", %f, %f)\n", (unsigned int)this,
@@ -239,16 +241,16 @@ void Sprite::Init(const std::string& filename, const Vector2f& pos) {
     setPosition(pos);
 }
 
-void Sprite::Init(const std::string& filename) {
+void Sprite::Init(std::string_view filename) {
     mCurrentState = mCurrentFrame = 0;
     #ifdef DEBUG_SPRITE
     std::printf("[%x] Sprite (\"%s\")\n", (unsigned int)this, filename);
     #endif
 #ifdef USE_SFML
-    if(strstr(filename.c_str(), ".sprite")) {
+    if(filename.ends_with(".sprite")) {
         static Cache<SpriteData, OldSpriteLoader> old_cache;
         mData = &old_cache.Get(filename);
-        std::printf("Old loader: loaded \"%s\"\n", filename.c_str());
+        std::cout << "Old loader: loaded \"" << filename << '"' << std::endl;
     } else
 #endif
     {
@@ -269,15 +271,15 @@ Sprite::~Sprite() {
     #endif
 }
 
-size_t Sprite::StatesCount() const {
+std::size_t Sprite::StatesCount() const {
     return mData ? mData->size() : 0;
 }
 
-size_t Sprite::CurrentState() const {
+std::size_t Sprite::CurrentState() const {
     return mCurrentState;
 }
 
-bool Sprite::SetState(size_t state) {
+bool Sprite::SetState(std::size_t state) {
     assert(state < StatesCount());
     if(state >= StatesCount())
         return false;
@@ -285,15 +287,15 @@ bool Sprite::SetState(size_t state) {
     return SetFrame(0);
 }
 
-size_t Sprite::FramesCount() const {
+std::size_t Sprite::FramesCount() const {
     return mData ? (*mData)[mCurrentState].images.size() : 0;
 }
 
-size_t Sprite::CurrentFrame() const {
+std::size_t Sprite::CurrentFrame() const {
     return mCurrentFrame;
 }
 
-bool Sprite::SetFrame(size_t frame) {
+bool Sprite::SetFrame(std::size_t frame) {
     if(frame >= FramesCount()) [[unlikely]]
         CriticalError("Frames count = ", FramesCount(), ", but selected frame ", frame);
     mCurrentFrame = frame;

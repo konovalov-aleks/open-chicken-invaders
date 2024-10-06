@@ -34,6 +34,8 @@
 #include <objects/text/text.h>
 
 #include <cstdio>
+#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -41,7 +43,9 @@ namespace levels {
 using namespace objects;
 using namespace modifiers;
 
-void Level::Init(const std::string& levelname) {
+using namespace std::string_literals;
+
+void Level::Init(const char* levelname) {
     levels::Manager::Instance().LoadLevel(levelname);
 }
 
@@ -51,14 +55,14 @@ void Level::EndLevel() {
     levels::Manager::Instance().CreateNextLevel();
 }
 
-void Level::ShowLevelInfo(const std::string& index, const std::string& name,
-                          const std::string& description, bool descr_blink) {
+void Level::ShowLevelInfo(const char* index, const char* name,
+                          const char* description, bool descr_blink) {
 
-    std::printf("show level info %s %s\n", index.c_str(), name.c_str());
+    std::printf("show level info %s %s\n", index, name);
     const int window_center = Window::Instance().getSize().x / 2;
     Storage().CreateObject<Expiring<Text> >(
                           20,
-                          "wave " + index,
+                          "wave "s + index,
                           Vector2f(window_center, FirstTextStringY),
                           Font::GetFont("medium.xml"),
                           Text::haCenter, Text::vaCenter);
@@ -68,7 +72,7 @@ void Level::ShowLevelInfo(const std::string& index, const std::string& name,
                           Vector2f(window_center, SecondTextStringY),
                           Font::GetFont("big.xml"),
                           Text::haCenter, Text::vaCenter);
-    if(!description.empty()) {
+    if(description) {
         if(descr_blink)
             Storage().CreateObject<Expiring<Blinkable<Text> > >(
                                 20, // life time

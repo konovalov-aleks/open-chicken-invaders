@@ -102,7 +102,7 @@ private:
 
     std::unique_ptr<SDL_Window, WindowDeleter> mWindow;
     std::unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
-    Uint32 mLastFrameTimeMs = 0;
+    Uint64 mLastFrameTimeMs = 0;
     Vector2u mSize = {};
     Uint32 mFrameMinTimeMs = 0;
 };

@@ -29,7 +29,7 @@
 #include <core/window.h>
 #include <objects/characters/boss1.h>
 
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {

@@ -28,8 +28,9 @@
 #include <objects/modifiers/hidden.h> // IWYU pragma: keep
 #include <objects/text/text.h> // IWYU pragma: keep
 
-#include <string>
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <memory>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace levels {
@@ -37,7 +38,7 @@ namespace interface {
 
 class Indicator : public objects::Active {
 public:
-    void Init(const std::string& sprite_name, const Vector2f& position);
+    void Init(std::string_view sprite_name, const Vector2f& position);
     void Run() override;
 
 protected:

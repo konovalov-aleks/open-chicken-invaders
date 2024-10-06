@@ -23,14 +23,12 @@
 
 #include "level.h"
 
-#include <string>
-
 namespace oci {
 namespace levels {
 
 class GameLevel : public Level {
 protected:
-    void Init(const std::string& levelname);
+    void Init(const char* levelname);
 };
 
 } // namespace levels

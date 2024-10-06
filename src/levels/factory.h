@@ -23,8 +23,10 @@
 
 #include <context/object_storage.h>
 
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <cassert>
 #include <memory>
-#include <string>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 #include <utility>
@@ -42,24 +44,22 @@ public:
     Factory& operator= (const Factory&) = delete;
 
     template<typename T, typename... Args>
-    void Register(std::string&& obj_name, std::string&& context_name, Args... args) {
-        mObjects.insert(
-            std::make_pair(std::move(obj_name), std::unique_ptr<IGenerator>(
-                new Generator<T, Args...>(std::move(context_name), args...)))
-        );
+    void Register(std::string_view obj_name, std::string_view context_name, Args&&... args) {
+        [[maybe_unused]] bool ok =
+            mObjects.emplace(obj_name, std::unique_ptr<IGenerator>(
+                new Generator<T, Args...>(context_name, std::forward<Args>(args)...))).second;
+        assert(ok);
     }
 
-    void Build(const std::string& obj_name);
+    void Build(std::string_view obj_name);
 
     template<typename T>
     class Registrar {
     public:
         template<typename... Args>
-        Registrar(std::string&& obj_name,
-                  std::string&& context_name, Args... args) {
-            Factory::Instance().Register<T>(std::move(obj_name),
-                                            std::move(context_name),
-                                            args...);
+        Registrar(std::string_view obj_name,
+                  std::string_view context_name, Args... args) {
+            Factory::Instance().Register<T>(obj_name, context_name, std::forward<Args>(args)...);
         }
     };
 
@@ -67,8 +67,8 @@ private:
 
     class IGenerator {
     public:
-        IGenerator(std::string&& context_name)
-            : mContextName(std::move(context_name))
+        IGenerator(std::string_view context_name)
+            : mContextName(context_name)
         {}
 
         virtual ~IGenerator() = default;
@@ -78,27 +78,27 @@ private:
         virtual void DoBuild(context::ObjectStorage& storage) = 0;
 
     private:
-        std::string mContextName;
+        std::string_view mContextName;
     };
 
     template<typename T, typename... Args>
     class Generator : public IGenerator {
     public:
-        Generator(std::string&& context_name, Args... args)
-            : IGenerator(std::move(context_name))
+        Generator(std::string_view context_name, Args... args)
+            : IGenerator(context_name)
             , mArgs(args...)
         {}
     protected:
         virtual void DoBuild(context::ObjectStorage& storage) override {
-            const auto args =
-                std::tuple_cat(std::tuple(&storage), mArgs);
-            std::apply(&context::ObjectStorage::CreateObject<T, Args...>, args);
+            auto args = std::tuple_cat(std::tuple(&storage), mArgs);
+            std::apply(&context::ObjectStorage::CreateObject<T, Args...>,
+                       std::tuple(args));
         }
     private:
         std::tuple<Args...> mArgs;
     };
 
-    typedef std::unordered_map<std::string, std::unique_ptr<IGenerator> > ObjectsMap;
+    typedef std::unordered_map<std::string_view, std::unique_ptr<IGenerator> > ObjectsMap;
     ObjectsMap mObjects;
 };
 

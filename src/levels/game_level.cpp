@@ -28,7 +28,7 @@
 namespace oci {
 namespace levels {
 
-void GameLevel::Init(const std::string& levelname) {
+void GameLevel::Init(const char* levelname) {
     Level::Init(levelname);
     levels::Manager::Instance().GetPlayerShip().StartFire();
 }

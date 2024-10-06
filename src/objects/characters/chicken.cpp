@@ -40,7 +40,7 @@
 
 #include <cstdlib>
 #include <iterator>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

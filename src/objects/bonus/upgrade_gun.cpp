@@ -27,7 +27,7 @@
 #include <core/vector2.h>
 #include <objects/bonus/bonus.h>
 
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

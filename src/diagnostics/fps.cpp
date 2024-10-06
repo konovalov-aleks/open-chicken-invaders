@@ -28,7 +28,7 @@
 
 #include <iterator>
 #include <cstdio>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace diagnostics {

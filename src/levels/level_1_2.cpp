@@ -31,7 +31,7 @@
 
 #include <cmath>
 #include <cstdlib>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {

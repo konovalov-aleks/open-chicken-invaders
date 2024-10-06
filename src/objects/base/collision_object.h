@@ -26,7 +26,8 @@
 #include "sprite.h"
 #include <core/vector2.h>
 
-#include <string>
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace objects {
@@ -76,7 +77,7 @@ protected:
 class CCollisionObject : public ICollisionObject, public Sprite
 {
 public:
-    void Init(const std::string& sprite_name, const Vector2f& pos,
+    void Init(std::string_view sprite_name, const Vector2f& pos,
               short power);
 
     virtual void OnCollision(const CollisionObjectInfo& collisedWith) = 0;

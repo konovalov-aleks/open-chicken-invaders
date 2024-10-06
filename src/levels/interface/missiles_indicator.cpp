@@ -26,7 +26,7 @@
 #include <core/window.h>
 #include <game/state.h>
 
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {

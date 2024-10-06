@@ -32,7 +32,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <memory>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {

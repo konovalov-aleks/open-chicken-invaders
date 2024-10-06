@@ -33,11 +33,12 @@
 #include <cmath>
 #include <cstdlib>
 #include <numbers>
+#include <string_view>
 
 namespace oci {
 namespace objects {
 
-void Bullet::Init(const std::string& sprite_name, const Vector2f& pos,
+void Bullet::Init(std::string_view sprite_name, const Vector2f& pos,
                   float speed, float angle, int _state, short power,
                   int collisionWith, CollisionType collisionType) {
     CCollisionObject::Init(sprite_name, pos, power);

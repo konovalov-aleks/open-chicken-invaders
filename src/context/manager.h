@@ -22,9 +22,10 @@
 #pragma once
 
 #include "context.h"
-#include <memory>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string_view>
 #include <unordered_map>
-#include <string>
 
 namespace oci {
 namespace context {
@@ -36,16 +37,16 @@ public:
     Manager(const Manager&) = delete;
     Manager& operator= (const Manager&) = delete;
 
-    std::shared_ptr<Context> GetContext(const std::string& context_name);
-    void KillContext(const std::string& context_name);
+    Context& GetContext(std::string_view context_name);
+    void KillContext(std::string_view context_name);
 
-    std::shared_ptr<Context> GetActiveContext() { return mActiveContext; }
-    void SetActiveContext(const std::shared_ptr<Context>& context);
+    Context* GetActiveContext() const { return mActiveContext; }
+    void SetActiveContext(Context&);
 private:
-    Manager();
+    Manager() = default;
 
-    std::shared_ptr<Context> mActiveContext;
-    typedef std::unordered_map<std::string, std::shared_ptr<Context> > ContextsMap;
+    Context* mActiveContext = nullptr;
+    typedef std::unordered_map<std::string_view, Context> ContextsMap;
     ContextsMap mContexts;
     static Manager mInstance;
 };

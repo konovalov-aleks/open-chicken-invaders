@@ -22,6 +22,8 @@
 #include "loader.h"
 
 #include <core/critical_error.h>
+#include <utils/transparent_equal.h>
+#include <utils/transparent_string_hash.h>
 
 // IWYU pragma: no_include <__fwd/fstream.h>
 // IWYU pragma: no_include <__fwd/ios.h>
@@ -29,6 +31,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -54,7 +57,7 @@ namespace resources {
             }
         }
 
-        inline std::vector<char> GetData(const std::string& resource_name) {
+        inline std::vector<char> GetData(std::string_view resource_name) {
             TOCType::const_iterator iter = mTOC.find(resource_name);
             if(iter == mTOC.end()) [[unlikely]]
                 CriticalError("Cannot find file \"", resource_name, '"');
@@ -99,14 +102,17 @@ namespace resources {
         }
 
         std::ifstream mFile;
-        typedef std::unordered_map<std::string, std::pair<int, int> > TOCType;
+        using TOCType = std::unordered_map<
+            std::string, std::pair<int, int>,
+            TransparentStrHash, TransparentEqual
+        >;
         TOCType mTOC;
     };
 
     ResourceLoader::ResourceLoader() : mImpl(new Impl) {
     }
 
-    std::vector<char> ResourceLoader::GetData(const std::string& resource_name) {
+    std::vector<char> ResourceLoader::GetData(std::string_view resource_name) {
         return mImpl->GetData(resource_name);
     }
 

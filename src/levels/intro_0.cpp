@@ -47,7 +47,7 @@
 #include <iterator>
 #include <memory>
 #include <numbers>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {

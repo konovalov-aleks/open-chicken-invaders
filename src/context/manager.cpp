@@ -21,36 +21,30 @@
 
 #include "manager.h"
 
-#include "context.h"
-#include <core/critical_error.h>
-
 // IWYU pragma: no_include <__hash_table>
-#include <memory>
-#include <utility>
+#include <cassert>
 
 namespace oci {
 namespace context {
 
+class Context;
+
 Manager Manager::mInstance;
 
-Manager::Manager() {
+Context& Manager::GetContext(std::string_view context_name) {
+    return mContexts[context_name];
 }
 
-std::shared_ptr<Context> Manager::GetContext(const std::string& context_name) {
-    ContextsMap::const_iterator iter = mContexts.find(context_name);
-    if(iter == mContexts.end())
-        iter = mContexts.insert(std::make_pair(context_name, std::make_shared<Context>())).first;
-    return iter->second;
+void Manager::KillContext(std::string_view context_name) {
+    auto iter = mContexts.find(context_name);
+    if (iter != mContexts.end()) {
+        assert(&iter->second != mActiveContext);
+        mContexts.erase(context_name);
+    }
 }
 
-void Manager::KillContext(const std::string& context_name) {
-    mContexts.erase(context_name);
-}
-
-void Manager::SetActiveContext(const std::shared_ptr<Context>& context) {
-    if(!context) [[unlikely]]
-        CriticalError("attempt to activate a NULL context");
-    mActiveContext = context;
+void Manager::SetActiveContext(Context& context) {
+    mActiveContext = &context;
 }
 
 } // namespace context

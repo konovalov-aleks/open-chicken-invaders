@@ -26,9 +26,10 @@
 #include <core/texture.h>
 #include <core/vector2.h>
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <cassert>
 #include <cstddef>
-#include <string>
+#include <string_view>
 #include <vector>
 
 //#define DEBUG_SPRITE
@@ -50,8 +51,8 @@ public:
 
     typedef std::vector<Animation> SpriteData;
 
-    void Init(const std::string& filename);
-    void Init(const std::string& filename, const Vector2f& pos);
+    void Init(std::string_view filename);
+    void Init(std::string_view filename, const Vector2f& pos);
 
     virtual ~Sprite();
     std::size_t StatesCount() const;
@@ -80,11 +81,11 @@ private:
 template<Visible::DrawPriority draw_priority>
 class CommonSprite : public Sprite {
 public:
-    void Init(const std::string& filename) {
+    void Init(std::string_view filename) {
         Sprite::Init(filename);
     }
 
-    void Init(const std::string& filename, const Vector2f& pos) {
+    void Init(std::string_view filename, const Vector2f& pos) {
         Sprite::Init(filename, pos);
     }
 

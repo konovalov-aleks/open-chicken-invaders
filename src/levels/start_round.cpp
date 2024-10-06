@@ -36,9 +36,12 @@
 #include <objects/particles/smoke.h>
 
 #include <cstdlib>
+#include <string_view>
 
 namespace oci {
 namespace levels {
+
+using namespace std::literals;
 
 namespace {
 
@@ -49,13 +52,13 @@ const float BACKGROUND_FINISH_SPEED = 8.0f;
 const float BACKGROUND_DECELERATION = -0.2;
 const int LEVEL_TIME = 50;
 
-Factory::Registrar<StartRound> reg("start_round_1", "game", "");
+Factory::Registrar<StartRound> reg("start_round_1", "game", ""sv);
 
 } // namespace
 
 StartRound::StartRound() : mDY(SHIP_START_SPEED), mTime(0) {}
 
-void StartRound::Init(const std::string& /*round_title*/) {
+void StartRound::Init(std::string_view /*round_title*/) {
     Level::Init("start_round");
     Storage().CreateObject<objects::UnshadeScreen>();
     mBackgroundController = Storage().CreateObject<SimpleController>();

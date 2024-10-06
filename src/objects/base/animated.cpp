@@ -25,7 +25,7 @@
 #include <context/object_storage.h>
 #include <core/vector2.h>
 
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

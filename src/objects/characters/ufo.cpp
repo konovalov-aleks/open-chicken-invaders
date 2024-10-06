@@ -34,7 +34,7 @@
 #include <objects/particles/smoke.h>
 
 #include <numbers>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

@@ -33,6 +33,7 @@
 #include <objects/text/text.h>
 
 #include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {

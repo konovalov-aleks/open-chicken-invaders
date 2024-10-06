@@ -23,8 +23,6 @@
 
 #include <tinyxml2.h>
 
-#include <string>
-
 namespace oci {
 namespace levels {
 
@@ -36,7 +34,7 @@ protected:
 
 private:
     /// Загружает ресурсы уровня с именем levelname
-    void LoadLevel(const std::string& levelname);
+    void LoadLevel(const char* levelname);
 
     tinyxml2::XMLDocument xml_file;
     tinyxml2::XMLElement* ResourcesList;

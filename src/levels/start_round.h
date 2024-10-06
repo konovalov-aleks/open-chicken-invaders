@@ -23,8 +23,9 @@
 
 #include "level.h"
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <memory>
-#include <string>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 
@@ -35,7 +36,7 @@ namespace levels {
 class StartRound : public Level {
 public:
     StartRound();
-    void Init(const std::string& round_title);
+    void Init(std::string_view round_title);
 protected:
     void Run() override;
 private:

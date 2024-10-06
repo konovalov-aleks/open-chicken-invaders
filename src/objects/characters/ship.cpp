@@ -27,7 +27,7 @@
 #include <objects/particles/exhaust.h>
 
 #include <cassert>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

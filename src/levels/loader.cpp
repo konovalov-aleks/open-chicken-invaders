@@ -33,7 +33,7 @@
 namespace oci {
 namespace levels {
 
-[[noreturn]] inline void LevelLoadFatalError(const std::string& levelname,
+[[noreturn]] inline void LevelLoadFatalError(const char* levelname,
                                              const char* description) {
     CriticalError("Error while loading level \"", levelname, "\": ", description);
 }
@@ -49,9 +49,9 @@ Loader::Loader() {
         CriticalError("node \"ResourceList\" is not xml element");
 }
 
-void Loader::LoadLevel(const std::string& levelname) {
+void Loader::LoadLevel(const char* levelname) {
     assert(ResourcesList);
-    tinyxml2::XMLNode* level_node = ResourcesList->FirstChildElement(levelname.c_str());
+    tinyxml2::XMLNode* level_node = ResourcesList->FirstChildElement(levelname);
     if(!level_node) [[unlikely]]
         LevelLoadFatalError(levelname, "cannot find level element");
     tinyxml2::XMLElement* level = level_node->ToElement();

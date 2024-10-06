@@ -26,8 +26,9 @@
 #include <font/font.h>
 #include <objects/base/visible.h>
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <memory>
-#include <string>
+#include <string_view> // IWYU pragma: keep
 #include <vector>
 
 namespace oci {
@@ -47,7 +48,7 @@ public:
         haRight
     };
 
-    void Init(const std::string& text, const Vector2f& position,
+    void Init(std::string_view text, const Vector2f& position,
               const Font& font, HorizontalAlign ha, VerticalAlign va);
 
     virtual void Draw() override;
@@ -59,7 +60,7 @@ public:
     Text();
     virtual ~Text();
 
-    void SetText(const std::string& text);
+    void SetText(std::string_view text);
 
 private:
     std::vector<core::Sprite> mSprites;

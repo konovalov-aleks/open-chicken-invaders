@@ -45,10 +45,10 @@ public:
     ObjectStorage& operator= (const ObjectStorage&) = delete;
 
     template<std::derived_from<objects::Object> T, typename... Values>
-    std::shared_ptr<T> CreateObject(const Values&... args) {
+    std::shared_ptr<T> CreateObject(Values&&... args) {
         std::shared_ptr<T> obj(std::make_shared<T>());
         obj->mStorage = this;
-        obj->Init(args...);
+        obj->Init(std::forward<Values>(args)...);
         [[maybe_unused]] bool ok = mObjects.insert(obj).second;
         assert(ok);
         RegisterObject(obj);

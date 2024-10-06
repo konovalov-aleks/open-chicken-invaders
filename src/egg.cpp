@@ -29,7 +29,7 @@
 #include "objects/base/animated_collision_object.h"
 
 #include <compare>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace objects {

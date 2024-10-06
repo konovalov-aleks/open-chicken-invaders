@@ -31,7 +31,7 @@
 #include <objects/characters/player_ship.h>
 
 #include <cstdio>
-#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -67,7 +67,7 @@ void Manager::NewGame() {
     context::Manager::Instance().KillContext("game");
     context::Manager::Instance().KillContext("intro");
     context::ObjectStorage& game_global_storage =
-        context::Manager::Instance().GetContext("game")->GetStorage("global");
+        context::Manager::Instance().GetContext("game").GetStorage("global");
     mPlayerShip = game_global_storage.CreateObject<objects::PlayerShip>();
     game_global_storage.CreateObject<Interface>();
     State::Instance().Reset();

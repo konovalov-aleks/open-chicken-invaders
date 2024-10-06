@@ -113,7 +113,7 @@ private:
     AlignerFunc mVAligner, mHAligner;
 };
 
-void Text::Init(const std::string& text, const Vector2f& position,
+void Text::Init(std::string_view text, const Vector2f& position,
                 const Font& font, HorizontalAlign ha, VerticalAlign va) {
     mAligner.reset(new Aligner(va, ha));
     mFont = &font;
@@ -132,7 +132,7 @@ void Text::Draw() {
         Window::Instance().draw(mSprites[i]);
 }
 
-void Text::SetText(const std::string& text) {
+void Text::SetText(std::string_view text) {
     assert(mFont);
     assert(mAligner);
     mSprites.clear();

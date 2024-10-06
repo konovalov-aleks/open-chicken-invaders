@@ -23,8 +23,9 @@
 
 #include <objects/base/collision_object_types.h>
 
+// IWYU pragma: no_include <__fwd/string_view.h>
 #include <memory>
-#include <string>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace objects {
@@ -59,9 +60,9 @@ public:
     void ProcessCollisions();
 
     /// "Столкнуть" все повреждающиеся объекты с данным объектом
-    void ColliseAll(CollisionType CollisionType, int power);
+    void CollideAll(CollisionType CollisionType, int power);
 
-    ObjectStorage& GetStorage(const std::string& name);
+    ObjectStorage& GetStorage(std::string_view name);
 
 private:
     class Impl;

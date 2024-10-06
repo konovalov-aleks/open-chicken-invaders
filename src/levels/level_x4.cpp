@@ -26,7 +26,6 @@
 #include <utils/cleanup_container.h>
 
 #include <cstdlib>
-#include <string>
 
 namespace oci {
 namespace levels {
