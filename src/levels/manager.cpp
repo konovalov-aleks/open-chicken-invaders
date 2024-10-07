@@ -30,7 +30,7 @@
 #include <game/state.h>
 #include <objects/characters/player_ship.h>
 
-#include <cstdio>
+#include <iostream>
 #include <string_view>
 
 namespace oci {
@@ -75,11 +75,10 @@ void Manager::NewGame() {
 }
 
 void Manager::SelectLevel(int level_index) {
-    std::printf("SelectLevel %d\n", level_index);
+    std::cout << "SelectLevel " << level_index << std::endl;
     Factory::Instance().Build(levels[level_index]);
     current_level_index = level_index;
 /*    ObjectsStorage& storage = LevelLocalStorage();
-std::printf("select level %llx\n", (long long)&storage);
     switch(level_index) {
 //        case 0: new CWarp(10); break;
 //        case 1: new CWarp(9); break;

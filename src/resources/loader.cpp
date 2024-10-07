@@ -27,8 +27,8 @@
 
 // IWYU pragma: no_include <__fwd/fstream.h>
 // IWYU pragma: no_include <__fwd/ios.h>
-#include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <string_view>
@@ -48,11 +48,11 @@ namespace resources {
         Impl() {
             mFile.open("ChickenInvaders2.dat", std::ios_base::in | std::ios_base::binary);
             if(!mFile) {
-                std::fputs("FATAL ERROR: Could not open resource file \"ChickenInvaders2.dat\"\n", stderr);
+                std::cerr << "FATAL ERROR: Could not open resource file \"ChickenInvaders2.dat\"" << std::endl;
                 std::exit(1);
             }
             if(!ReadTOC()) {
-                std::fputs("FATAL ERROR: file \"ChickenInvaders2.dat\" corrupted\n", stderr);
+                std::cerr << "FATAL ERROR: file \"ChickenInvaders2.dat\" corrupted" << std::endl;
                 std::exit(1);
             }
         }

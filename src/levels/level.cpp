@@ -33,7 +33,7 @@
 #include <objects/modifiers/expiring.h>
 #include <objects/text/text.h>
 
-#include <cstdio>
+#include <iostream>
 #include <string>
 #include <string_view>
 
@@ -50,7 +50,7 @@ void Level::Init(const char* levelname) {
 }
 
 void Level::EndLevel() {
-    std::puts("End level");
+    std::cout << "End level" << std::endl;
     Storage().KillObject(this);
     levels::Manager::Instance().CreateNextLevel();
 }
@@ -58,7 +58,7 @@ void Level::EndLevel() {
 void Level::ShowLevelInfo(const char* index, const char* name,
                           const char* description, bool descr_blink) {
 
-    std::printf("show level info %s %s\n", index, name);
+    std::cout << "show level info " << index << ", " << name << std::endl;
     const int window_center = Window::Instance().getSize().x / 2;
     Storage().CreateObject<Expiring<Text> >(
                           20,

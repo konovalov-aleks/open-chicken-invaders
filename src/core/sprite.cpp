@@ -27,7 +27,7 @@
 #include "texture.h"
 #include "vector2.h"
 
-#include <SDL_rect.h>      // for SDL_Rect
+#include <SDL_rect.h>
 
 #ifdef ANDROID
 #   include "window.h"

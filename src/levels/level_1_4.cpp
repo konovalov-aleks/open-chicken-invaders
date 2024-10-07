@@ -52,11 +52,11 @@ std::weak_ptr<objects::Asteroid> Level_1_4::CreateAsteroid() {
     const Vector2u wndSize = Window::Instance().getSize();
     int x = wndSize.x + 10;
     int y = -10;
-    if(rand() % 3)
+    if(std::rand() % 3)
         x = std::rand() % wndSize.x * 3 / 4 + wndSize.x / 4;
     else
         y = std::rand() % (wndSize.y / 2);
-    bool big = rand() & 1;
+    bool big = std::rand() & 1;
     return Storage().CreateObject<AutoKillable<Asteroid, BoundLeft, BoundBottom> >(
                 Vector2f(x, y), // position
                 6.1f,               // angle

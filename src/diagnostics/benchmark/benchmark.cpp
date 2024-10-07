@@ -32,8 +32,8 @@
 
 #include <chrono>
 #include <compare>
-#include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <ratio>
 #include <string_view>
 
@@ -80,7 +80,7 @@ namespace benchmark {
         Storage().GetContext().CollideAll(ctFriendBullet, 100500);
         if(time >= std::chrono::seconds(1)) {
             float FPS = mFramesCount / std::chrono::duration_cast<std::chrono::seconds>(time).count();
-            std::printf("[%d chickens] FPS: %f\n", mChickensCount, FPS);
+            std::cout << '[' << mChickensCount << " chickens] FPS: " << FPS << std::endl;
             mFramesCount = 0;
             mLastStatisticTime = Clock::now();
         }

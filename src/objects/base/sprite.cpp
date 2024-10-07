@@ -78,7 +78,7 @@ namespace {
             char c[2];
             while(f.read(c, 2) && c[0])
                 image_name += c[0];
-            std::puts(image_name.c_str());
+            std::cout << image_name << std::endl;
             Image img;
             if(!img.loadFromFile("res/images/" + image_name)) [[unlikely]]
                 CriticalError("cannot load image \"", image_name, '"');
@@ -86,7 +86,7 @@ namespace {
             unsigned char draw_type;
             f.read((char*)&draw_type, 1);
             #ifdef DEBUG_SPRITE
-            std::printf("Draw type: %hhd\n", draw_type);
+            std::cout << "Draw type: " << static_cast<unsigned>(draw_type) << std::endl;
             #endif
             switch(draw_type) {
                 case bdtCOPY:
@@ -105,7 +105,7 @@ namespace {
             f.read(&statescount, 1);
 
             #ifdef DEBUG_SPRITE
-            std::printf("States count: %hhd\n", statescount);
+            std::cout << "States count: " << static_cast<int>(statescount) << std::endl;
             #endif
             int top = 0;
             for(int i = 0; i < statescount; ++i) {
@@ -113,7 +113,7 @@ namespace {
                 char framescount = 0;
                 f.read(&framescount, 1);
                 #ifdef DEBUG_SPRITE
-                std::printf("\tFrames count: %hhd\n", framescount);
+                std::cout << "\tFrames count: " << static_cast<int>(framescount) << std::endl;
                 #endif
                 Sprite::Animation anim;
                 char mode;
@@ -135,7 +135,7 @@ namespace {
                         CriticalError("unknown animation mode (", mode, ')');
                 };
                 #ifdef DEBUG_SPRITE
-                std::printf("\tAnimation mode: %hhd\n", anim.mode);
+                std::cout << "\tAnimation mode: " << static_cast<int>(anim.mode) << std::endl;
                 #endif
                 for(int k = 0; k < framescount;) {
                     char n = 0;
@@ -145,7 +145,9 @@ namespace {
                     f.read((char*)&width, 2);
                     f.read((char*)&height, 2);
                     #ifdef DEBUG_SPRITE
-                    std::printf("\tFrame[%d x %hhd]: width = %hd, height = %hd\n", k, n, width, height);
+                    std::cout << "\tFrame[" << k << " x " << static_cast<int>(n)
+                              << "]: width = " << width << ", height = " << height
+                              << std::endl;
                     #endif
                     for(int t = 0; t < n; ++t) {
                         anim.images.emplace_back();
@@ -153,7 +155,9 @@ namespace {
                         if(!tex.loadFromImage(img, IntRect(left, top, width, height))) [[unlikely]]
                             CriticalError("Unable to create a texture");
                         #ifdef DEBUG_SPRITE
-                        std::printf("\t\t[%d, %d, %d, %d]\n", left, top, left + width, top + height);
+                        std::cout << "\t\t[" << left << ", " << top << ", "
+                                  << left + width << ", " << top + height << ']'
+                                  << std::endl;
                         #endif
                         left += width;
                         if(height > max_height)
@@ -235,8 +239,8 @@ namespace {
 void Sprite::Init(std::string_view filename, const Vector2f& pos) {
     Init(filename);
     #ifdef DEBUG_SPRITE
-    std::printf("[%x] Sprite(\"%s\", %f, %f)\n", (unsigned int)this,
-                filename.c_str(), pos.x, pos.y);
+    std::cout << '[' << this << "] Sprite(\"" << filename << "\", "
+              << pos.x << ", " << pos.y << ')' << std::endl;
     #endif
     setPosition(pos);
 }
@@ -244,7 +248,7 @@ void Sprite::Init(std::string_view filename, const Vector2f& pos) {
 void Sprite::Init(std::string_view filename) {
     mCurrentState = mCurrentFrame = 0;
     #ifdef DEBUG_SPRITE
-    std::printf("[%x] Sprite (\"%s\")\n", (unsigned int)this, filename);
+    std::cout << '[' << this << "] Sprite (\"" << filename << "\")" << std::endl;
     #endif
 #ifdef USE_SFML
     if(filename.ends_with(".sprite")) {
@@ -267,7 +271,7 @@ void Sprite::Init(std::string_view filename) {
 
 Sprite::~Sprite() {
     #ifdef DEBUG_SPRITE
-    std::printf("[%x] ~Sprite\n", (unsigned int)this);
+    std::cout << '[' << this << "] ~Sprite" << std::endl;
     #endif
 }
 

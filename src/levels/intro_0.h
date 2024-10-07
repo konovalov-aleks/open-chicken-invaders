@@ -32,9 +32,11 @@
 #include <list>
 #include <memory>
 
-namespace oci::objects { class Sprite; }
-namespace oci::objects { class SubtitleText; }
-namespace oci::objects { struct CollisionObjectInfo; }
+namespace oci::objects {
+    class Sprite;
+    class SubtitleText;
+    struct CollisionObjectInfo;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {
