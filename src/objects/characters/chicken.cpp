@@ -23,16 +23,24 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <core/window.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <egg.h>
 #include <game/state.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/bonus/chicken_body.h>
 #include <objects/bonus/chicken_leg.h>
 #include <objects/bonus/coin.h>
 #include <objects/bonus/switch_gun.h>
 #include <objects/bonus/upgrade_gun.h>
+#include <objects/gun/gun.h>
 #include <objects/particles/smoke.h>
-#include <utils/array_size.h>
+
+#include <cstdlib>
+#include <iterator>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -49,21 +57,21 @@ void Chicken::Init(const Vector2f& position, int period, Type type,
         "chicken_purple.xml",
         "chicken_pink.xml"
     };
-    static_assert(ARRAY_SIZE(SPRITES) == TYPE_COUNT,
+    static_assert(std::size(SPRITES) == TYPE_COUNT,
                   "For each elements of enumeration Chicken::Type must be "
                   "exists element in array SPRITES");
 
     AnimatedCollisionObject::Init(SPRITES[type], position, health);
     mMaxBombingPeriod = period;
-    mTime = rand() % mMaxBombingPeriod;
-    SetFrame(rand() % FramesCount());
+    mTime = std::rand() % mMaxBombingPeriod;
+    SetFrame(std::rand() % FramesCount());
 }
 
 void Chicken::Run() {
     if(mTime-- <= 0) {
 //        if(GetX() > 0 && GetX() < Window::Instance().GetWidth() && GetY() > 0 && GetY() < FloorLevel)
-        Storage().CreateObject<Egg>(GetPosition());
-        mTime = rand() % mMaxBombingPeriod;
+        Storage().CreateObject<Egg>(getPosition());
+        mTime = std::rand() % mMaxBombingPeriod;
     }
 }
 
@@ -82,34 +90,34 @@ void Chicken::OnCollision(const CollisionObjectInfo& collisedWith) {
     }
     if(power <= 0) {
         State::Instance().IncScore(1000);
-        Smoke(Storage(), GetPosition(), 20);
+        Smoke(Storage(), getPosition(), 20);
         Storage().KillObject(this);
     }
 }
 
 void Chicken::OnBang(const CollisionObjectInfo& collisedWith) {
     Storage().CreateObject<audio::ControllerHolder>(
-        audio::Play(rand() % 2 ? "rdfx31.wav" : "fx39trimmed.wav"));
+        audio::Play(std::rand() % 2 ? "rdfx31.wav" : "fx39trimmed.wav"));
 
     // теперь определимся с бонусом...
-    if(rand() % 20) {
+    if(std::rand() % 20) {
         // в 19 из 20 случаев выпадет нога
-        float dx = -(collisedWith.x - GetPosition().x) / (7.0f + 2 * (float)rand() / RAND_MAX);
-        if(rand() % 8) // в 7 из 8 случаев выпадет нога, в 1 из 8 - тушка или монетки
-            Storage().CreateObject<BonusChickenLeg>(GetPosition(), dx, 0);
-        else if(rand() % 2)
-            Storage().CreateObject<BonusChickenBody>(GetPosition(), dx, 0);
+        float dx = -(collisedWith.x - getPosition().x) / (7.0f + 2 * (float)std::rand() / RAND_MAX);
+        if(std::rand() % 8) // в 7 из 8 случаев выпадет нога, в 1 из 8 - тушка или монетки
+            Storage().CreateObject<BonusChickenLeg>(getPosition(), dx, 0);
+        else if(std::rand() % 2)
+            Storage().CreateObject<BonusChickenBody>(getPosition(), dx, 0);
         else {
-            for(int i = 0; i < rand() % 5 + 5; ++i) {
-                float dx =  3.0f * (float)rand() / RAND_MAX;
-                float dy = -5.0f * (float)rand() / RAND_MAX;
-                Storage().CreateObject<BonusCoin>(GetPosition(), dx, dy);
+            for(int i = 0; i < std::rand() % 5 + 5; ++i) {
+                float dx =  3.0f * (float)std::rand() / RAND_MAX;
+                float dy = -5.0f * (float)std::rand() / RAND_MAX;
+                Storage().CreateObject<BonusCoin>(getPosition(), dx, dy);
             }
         }
     } else {
         TGunType t;
         CollisionType ct;
-        switch(rand() % 3) {
+        switch(std::rand() % 3) {
             case 0:
                 t = gt_Red;
                 ct = ctRedBonus;
@@ -119,10 +127,10 @@ void Chicken::OnBang(const CollisionObjectInfo& collisedWith) {
                 ct = ctGreenBonus;
                 break;
             default:
-                Storage().CreateObject<BonusUpgradeGun>(GetPosition());
+                Storage().CreateObject<BonusUpgradeGun>(getPosition());
                 return;
         }
-        Storage().CreateObject<BonusSwitchGun>(GetPosition(), t, ct);
+        Storage().CreateObject<BonusSwitchGun>(getPosition(), t, ct);
     }
 }
 

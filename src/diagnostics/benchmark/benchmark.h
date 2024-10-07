@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include <portability/chrono.h>
 #include <objects/base/active.h>
+
+#include <chrono>
 
 namespace oci {
 namespace benchmark {
@@ -37,7 +38,7 @@ protected:
 private:
     void CreateNewChickens();
 
-    typedef CHRONO::high_resolution_clock Clock;
+    typedef std::chrono::high_resolution_clock Clock;
 
     int mFramesCount;
     int mChickensCount;

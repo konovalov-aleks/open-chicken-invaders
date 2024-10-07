@@ -22,77 +22,93 @@
 #include "font.h"
 
 #include <core/color.h>
+#include <core/critical_error.h>
+#include <core/image.h>
+#include <core/texture.h>
 #include <resources/loader.h>
-#include <stdexcept>
-#include <tinyxml.h>
 #include <utils/cache.h>
+
+#include <tinyxml2.h>
+
+#include <cstring>
+#include <filesystem>
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace oci {
 
+using namespace std::literals;
+
 struct FontLoader {
-    Font operator()(const std::string& name) {
+    Font operator()(std::string_view name) {
         return Font(name);
     }
 };
 
-const Font& Font::GetFont(const std::string& name) {
+const Font& Font::GetFont(std::string_view name) {
     static Cache<Font, FontLoader> cache;
     return cache.Get(name);
 }
 
-Font::Font(const std::string& name) {
+Font::Font(std::string_view name) {
     Load(name);
 }
 
-const Image& Font::operator[] (char s) const {
-    static const Image empty;
-    unordered_map<char, Image>::const_iterator res = mImages.find(s);
-    return res == mImages.end() ? empty : res->second;
+const Texture& Font::operator[] (char s) const {
+    static const Texture empty;
+    std::unordered_map<char, Texture>::const_iterator res = mTextures.find(s);
+    return res == mTextures.end() ? empty : res->second;
 }
 
-void Font::Load(const std::string& name) {
-    TiXmlDocument xml;
-    if(!xml.LoadFile("res/fonts/" + name))
-        throw std::logic_error("font \"" + name + "\" not found");
-    const TiXmlNode* root = xml.FirstChild("font");
-    if(!root)
-        throw std::logic_error("cannot find root tag \"font\" in file \"" + name + "\"");
-    const TiXmlNode* node = NULL;
-    while((node = root->IterateChildren(node)) != NULL) {
-        const TiXmlElement* glyph = node->ToElement();
-        if(glyph && glyph->ValueStr() == "glyph") {
+void Font::Load(std::string_view name) {
+    tinyxml2::XMLDocument xml;
+    if(xml.LoadFile((std::filesystem::path("res/fonts/") / name).string().c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+        CriticalError("font \"", name, "\" not found");
+    const tinyxml2::XMLNode* root = xml.FirstChildElement("font");
+    if(!root) [[unlikely]]
+        CriticalError("cannot find root tag \"font\" in file \"", name, "\"");
+    for (const tinyxml2::XMLNode* node = root->FirstChildElement(); node; node = node->NextSiblingElement()) {
+        const tinyxml2::XMLElement* glyph = node->ToElement();
+        if(glyph && glyph->Value() == "glyph"sv) {
             const char* symbol = glyph->Attribute("symbol");
-            if(!symbol || strlen(symbol) != 1)
-                throw std::logic_error("Invalid value for attribute \"symbol\" in tag \"glyph\"");
+            if(!symbol || std::strlen(symbol) != 1) [[unlikely]]
+                CriticalError("Invalid value for attribute \"symbol\" in tag \"glyph\"");
             const char* name = glyph->Attribute("name");
-            if(!name)
-                throw std::logic_error("Invalid value for attribute \"name\" in tag \"glyph\"");
+            if(!name) [[unlikely]]
+                CriticalError("Invalid value for attribute \"name\" in tag \"glyph\"");
             LoadGlyph(*symbol, name);
         }
     }
-    if(mImages.find(' ') == mImages.end()) {
+    if(mTextures.find(' ') == mTextures.end()) {
         int sum_width = 0;
-        for(unordered_map<char, Image>::const_iterator iter = mImages.begin();
-           iter != mImages.end(); ++iter)
-            sum_width += iter->second.GetWidth();
-        Image img(sum_width / mImages.size(), 1, Color::Black);
-        img.CreateMaskFromColor(Color::Black);
-        mImages.insert(std::make_pair(' ', img));
+        for(std::unordered_map<char, Texture>::const_iterator iter = mTextures.begin();
+           iter != mTextures.end(); ++iter)
+            sum_width += iter->second.getSize().x;
+        Image img;
+        img.create(sum_width / mTextures.size(), 1, Color::Black);
+        img.createMaskFromColor(Color::Black);
+        Texture tex;
+        if(!tex.loadFromImage(img)) [[unlikely]]
+            CriticalError("Unable to create a texture");
+        mTextures.insert(std::make_pair(' ', std::move(tex)));
     }
 }
 
-void Font::LoadGlyph(char s, const std::string& filename) {
-    std::vector<char> data = resources::ResourcesLoader::Instance().GetData(filename);
-    if(data.empty())
-        throw std::logic_error("Image resource \"" + filename + "\" is empty");
-    std::pair<unordered_map<char, Image>::iterator, bool> res =
-        mImages.insert(std::make_pair(s, Image()));
-    if(res.second) {
-        Image& img = res.first->second;
-        if(!img.LoadFromMemory(&data[0], data.size()))
-            throw std::logic_error("Cannot load image \"" + filename + "\"");
-        img.SetSmooth(false);
-        img.CreateMaskFromColor(Color::Black);
+void Font::LoadGlyph(char s, std::string_view filename) {
+    std::vector<char> data = resources::ResourceLoader::Instance().GetData(filename);
+    if(data.empty()) [[unlikely]]
+        CriticalError("Image resource \"", filename, "\" is empty");
+    const auto [iter, inserted] = mTextures.insert(std::make_pair(s, Texture()));
+    if(inserted) {
+        Image img;
+        if(!img.loadFromMemory(&data[0], data.size())) [[unlikely]]
+            CriticalError("Cannot load image \"", filename, '"');
+        img.createMaskFromColor(Color::Black);
+        if(!iter->second.loadFromImage(img)) [[unlikely]]
+            CriticalError("Unable to create a texture");
     }
 }
 

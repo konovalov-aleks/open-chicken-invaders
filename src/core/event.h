@@ -24,15 +24,13 @@
 #ifdef USE_SFML
 #   include <SFML/Window/Event.hpp>
 #else
-#   include <SDL2/SDL.h>
+#   include <SDL.h>
 #endif
 
 namespace oci {
 
 #ifdef USE_SFML
 
-namespace Key = sf::Key;
-namespace Mouse = sf::Mouse;
 using sf::Event;
 
 #else
@@ -43,24 +41,7 @@ public:
         Closed = SDL_QUIT
     };
 
-    EventType Type;
-};
-
-namespace Key {
-    enum Code {
-        Left   = SDL_SCANCODE_LEFT,
-        Right  = SDL_SCANCODE_RIGHT,
-        Return = SDL_SCANCODE_RETURN,
-        Escape = SDL_SCANCODE_ESCAPE,
-    };
-};
-
-namespace Mouse {
-    enum Button {
-        Left   = SDL_BUTTON_LMASK,
-        Right  = SDL_BUTTON_RMASK,
-        Middle = SDL_BUTTON_MMASK
-    };
+    EventType type;
 };
 
 #endif

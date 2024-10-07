@@ -21,19 +21,23 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
+#include <core/vector2.h>
+#include <objects/base/sprite.h>
+
 #include <list>
 #include <memory>
-#include <objects/base/sprite.h>
+#include <string_view>
 
 namespace oci {
 
 /// Синглтон, отвечающий за фон
-class Background : boost::noncopyable {
+class Background {
 public:
     /// Интерфейс класса, управляющего движением фонового изображения
     class Controller {
     public:
+        virtual ~Controller() = default;
+
         /// \return Координату Х фона
         virtual int GetX() const = 0;
         /// \return Координату Y фона
@@ -69,17 +73,20 @@ public:
         }
 
     private:
-        shared_ptr<T> mController;
+        std::shared_ptr<T> mController;
     };
 
     static Background& Instance();
 
+    Background(const Background&) = delete;
+    Background& operator= (const Background&) = delete;
+
     /// Нарисовать фон
     void Draw();
     /// Установить контроллер фона
-    void SetController(const shared_ptr<Controller>& controller);
+    void SetController(const std::shared_ptr<Controller>& controller);
     /// Сбросить контроллер, использовать предыдущий
-    void ResetController(const shared_ptr<Controller>& controller);
+    void ResetController(const std::shared_ptr<Controller>& controller);
     /// Получить используемый контроллер
     const Controller& GetController() const;
 
@@ -88,20 +95,16 @@ private:
     public:
         BackgroundSprite() {
             Sprite::Init("background.xml");
-            SetCenter(Vector2f(0, 0));
+            setOrigin(Vector2f(0, 0));
         }
 
-        virtual DrawPriority GetDrawPriority() const override {
+        DrawPriority GetDrawPriority() const override {
             return dpForeground;
-        }
-
-        virtual context::ObjectsStorage& Storage() override {
-            return *static_cast<context::ObjectsStorage*>(NULL);
         }
     } mSprite;
 
     Background();
-    std::list<shared_ptr<Controller> > mControllers;
+    std::list<std::shared_ptr<Controller> > mControllers;
 };
 
 } // namespace oci

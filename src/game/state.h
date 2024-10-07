@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-
 namespace oci {
 
 class State {

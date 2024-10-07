@@ -1,0 +1,36 @@
+<sprite>
+	<animation repeat="1" reverse="0">
+		<frame name="gfx/asteroid-big-rock_0.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_1.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_2.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_3.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_4.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_5.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_6.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_7.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_8.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_9.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_10.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_11.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_12.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_13.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_14.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_15.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_16.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_17.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_18.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_19.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_20.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_21.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_22.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_23.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_24.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_25.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_26.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_27.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_28.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_29.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_30.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-big-rock_31.bmp" colorkey="0"/>
+	</animation>
+</sprite>

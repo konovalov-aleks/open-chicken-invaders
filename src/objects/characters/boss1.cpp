@@ -23,11 +23,20 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/bonus/chicken_leg.h>
 #include <objects/gun/bullet.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
+
+#include <cmath>
+#include <cstdlib>
+#include <numbers>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -49,8 +58,8 @@ void Boss1::Init(const Vector2f& position, const Vector2f& destination,
 void Boss1::Run() {
     if(!mode) {
         mRealPosition += mSpeed;
-        if(fabs(mDestination.x - mRealPosition.x) <= fabs(mSpeed.x) &&
-           fabs(mDestination.y - mRealPosition.y) <= fabs(mSpeed.y))
+        if(std::abs(mDestination.x - mRealPosition.x) <= std::abs(mSpeed.x) &&
+           std::abs(mDestination.y - mRealPosition.y) <= std::abs(mSpeed.y))
             mode = 1;
     } else if (mode > 9) {
         Fire();
@@ -61,24 +70,24 @@ void Boss1::Run() {
     if(mOffset.y != 0)
         mOffset.y += 0.25f;
 
-    SetPosition(mRealPosition + mOffset);
+    setPosition(mRealPosition + mOffset);
 }
 
 void Boss1::OnCollision(const CollisionObjectInfo& collisedWith) {
     mOffset.y = -3;
     if(collisedWith.type == ctFriendBullet || collisedWith.type == ctMissile) {
-//        for(int i = 0; i < rand() % 3 + 1; ++i)
-//            Storage().CreateObject<CFeather>(GetPosition());
+//        for(int i = 0; i < std::rand() % 3 + 1; ++i)
+//            Storage().CreateObject<CFeather>(getPosition());
 
         power -= collisedWith.power;
         if(power <= 0) {
-            Smoke(Storage(), GetPosition(), 40);
+            Smoke(Storage(), getPosition(), 40);
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("rdfx31-16k.wav"));
             for(int i = 0; i < 10; ++i) {
-                float xx = ((float)rand() / RAND_MAX) * 8 - 4;
-                float yy = ((float)rand() / RAND_MAX) * 4 - 2;
-                Storage().CreateObject<BonusChickenLeg>(GetPosition(), xx, yy);
+                float xx = ((float)std::rand() / RAND_MAX) * 8 - 4;
+                float yy = ((float)std::rand() / RAND_MAX) * 4 - 2;
+                Storage().CreateObject<BonusChickenLeg>(getPosition(), xx, yy);
             }
             Storage().KillObject(this);
         }
@@ -88,10 +97,11 @@ void Boss1::OnCollision(const CollisionObjectInfo& collisedWith) {
 }
 
 void Boss1::GenerateNewPoint() {
+    const Vector2u wnd_size = Window::Instance().getSize();
     do {
         mDestination = Vector2f(
-            rand() % (Window::Instance().GetWidth() - GetWidth()) + GetWidth() / 2,
-            rand() % (Window::Instance().GetHeight() - GetHeight()) + GetHeight() / 2);
+            std::rand() % (wnd_size.x - GetWidth()) + GetWidth() / 2,
+            std::rand() % (wnd_size.y - GetHeight()) + GetHeight() / 2);
     } while(!CalculateSpeed());
     mode = 0;
 }
@@ -100,7 +110,7 @@ bool Boss1::CalculateSpeed() {
     float xx = mDestination.x - mRealPosition.x;
     float yy = mDestination.y - mRealPosition.y;
     float l = sqrtf(xx * xx + yy * yy);
-    float sp = mAbsoluteSpeed + (float)rand() / RAND_MAX;
+    float sp = mAbsoluteSpeed + (float)std::rand() / RAND_MAX;
     if(l < sp)
         return false;
     mSpeed = Vector2f(mAbsoluteSpeed * xx / l, mAbsoluteSpeed * yy / l);
@@ -111,13 +121,13 @@ void Boss1::Fire() {
     Storage().CreateObject<audio::ControllerHolder>(
         audio::Play("laserLow.wav"));
     Storage().CreateObject<Bullet>(
-        "gun4.xml", GetPosition(), BOSS1_BULLET_SPEED, M_PI, 0, 0,
+        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float>, 0, 0,
         ctPlayerShip, ctEnemyBullet);
     Storage().CreateObject<Bullet>(
-        "gun4.xml", GetPosition(), BOSS1_BULLET_SPEED, M_PI + 0.52f, 0, 0,
+        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float> + 0.52f, 0, 0,
         ctPlayerShip, ctEnemyBullet);
     Storage().CreateObject<Bullet>(
-        "gun4.xml", GetPosition(), BOSS1_BULLET_SPEED, M_PI - 0.52f, 0, 0,
+        "gun4.xml", getPosition(), BOSS1_BULLET_SPEED, std::numbers::pi_v<float> - 0.52f, 0, 0,
         ctPlayerShip,ctEnemyBullet);
 }
 

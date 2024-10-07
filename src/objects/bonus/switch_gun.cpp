@@ -21,22 +21,29 @@
 
 #include "switch_gun.h"
 
+#include "bonus.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <utils/array_size.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
+#include <objects/gun/gun.h>
+
+#include <iterator>
+#include <string_view>
 
 namespace oci {
 namespace objects {
 
 namespace {
 
-static const char* const SPRITE_NAMES[] = {
+const char* const SPRITE_NAMES[] = {
     "giftbox_red.xml",      // gtRed
     "giftbox_green.xml",    // gtGreen
     "giftbox_yellow.xml"    // gtYellow
 };
 
-static_assert(ARRAY_SIZE(SPRITE_NAMES) == GUN_TYPE_COUNT,
+static_assert(std::size(SPRITE_NAMES) == GUN_TYPE_COUNT,
               "For each element of enumeration GunType must be exist "
               "element in SPRITE_NAMES");
 

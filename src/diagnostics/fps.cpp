@@ -21,6 +21,15 @@
 
 #include "fps.h"
 
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <font/font.h>
+#include <objects/text/text.h>
+
+#include <iterator>
+#include <cstdio>
+#include <string_view>
+
 namespace oci {
 namespace diagnostics {
 
@@ -34,11 +43,12 @@ void FPSViewer::Init() {
 }
 
 void FPSViewer::Run() {
-    int frame_time = CHRONO::duration_cast<CHRONO::milliseconds>(
-                        Clock::now() - mLastFrameTime).count();
+    int frame_time = static_cast<int>(
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+            Clock::now() - mLastFrameTime).count());
     char buf[128] = "Inf";
     if(frame_time != 0)
-        sprintf(buf, "%.2f", 1000.0f / frame_time);
+        std::snprintf(buf, std::size(buf), "%.2f", 1000.0f / frame_time);
     mText->SetText(buf);
 }
 

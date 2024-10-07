@@ -23,6 +23,12 @@
 
 #ifndef USE_SFML
 
+#include "rect.h"
+#include "texture.h"
+#include "vector2.h"
+
+#include <SDL_rect.h>
+
 #ifdef ANDROID
 #   include "window.h"
 #endif
@@ -30,8 +36,9 @@
 namespace oci {
 namespace core {
 
-Vector2f Sprite::GetSize() const {
-    return mImage ? Vector2f(mImage->GetWidth(), mImage->GetHeight()) : Vector2f();
+FloatRect Sprite::getGlobalBounds() const noexcept {
+    const Vector2u tex_size = mTexture ? mTexture->getSize() : Vector2u();
+    return { getPosition() - getOrigin(), tex_size };
 }
 
 void Sprite::DoDraw(SDL_Renderer* renderer) const {
@@ -41,13 +48,14 @@ void Sprite::DoDraw(SDL_Renderer* renderer) const {
 #else
     const float scale = 1.0f;
 #endif
-    if(mImage && mImage->GetTexture()) {
+    if(mTexture) {
+        const Vector2u tex_size = mTexture->getSize();
         SDL_Rect dstrect;
-        dstrect.x = (GetPosition().x - GetCenter().x) * scale;
-        dstrect.y = (GetPosition().y - GetCenter().y) * scale;
-        dstrect.w = mImage->GetWidth() * scale;
-        dstrect.h = mImage->GetHeight() * scale;
-        SDL_RenderCopy(renderer, mImage->GetTexture(), NULL, &dstrect);
+        dstrect.x = (getPosition().x - getOrigin().x) * scale;
+        dstrect.y = (getPosition().y - getOrigin().y) * scale;
+        dstrect.w = tex_size.x * scale;
+        dstrect.h = tex_size.y * scale;
+        SDL_RenderCopy(renderer, mTexture->SDLObject(), nullptr, &dstrect);
     }
 }
 

@@ -21,7 +21,12 @@
 
 #include "bonus.h"
 
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/animated_collision_object.h>
+
+#include <cstdlib>
 
 namespace oci {
 namespace objects {
@@ -31,12 +36,12 @@ const float Bonus::Gravity = 0.4f;
 
 void Bonus::Init(const Vector2f& position, const char* sprite_name) {
     AnimatedCollisionObject::Init(sprite_name, position, 0);
-    SetFrame(rand() % FramesCount());
+    SetFrame(std::rand() % FramesCount());
 }
 
 void Bonus::Run() {
-    Move(0, Speed);
-    if(GetPosition().y > Window::Instance().GetHeight())
+    move(0, Speed);
+    if(getPosition().y > Window::Instance().getSize().y)
         Storage().KillObject(this);
 }
 

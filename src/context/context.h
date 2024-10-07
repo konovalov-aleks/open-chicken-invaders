@@ -21,13 +21,13 @@
 
 #pragma once
 
-#include <memory>
-#include <boost/noncopyable.hpp>
 #include <objects/base/collision_object_types.h>
-#include <portability/memory.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <memory>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
-
 namespace objects {
 
 class Active;
@@ -39,17 +39,20 @@ class ICollisionObject;
 
 namespace context {
 
-class ObjectsStorage;
+class ObjectStorage;
 
-class Context : boost::noncopyable {
+class Context {
 public:
     Context();
     ~Context();
 
-    void RegisterActiveObject(const shared_ptr<objects::Active>& func);
-    void RegisterVisible(const shared_ptr<objects::Visible>& obj);
-    void RegisterAnimated(const shared_ptr<objects::Animated>& obj);
-    void RegisterCollisionObject(const shared_ptr<objects::ICollisionObject>& obj);
+    Context(const Context&) = delete;
+    Context& operator= (const Context&) = delete;
+
+    void RegisterActiveObject(const std::shared_ptr<objects::Active>& func);
+    void RegisterVisible(const std::shared_ptr<objects::Visible>& obj);
+    void RegisterAnimated(const std::shared_ptr<objects::Animated>& obj);
+    void RegisterCollisionObject(const std::shared_ptr<objects::ICollisionObject>& obj);
 
     void Run();
     void Draw();
@@ -57,13 +60,13 @@ public:
     void ProcessCollisions();
 
     /// "Столкнуть" все повреждающиеся объекты с данным объектом
-    void ColliseAll(CollisionType CollisionType, int power);
+    void CollideAll(CollisionType CollisionType, int power);
 
-    ObjectsStorage& GetStorage(const std::string& name);
+    ObjectStorage& GetStorage(std::string_view name);
 
 private:
     class Impl;
-    unique_ptr<Impl> mImpl;
+    std::unique_ptr<Impl> mImpl;
 };
 
 } // namespace context

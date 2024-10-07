@@ -21,10 +21,13 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/active.h>
 #include <objects/base/collision_object.h>
-#include <objects/base/sprite.h>
-#include <objects/base/visible.h>
+#include <objects/base/collision_object_types.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace objects {
@@ -41,7 +44,7 @@ public:
         \param collisionWith    Битовое поле, содержит флаги, указывающие, с какими объектами может сталкиваться пуля
         \param collisionType    Тип объекта (по коллизии)
     */
-    void Init(const std::string& sprite_name, const Vector2f& pos, float speed,
+    void Init(std::string_view sprite_name, const Vector2f& pos, float speed,
               float angle, int State, short power, int collisionWith,
               CollisionType collisionType);
 

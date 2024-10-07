@@ -22,7 +22,12 @@
 #pragma once
 
 #include "game_level.h"
-#include <objects/characters/boss1.h>
+
+#include <memory>
+
+namespace oci::objects {
+    class Boss1;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {
@@ -34,7 +39,7 @@ public:
 protected:
     virtual void Run() override;
 private:
-    weak_ptr<objects::Boss1> mBoss;
+    std::weak_ptr<objects::Boss1> mBoss;
 };
 
 } // namespace levels

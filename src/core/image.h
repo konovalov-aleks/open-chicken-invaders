@@ -25,48 +25,36 @@
 #   include<SFML/Graphics/Image.hpp>
 #else
 #   include "color.h"
-#   include <portability/memory.h>
-#   include <SDL2/SDL.h>
+
+#   include <SDL_surface.h>
+
+#   include <cstddef>
+#   include <memory>
 #   include <string>
-#   include "vector2.h"
 #endif
 
 namespace oci {
 
 #ifdef USE_SFML
 
-typedef sf::Image Image;
+using Image = sf::Image;
 
 #else
 
 class Image {
 public:
-    Image();
-    Image(size_t width, size_t height, const Color& color = Color::Black);
-    bool LoadFromMemory(const char* data, size_t datasize);
-    bool LoadFromFile(const std::string& filename);
-    void CreateMaskFromColor(Color color_key);
-    void SetSmooth(bool /*smooth*/) {}
+    Image() = default;
+    Image(Image&&) = default;
+    Image& operator= (Image&&) = default;
 
-    size_t GetWidth() const;
-    size_t GetHeight() const;
+    void create(unsigned width, unsigned height, const Color& color = Color::Black);
+    bool loadFromMemory(const char* data, std::size_t datasize);
+    bool loadFromFile(const std::string& filename);
+    void createMaskFromColor(Color color_key);
 
-    SDL_Texture* GetTexture() const {
-        if(!mTexture)
-            LoadTexture();
-        return mTexture.get();
-    }
+    SDL_Surface* SDLHandle() const noexcept { return mSurface.get(); }
 
 private:
-    bool LoadTexture() const;
-
-    struct TextureDeleter {
-        void operator() (SDL_Texture* texture) {
-            if(texture)
-                SDL_DestroyTexture(texture);
-        }
-    };
-
     struct SurfaceDeleter {
         void operator() (SDL_Surface* surface) {
             if(surface)
@@ -74,8 +62,7 @@ private:
         }
     };
 
-    shared_ptr<SDL_Surface> mSurface;
-    mutable shared_ptr<SDL_Texture> mTexture;
+    std::unique_ptr<SDL_Surface, SurfaceDeleter> mSurface;
 };
 
 #endif

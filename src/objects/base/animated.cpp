@@ -21,6 +21,12 @@
 
 #include "animated.h"
 
+#include "sprite.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+
+#include <string_view>
+
 namespace oci {
 namespace objects {
 
@@ -28,7 +34,7 @@ void Animated::Init(const char* spritename, const Vector2f& position,
                     float animation_speed) {
     Sprite::Init(spritename);
     mAnimationSpeed = animation_speed;
-    SetPosition(position);
+    setPosition(position);
 }
 
 void Animated::NextFrame() {
@@ -39,10 +45,10 @@ void Animated::NextFrame() {
             return;
         } else
             mAnimationPosition =
-                (mAnimationPosition < 0 && AnimationInfo().need_reverce) ||
+                (mAnimationPosition < 0 && AnimationInfo().need_reverse) ||
                 (mAnimationPosition > FramesCount() - 1 &&
-                 !AnimationInfo().need_reverce) ? 0 : FramesCount() - 1;
-        if(AnimationInfo().need_reverce)
+                 !AnimationInfo().need_reverse) ? 0 : FramesCount() - 1;
+        if(AnimationInfo().need_reverse)
             mAnimationDirection = -mAnimationDirection;
     }
     SetFrame(static_cast<int>(mAnimationPosition));

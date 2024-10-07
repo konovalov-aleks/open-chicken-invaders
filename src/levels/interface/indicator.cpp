@@ -19,9 +19,18 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "lives_indicator.h"
+#include "indicator.h"
 
-#include <boost/lexical_cast.hpp>
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <font/font.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
+#include <objects/modifiers/hidden.h>
+#include <objects/text/text.h>
+
+#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -30,7 +39,7 @@ namespace interface {
 using namespace objects;
 using namespace modifiers;
 
-void Indicator::Init(const std::string& sprite_name,
+void Indicator::Init(std::string_view sprite_name,
                      const Vector2f& position) {
     mText = Storage().CreateObject<Hidden<Text> >(
         "", Vector2f(position.x + 17, position.y),
@@ -53,7 +62,7 @@ void Indicator::Run() {
         mIcons[1]->Hide();
         mIcons[2]->Hide();
         mText->Show();
-        mText->SetText(boost::lexical_cast<std::string>(value));
+        mText->SetText(std::to_string(value));
     }
 }
 

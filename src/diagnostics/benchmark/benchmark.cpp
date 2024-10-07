@@ -21,23 +21,34 @@
 
 #include "benchmark.h"
 
+#include <context/context.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <levels/factory.h>
 #include <objects/base/animated.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/characters/chicken.h>
+
+#include <chrono>
+#include <compare>
+#include <cstdlib>
+#include <iostream>
+#include <ratio>
+#include <string_view>
 
 namespace oci {
 namespace benchmark {
 
-    static levels::Factory::Registrator<Benchmark> reg("benchmark", "benchmark");
+    static levels::Factory::Registrar<Benchmark> reg("benchmark", "benchmark");
 
     class BenchmarkChicken : public objects::Animated {
     public:
         void Init() {
             Animated::Init(
                 "chicken_red.xml",
-                Vector2f(rand() % Window::Instance().GetWidth(),
-                             rand() % Window::Instance().GetHeight())
+                Vector2f(std::rand() % Window::Instance().getSize().x,
+                         std::rand() % Window::Instance().getSize().y)
             );
         }
 
@@ -55,31 +66,32 @@ namespace benchmark {
         for(int i = 0; i < mChickensCount; ++i)
             //Storage().CreateObject<BenchmarkChicken>();
             Storage().CreateObject<objects::Chicken>(
-                Vector2f(rand() % Window::Instance().GetWidth(), rand() % Window::Instance().GetHeight()),
+                Vector2f(std::rand() % Window::Instance().getSize().x,
+                         std::rand() % Window::Instance().getSize().y),
                 100, objects::Chicken::tCyan, 10);
         mChickensCount += CHICKENS_COUNT;
     }
 
     void Benchmark::Run() {
         ++mFramesCount;
-        CHRONO::nanoseconds time = Clock::now() - mLastStatisticTime;
+        std::chrono::nanoseconds time = Clock::now() - mLastStatisticTime;
 //        for(int i = 0; i < mChickensCount; ++i)
 //            Storage().KillObject(Storage().CreateObject<BenchmarkChicken>());
-        Storage().GetContext().ColliseAll(ctFriendBullet, 100500);
-        if(time >= CHRONO::seconds(1)) {
-            float FPS = mFramesCount / CHRONO::duration_cast<CHRONO::seconds>(time).count();
-            printf("[%d chickens] FPS: %f\n", mChickensCount, FPS);
+        Storage().GetContext().CollideAll(ctFriendBullet, 100500);
+        if(time >= std::chrono::seconds(1)) {
+            float FPS = mFramesCount / std::chrono::duration_cast<std::chrono::seconds>(time).count();
+            std::cout << '[' << mChickensCount << " chickens] FPS: " << FPS << std::endl;
             mFramesCount = 0;
             mLastStatisticTime = Clock::now();
         }
-        if(Clock::now() - mLastSceneUpdateTime >= CHRONO::seconds(5)) {
+        if(Clock::now() - mLastSceneUpdateTime >= std::chrono::seconds(5)) {
             CreateNewChickens();
             mLastSceneUpdateTime = Clock::now();
         }
     }
 
     void StartBenchmark() {
-        levels::Factory::Instance().Build("benchmark"); 
+        levels::Factory::Instance().Build("benchmark");
     }
 
 } // namespace benchmark

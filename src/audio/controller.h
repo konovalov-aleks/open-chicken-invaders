@@ -24,8 +24,13 @@
 namespace oci {
 namespace audio {
 
-class Controller : boost::noncopyable {
+class Controller {
 public:
+    Controller() = default;
+
+    Controller(const Controller&) = delete;
+    Controller& operator= (const Controller&) = delete;
+
     virtual ~Controller() {}
     virtual bool IsPlaying() const = 0;
 };

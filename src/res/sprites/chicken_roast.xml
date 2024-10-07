@@ -1,5 +1,0 @@
-<sprite>
-	<animation repeat="1" reverce="0">
-		<frame name="gfx/roastchicken_0.bmp" colorkey="0"/>
-	</animation>
-</sprite>

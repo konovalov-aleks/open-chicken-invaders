@@ -21,36 +21,46 @@
 
 #include "loader.h"
 
+#include <core/critical_error.h>
+#include <utils/transparent_equal.h>
+#include <utils/transparent_string_hash.h>
+
+// IWYU pragma: no_include <__fwd/fstream.h>
+// IWYU pragma: no_include <__fwd/ios.h>
+#include <cstdlib>
+#include <iostream>
 #include <fstream>
-#include <portability/unordered_map.h>
-#include <stdexcept>
-#include <stdlib.h>
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace oci {
 namespace resources {
 
-    ResourcesLoader ResourcesLoader::mInstance;
+    ResourceLoader ResourceLoader::mInstance;
 
-    class ResourcesLoader::Impl {
+    class ResourceLoader::Impl {
     public:
         virtual ~Impl() {}
 
         Impl() {
             mFile.open("ChickenInvaders2.dat", std::ios_base::in | std::ios_base::binary);
             if(!mFile) {
-                fputs("FATAL ERROR: Could not open resource file \"ChickenInvaders2.dat\"\n", stderr);
-                exit(1);
+                std::cerr << "FATAL ERROR: Could not open resource file \"ChickenInvaders2.dat\"" << std::endl;
+                std::exit(1);
             }
             if(!ReadTOC()) {
-                fputs("FATAL ERROR: file \"ChickenInvaders2.dat\" corrupted\n", stderr);
-                exit(1);
+                std::cerr << "FATAL ERROR: file \"ChickenInvaders2.dat\" corrupted" << std::endl;
+                std::exit(1);
             }
         }
 
-        inline std::vector<char> GetData(const std::string& resource_name) {
+        inline std::vector<char> GetData(std::string_view resource_name) {
             TOCType::const_iterator iter = mTOC.find(resource_name);
-            if(iter == mTOC.end())
-                throw std::logic_error("Cannot find file \"" + resource_name + "\"");
+            if(iter == mTOC.end()) [[unlikely]]
+                CriticalError("Cannot find file \"", resource_name, '"');
             std::vector<char> v;
             if(iter->second.second > 0) {
                 v.resize(iter->second.second);
@@ -70,7 +80,7 @@ namespace resources {
                     "#rs############\0####################-./################89##456"
                     "70123";
             mFile.seekg(0, std::ios::end);
-            const int file_size = mFile.tellg();
+            const int file_size = static_cast<int>(mFile.tellg());
             mFile.seekg(0, std::ios::beg);
             int items_count = 0;
             if(!mFile.read(reinterpret_cast<char*>(&items_count), 4))
@@ -83,7 +93,7 @@ namespace resources {
                    !mFile.read(reinterpret_cast<char*>(&len), 4) ||
                    len < 0 || pos < 0 || len + pos > file_size)
                     return false;
-                for(size_t i = 0; i < sizeof(buffer); ++i)
+                for(std::size_t i = 0; i < sizeof(buffer); ++i)
                     buffer[i] = TRANSLATION_TABLE[static_cast<unsigned char>(buffer[i])];
                 buffer[sizeof(buffer) - 1] = '\0';
                 mTOC.insert(std::make_pair(buffer, std::make_pair(pos, len)));
@@ -92,14 +102,17 @@ namespace resources {
         }
 
         std::ifstream mFile;
-        typedef unordered_map<std::string, std::pair<int, int> > TOCType;
+        using TOCType = std::unordered_map<
+            std::string, std::pair<int, int>,
+            TransparentStrHash, TransparentEqual
+        >;
         TOCType mTOC;
     };
 
-    ResourcesLoader::ResourcesLoader() : mImpl(new Impl) {
+    ResourceLoader::ResourceLoader() : mImpl(new Impl) {
     }
 
-    std::vector<char> ResourcesLoader::GetData(const std::string& resource_name) {
+    std::vector<char> ResourceLoader::GetData(std::string_view resource_name) {
         return mImpl->GetData(resource_name);
     }
 

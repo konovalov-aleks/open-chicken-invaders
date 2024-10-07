@@ -21,33 +21,42 @@
 
 #include "subtitle_text.h"
 
-#include <assert.h>
+#include "text.h"
+#include <context/object_holder.h>
+#include <context/object_storage.h>
+#include <core/critical_error.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <font/font.h>
-#include <stdexcept>
-#include <tinyxml.h>
+
+#include <tinyxml2.h>
+
+#include <filesystem>
+#include <memory>
+#include <string_view>
+#include <utility>
 
 namespace oci {
 namespace objects {
+
+using namespace std::literals;
 
 static const int SUBTITLE_Y_POS = 400;
 
 SubtitleText::SubtitleText() : mCurTask(-1), mCurTaskExpireTime(0) {}
 
-void SubtitleText::Init(const std::string& filename) {
-    TiXmlDocument xml;
-    if(!xml.LoadFile("res/subtitle/" + filename))
-        throw std::logic_error("subtitle \"" + filename + "\" not found");
-    const TiXmlNode* root = xml.FirstChild("subtitle");
-    if(!root)
-        throw std::logic_error("cannot find root tag \"subtitle\" in file \"" +
-                               filename + "\"");
-    const TiXmlNode* node = NULL;
-    while((node = root->IterateChildren(node)) != NULL) {
-        const TiXmlElement* sentence = node->ToElement();
-        if(sentence && sentence->ValueStr() == "sentence") {
+void SubtitleText::Init(std::string_view filename) {
+    tinyxml2::XMLDocument xml;
+    if(xml.LoadFile((std::filesystem::path("res/subtitle/") / filename).string().c_str()) != tinyxml2::XML_SUCCESS) [[unlikely]]
+        CriticalError("subtitle \"", filename, "\" not found");
+    const tinyxml2::XMLNode* root = xml.FirstChildElement("subtitle");
+    if(!root) [[unlikely]]
+        CriticalError("cannot find root tag \"subtitle\" in file \"", filename, '"');
+    for (const tinyxml2::XMLNode* node = root->FirstChild(); node; node = node->NextSiblingElement()) {
+        const tinyxml2::XMLElement* sentence = node->ToElement();
+        if(sentence && sentence->Value() == "sentence"sv) {
             int time = 0;
-            if(sentence->QueryIntAttribute("time", &time) == TIXML_SUCCESS) {
+            if(sentence->QueryIntAttribute("time", &time) == tinyxml2::XML_SUCCESS) {
                 const char* text = sentence->Attribute("text");
                 mTasks.push_back(std::make_pair(time, text ? text : ""));
             }
@@ -63,7 +72,7 @@ void SubtitleText::Run() {
             mCurTaskExpireTime = mTasks[mCurTask].first;
             mText = Storage().CreateObject<Text>(
                 mTasks[mCurTask].second,
-                Vector2f(Window::Instance().GetWidth() / 2, SUBTITLE_Y_POS),
+                Vector2f(Window::Instance().getSize().x / 2, SUBTITLE_Y_POS),
                 Font::GetFont("big.xml"), Text::haCenter, Text::vaCenter);
         }
     }

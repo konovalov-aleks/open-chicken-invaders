@@ -21,8 +21,15 @@
 
 #include "level_1_10.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <objects/characters/boss1.h>
+
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -37,15 +44,15 @@ namespace {
     /// Скорость босса
     extern const float BOSS_SPEED = 4.0f;
 
-    static Factory::Registrator<Level_1_10> reg("level_1_10", "game");
+    static Factory::Registrar<Level_1_10> reg("level_1_10", "game");
 } // namespace
 
 void Level_1_10::Init() {
     GameLevel::Init("level_1_10");
+    const Vector2u wndSize = Window::Instance().getSize();
     mBoss = Storage().CreateObject<Boss1>(
-        Vector2f(Window::Instance().GetWidth() / 2, BOSS_INITIAL_Y_POS),
-        Vector2f(Window::Instance().GetHeight() / 2,
-                 BOSS_INITIAL_DESTINATION_POINT_Y),
+        Vector2f(wndSize.x / 2, BOSS_INITIAL_Y_POS),
+        Vector2f(wndSize.x / 2, BOSS_INITIAL_DESTINATION_POINT_Y),
         BOSS_SPEED);
     ShowLevelInfo("10", "show'em who's boss!");
 }

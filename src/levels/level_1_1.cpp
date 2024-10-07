@@ -21,12 +21,21 @@
 
 #include "level_1_1.h"
 
-#include <constants.h>
-#include <core/window.h>
 #include "factory.h"
-#include <objects/characters/player_ship.h>
+#include "game_level.h"
+#include "level.h"
+#include <constants.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <font/font.h>
+#include <objects/characters/chicken.h>
+#include <objects/characters/random_chicken.h>
 #include <objects/modifiers/expiring.h>
 #include <objects/text/text.h>
+
+#include <cstdlib>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -35,18 +44,18 @@ using namespace objects;
 
 namespace {
     /// Начальное положение куры (по Y)
-    static const float INITIAL_CHICKEN_Y_POS = -30.0f;
+    const float INITIAL_CHICKEN_Y_POS = -30.0f;
     /// Скорость куры
-    static const float CHICKEN_SPEED = 2.0f;
+    const float CHICKEN_SPEED = 2.0f;
 
-    static Factory::Registrator<Level_1_1> reg("level_1_1", "game");
+    Factory::Registrar<Level_1_1> reg("level_1_1", "game");
 } // namespace
 
 void Level_1_1::Init() {
     GameLevel::Init("level_1_1");
     mMode = 0;
     mChicken = Storage().CreateObject<RandomChicken>(
-                    Vector2f(static_cast<float>(rand() % Window::Instance().GetWidth()),
+                    Vector2f(static_cast<float>(std::rand() % Window::Instance().getSize().x),
                              INITIAL_CHICKEN_Y_POS), 100, Chicken::tRed, 1, CHICKEN_SPEED);
 }
 
@@ -56,7 +65,7 @@ void Level_1_1::Run() {
         ++mMode;
         if(mMode < 40) {
             if(mMode == 10) {
-                const int window_center = Window::Instance().GetWidth() / 2;
+                const int window_center = Window::Instance().getSize().x / 2;
                 Storage().CreateObject<modifiers::Expiring<Text> >(
                     20, "on approach to",
                     Vector2f(window_center, FirstTextStringY),

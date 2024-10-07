@@ -21,10 +21,15 @@
 
 #pragma once
 
-#include <context/object_holder.h>
-#include <fstream>
-#include <objects/base/active.h>
 #include "text.h"
+#include <context/object_holder.h>
+#include <objects/base/active.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string>
+#include <string_view> // IWYU pragma: keep
+#include <utility>
+#include <vector>
 
 namespace oci {
 namespace objects {
@@ -33,7 +38,7 @@ class SubtitleText : public Active {
 public:
     SubtitleText();
 
-    void Init(const std::string& filename);
+    void Init(std::string_view filename);
     void Run() override;
 
 private:

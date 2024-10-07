@@ -21,29 +21,32 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include "context.h"
-#include <portability/memory.h>
-#include <portability/unordered_map.h>
-#include <string>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string_view>
+#include <unordered_map>
 
 namespace oci {
 namespace context {
 
-class Manager : boost::noncopyable {
+class Manager {
 public:
     inline static Manager& Instance() { return mInstance; }
 
-    shared_ptr<Context> GetContext(const std::string& context_name);
-    void KillContext(const std::string& context_name);
+    Manager(const Manager&) = delete;
+    Manager& operator= (const Manager&) = delete;
 
-    shared_ptr<Context> GetActiveContext() { return mActiveContext; }
-    void SetActiveContext(const shared_ptr<Context>& context);
+    Context& GetContext(std::string_view context_name);
+    void KillContext(std::string_view context_name);
+
+    Context* GetActiveContext() const { return mActiveContext; }
+    void SetActiveContext(Context&);
 private:
-    Manager();
+    Manager() = default;
 
-    shared_ptr<Context> mActiveContext;
-    typedef unordered_map<std::string, shared_ptr<Context> > ContextsMap;
+    Context* mActiveContext = nullptr;
+    typedef std::unordered_map<std::string_view, Context> ContextsMap;
     ContextsMap mContexts;
     static Manager mInstance;
 };

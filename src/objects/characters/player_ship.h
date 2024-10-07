@@ -21,18 +21,21 @@
 
 #pragma once
 
+#include "ship.h"
 #include <core/window.h>
 #include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/gun/gun.h>
-#include <portability/memory.h>
-#include "shield.h"
-#include "ship.h"
+
+#include <memory>
 
 namespace oci {
 namespace objects {
 
+class Shield;
+
 class PlayerShip : public Ship, public ICollisionObject,
-                   public enable_shared_from_this<PlayerShip> {
+                   public std::enable_shared_from_this<PlayerShip> {
 public:
     void Init();
 
@@ -42,8 +45,7 @@ public:
     void CreateShield();
 
     static int DEFAULT_Y_POS() {
-        static const int default_y_pos = Window::Instance().GetHeight() - 80;
-        return default_y_pos;
+        return Window::Instance().getSize().y - 80;
     }
 
 protected:
@@ -87,9 +89,9 @@ private:
     bool mEnterPressed;
 
     /// оружие
-    unique_ptr<Gun> mGun;
+    std::unique_ptr<Gun> mGun;
 
-    weak_ptr<Shield> mShield;
+    std::weak_ptr<Shield> mShield;
 };
 
 } // namespace objects

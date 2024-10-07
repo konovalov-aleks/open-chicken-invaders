@@ -21,12 +21,16 @@
 
 #pragma once
 
-#include <objects/base/sprite.h>
+#include <core/vector2.h>
 #include <objects/base/active.h>
-#include <objects/particles/exhaust.h>
+#include <objects/base/sprite.h>
+
+#include <memory>
 
 namespace oci {
 namespace objects {
+
+class Exhaust;
 
 class Ship : public Sprite, public Active {
 public:
@@ -41,7 +45,7 @@ protected:
     virtual void Run() override;
 
     /// огоньки от двигателей
-    shared_ptr<Exhaust> e1, e2;
+    std::shared_ptr<Exhaust> e1, e2;
     /// смещение огоньков двигателей к центру при наклоне корабля
     float dx_e;
 

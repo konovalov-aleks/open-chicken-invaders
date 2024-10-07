@@ -21,13 +21,16 @@
 
 #pragma once
 
-#include <assert.h>
-#include <core/image.h>
-#include <core/sprite.h>
-#include <core/vector2.h>
-#include <string>
-#include <vector>
 #include "visible.h"
+#include <core/sprite.h>
+#include <core/texture.h>
+#include <core/vector2.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <cassert>
+#include <cstddef>
+#include <string_view>
+#include <vector>
 
 //#define DEBUG_SPRITE
 
@@ -37,27 +40,27 @@ namespace objects {
 class Sprite : public core::Sprite, public Visible {
 public:
     struct AnimationInfo {
-        bool need_reverce;
+        bool need_reverse;
         bool need_repeat;
     };
 
     struct Animation {
         struct AnimationInfo info;
-        std::vector<Image> images;
+        std::vector<Texture> images;
     };
 
     typedef std::vector<Animation> SpriteData;
 
-    void Init(const std::string& filename);
-    void Init(const std::string& filename, const Vector2f& pos);
+    void Init(std::string_view filename);
+    void Init(std::string_view filename, const Vector2f& pos);
 
     virtual ~Sprite();
-    size_t StatesCount() const;
-    size_t CurrentState() const;
-    bool SetState(size_t state);
-    size_t FramesCount() const;
-    size_t CurrentFrame() const;
-    bool SetFrame(size_t frame);
+    std::size_t StatesCount() const;
+    std::size_t CurrentState() const;
+    bool SetState(std::size_t state);
+    std::size_t FramesCount() const;
+    std::size_t CurrentFrame() const;
+    bool SetFrame(std::size_t frame);
 
     AnimationInfo AnimationInfo() const { assert(mData); return (*mData)[mCurrentState].info; }
     bool AnimationRepeated() const;
@@ -71,18 +74,18 @@ protected:
 
 private:
     const SpriteData* mData;
-    size_t mCurrentState;
-    size_t mCurrentFrame;
+    std::size_t mCurrentState;
+    std::size_t mCurrentFrame;
 };
 
 template<Visible::DrawPriority draw_priority>
 class CommonSprite : public Sprite {
 public:
-    void Init(const std::string& filename) {
+    void Init(std::string_view filename) {
         Sprite::Init(filename);
     }
 
-    void Init(const std::string& filename, const Vector2f& pos) {
+    void Init(std::string_view filename, const Vector2f& pos) {
         Sprite::Init(filename, pos);
     }
 

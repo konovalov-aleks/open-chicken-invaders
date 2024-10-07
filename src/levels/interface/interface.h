@@ -21,10 +21,13 @@
 
 #pragma once
 
-#include <context/object_holder.h>
 #include <objects/base/active.h>
-#include <objects/base/sprite.h>
-#include <objects/text/text.h>
+
+#include <memory>
+
+namespace oci::objects {
+    class Text;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {
@@ -37,7 +40,7 @@ public:
     void Run() override;
 private:
     int mDisplayedScore;
-    shared_ptr<objects::Text> mScoreText;
+    std::shared_ptr<objects::Text> mScoreText;
 };
 
 } // namespace levels

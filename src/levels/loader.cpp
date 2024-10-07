@@ -21,67 +21,61 @@
 
 #include "loader.h"
 
+#include <core/critical_error.h>
+
+#include <tinyxml2.h>
+
+#include <cassert>
+#include <cstdio>
 #include <set>
 #include <string>
 
 namespace oci {
 namespace levels {
 
-namespace {
-    void FatalError(const char* description) {
-        fprintf(stderr, "Error while loading \"description.xml\": %s\n",
-                description);
-        exit(1);
-    }
-
-    void LevelLoadFatalError(const std::string& levelname,
-                             const char* description) {
-        fprintf(stderr, "Error while loading level \"%s\": %s\n",
-                levelname.c_str(), description);
-        exit(1);
-    }
-} // namespace
-
-Loader::Loader() {
-    if(!xml_file.LoadFile("res/description.xml"))
-        FatalError(xml_file.ErrorDesc());
-    TiXmlNode* node = xml_file.FirstChild("ResourcesList");
-    if(!node)
-        FatalError("cannot find node \"ResourceList\"");
-    ResourcesList = node->ToElement();
-    if(!ResourcesList)
-        FatalError("node \"ResourceList\" is not xml element");
+[[noreturn]] inline void LevelLoadFatalError(const char* levelname,
+                                             const char* description) {
+    CriticalError("Error while loading level \"", levelname, "\": ", description);
 }
 
-void Loader::LoadLevel(const std::string& levelname) {
+Loader::Loader() {
+    if(xml_file.LoadFile("res/description.xml") != tinyxml2::XML_SUCCESS) [[unlikely]]
+        CriticalError(xml_file.ErrorStr());
+    tinyxml2::XMLNode* node = xml_file.FirstChildElement("ResourcesList");
+    if(!node) [[unlikely]]
+        CriticalError("cannot find node \"ResourceList\"");
+    ResourcesList = node->ToElement();
+    if(!ResourcesList) [[unlikely]]
+        CriticalError("node \"ResourceList\" is not xml element");
+}
+
+void Loader::LoadLevel(const char* levelname) {
     assert(ResourcesList);
-    TiXmlNode* level_node = ResourcesList->FirstChild(levelname);
-    if(!level_node)
+    tinyxml2::XMLNode* level_node = ResourcesList->FirstChildElement(levelname);
+    if(!level_node) [[unlikely]]
         LevelLoadFatalError(levelname, "cannot find level element");
-    TiXmlElement* level = level_node->ToElement();
-    if(!level)
+    tinyxml2::XMLElement* level = level_node->ToElement();
+    if(!level) [[unlikely]]
         LevelLoadFatalError(levelname, "level node is not xml element");
 
     std::set<std::string> sprites_list, sounds_list;
 
     {
-        TiXmlNode* node = level->FirstChild("sprite");
+        tinyxml2::XMLNode* node = level->FirstChildElement("sprite");
         if(node) {
-            TiXmlNode* child = NULL;
-            while((child = node->IterateChildren(child)) != NULL)
+            for (tinyxml2::XMLNode* child = node->FirstChildElement(); child; child = child->NextSiblingElement())
                 sprites_list.insert(child->ToElement()->Attribute("name"));
         }
     }
     {
-        TiXmlNode* node = level->FirstChild("sound");
+        tinyxml2::XMLNode* node = level->FirstChildElement("sound");
         if(node) {
-            TiXmlNode* child = NULL;
-            while((child = node->IterateChildren(child)) != NULL)
+            for (tinyxml2::XMLNode* child = node->FirstChildElement(); child; child = child->NextSiblingElement())
                 sounds_list.insert(child->ToElement()->Attribute("name"));
         }
     }
 
-    int max_progr = sprites_list.size() + sounds_list.size();
+    std::size_t max_progr = sprites_list.size() + sounds_list.size();
     if(max_progr) {
 //            CLoadScreen lscreen;
 //            lscreen.InitMax(sprites_list.size() + sounds_list.size());

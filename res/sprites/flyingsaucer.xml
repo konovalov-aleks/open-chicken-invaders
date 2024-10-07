@@ -1,0 +1,20 @@
+<sprite>
+	<animation repeat="1" reverse="0">
+		<frame name="gfx/flyingsaucer_0.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_1.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_2.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_3.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_4.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_5.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_6.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_7.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_8.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_9.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_10.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_11.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_12.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_13.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_14.bmp" colorkey="0"/>
+		<frame name="gfx/flyingsaucer_15.bmp" colorkey="0"/>
+	</animation>
+</sprite>

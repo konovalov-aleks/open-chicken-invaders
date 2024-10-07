@@ -23,6 +23,10 @@
 
 #include "level_x4.h"
 
+#include <objects/characters/asteroid.h>
+
+#include <memory>
+
 namespace oci {
 namespace levels {
 
@@ -31,7 +35,7 @@ class Level_1_4 : public Level_x4 {
 public:
     void Init();
 protected:
-    virtual weak_ptr<objects::Asteroid> CreateAsteroid() override;
+    virtual std::weak_ptr<objects::Asteroid> CreateAsteroid() override;
 };
 
 } // namespace levels

@@ -21,11 +21,18 @@
 
 #include "text.h"
 
-#include <algorithm>
-#include <assert.h>
+#include <core/critical_error.h>
+#include <core/sprite.h>
+#include <core/texture.h>
+#include <core/vector2.h>
 #include <core/window.h>
-#include <portability/array.h>
-#include <stdexcept>
+#include <font/font.h>
+
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cstddef>
+#include <utility>
 
 namespace oci {
 namespace objects {
@@ -62,7 +69,7 @@ private:
 class Text::Aligner {
 public:
     Aligner(Text::VerticalAlign va, Text::HorizontalAlign ha) {
-        typedef array<
+        typedef std::array<
             std::pair<Text::VerticalAlign, AlignerFunc>,
             3
         > VerticalArr;
@@ -72,7 +79,7 @@ public:
             std::make_pair(vaBottom, BottomAlign)
         };
 
-        typedef  array<
+        typedef std::array<
             std::pair<Text::HorizontalAlign, AlignerFunc>,
             3
         > HorizontalArr;
@@ -85,15 +92,15 @@ public:
         VerticalArr::const_iterator viter =
             std::find_if(vertical.begin(), vertical.end(),
                          PairFilter<Text::VerticalAlign>(va));
-        if(viter == vertical.end())
-            throw std::logic_error("FATAL ERROR: unknown vertical align type");
+        if(viter == vertical.end()) [[unlikely]]
+            CriticalError("unknown vertical align type");
         mVAligner = viter->second;
 
         HorizontalArr::const_iterator hiter =
             std::find_if(horizontal.begin(), horizontal.end(),
                         PairFilter<Text::HorizontalAlign>(ha));
-        if(hiter == horizontal.end())
-            throw std::logic_error("FATAL ERROR: unknown horizontal align type");
+        if(hiter == horizontal.end()) [[unlikely]]
+            CriticalError("unknown horizontal align type");
         mHAligner = hiter->second;
     }
 
@@ -106,7 +113,7 @@ private:
     AlignerFunc mVAligner, mHAligner;
 };
 
-void Text::Init(const std::string& text, const Vector2f& position,
+void Text::Init(std::string_view text, const Vector2f& position,
                 const Font& font, HorizontalAlign ha, VerticalAlign va) {
     mAligner.reset(new Aligner(va, ha));
     mFont = &font;
@@ -121,28 +128,28 @@ Text::~Text() {
 }
 
 void Text::Draw() {
-    for(size_t i = 0; i < mSprites.size(); ++i)
-        Window::Instance().Draw(mSprites[i]);
+    for(std::size_t i = 0; i < mSprites.size(); ++i)
+        Window::Instance().draw(mSprites[i]);
 }
 
-void Text::SetText(const std::string& text) {
+void Text::SetText(std::string_view text) {
     assert(mFont);
     assert(mAligner);
     mSprites.clear();
     mSprites.reserve(text.length());
     Vector2f size(0, 0);
-    for(size_t i = 0; i < text.length(); ++i) {
-        const Image& glyph = (*mFont)[text[i]];
+    for(std::size_t i = 0; i < text.length(); ++i) {
+        const Texture& glyph = (*mFont)[text[i]];
         mSprites.push_back(core::Sprite(glyph));
-        size.x += glyph.GetWidth() + 1;
-        if(glyph.GetHeight() > size.y)
-            size.y = glyph.GetHeight();
+        size.x += glyph.getSize().x + 1;
+        if(glyph.getSize().y > size.y)
+            size.y = glyph.getSize().y;
     }
     Vector2f pos = mAligner->Align(mPosition, size);
     for(std::vector<core::Sprite>::iterator glyph = mSprites.begin();
        glyph != mSprites.end(); ++glyph) {
-        glyph->SetPosition(pos);
-        pos.x += glyph->GetSize().x + 1;
+        glyph->setPosition(pos);
+        pos.x += glyph->getTexture()->getSize().x + 1;
     }
 }
 

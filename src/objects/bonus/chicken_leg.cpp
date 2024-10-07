@@ -21,9 +21,14 @@
 
 #include "chicken_leg.h"
 
+#include "chicken_part.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <game/state.h>
+
+#include <string_view>
 
 namespace oci {
 namespace objects {

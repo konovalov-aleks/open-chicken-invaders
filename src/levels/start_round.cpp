@@ -21,9 +21,13 @@
 
 #include "start_round.h"
 
+#include "level.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
 #include <background/background.h>
+#include <background/simple_controller.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <levels/factory.h>
 #include <levels/manager.h>
@@ -31,25 +35,30 @@
 #include <objects/effects/unshade_screen.h>
 #include <objects/particles/smoke.h>
 
+#include <cstdlib>
+#include <string_view>
+
 namespace oci {
 namespace levels {
 
+using namespace std::literals;
+
 namespace {
 
-static const float SHIP_DECELERATION = -3;
-static const float SHIP_START_SPEED = -25.0;
-static const float BACKGROUND_INITIAL_SPEED = 20.0f;
-static const float BACKGROUND_FINISH_SPEED = 8.0f;
-static const float BACKGROUND_DECELERATION = -0.2;
-static const int LEVEL_TIME = 50;
+const float SHIP_DECELERATION = -3;
+const float SHIP_START_SPEED = -25.0;
+const float BACKGROUND_INITIAL_SPEED = 20.0f;
+const float BACKGROUND_FINISH_SPEED = 8.0f;
+const float BACKGROUND_DECELERATION = -0.2;
+const int LEVEL_TIME = 50;
 
-static Factory::Registrator<StartRound> reg("start_round_1", "game", "");
+Factory::Registrar<StartRound> reg("start_round_1", "game", ""sv);
 
 } // namespace
 
 StartRound::StartRound() : mDY(SHIP_START_SPEED), mTime(0) {}
 
-void StartRound::Init(const std::string& /*round_title*/) {
+void StartRound::Init(std::string_view /*round_title*/) {
     Level::Init("start_round");
     Storage().CreateObject<objects::UnshadeScreen>();
     mBackgroundController = Storage().CreateObject<SimpleController>();
@@ -57,27 +66,28 @@ void StartRound::Init(const std::string& /*round_title*/) {
     Background::Instance().SetController(mBackgroundController);
     objects::PlayerShip& player_ship = levels::Manager::Instance().GetPlayerShip();
     player_ship.StopFire();
-    player_ship.SetPosition(Vector2f(Window::Instance().GetWidth() / 2.0f,
-                                     Window::Instance().GetHeight() + player_ship.GetHeight()));
+    const Vector2u wnd_size = Window::Instance().getSize();
+    player_ship.setPosition(Vector2f(wnd_size.x / 2.0f,
+                                     wnd_size.y + player_ship.GetHeight()));
 }
 
 void StartRound::Run() {
     ++mTime;
     objects::PlayerShip& ship = levels::Manager::Instance().GetPlayerShip();
 
-    int smoke_cnt = rand() % 5;
+    int smoke_cnt = std::rand() % 5;
     while(smoke_cnt-- > 0)
         Storage().CreateObject<objects::CSmoke>(
-            Vector2f(ship.GetPosition().x + rand() % 20 - 10, ship.GetPosition().y + 15 + rand() % 10), // позиция
+            Vector2f(ship.getPosition().x + std::rand() % 20 - 10, ship.getPosition().y + 15 + std::rand() % 10), // позиция
             mBackgroundController->GetSpeed().y / 10.0f,  // скорость
-            180 + 4 * (rand() % 20 - 10), // распределение углов
-            1.0f / (3 + rand() % 15) // скорость анимации
+            180 + 4 * (std::rand() % 20 - 10), // распределение углов
+            1.0f / (3 + std::rand() % 15) // скорость анимации
         );
 
-    if(ship.GetPosition().y <= objects::PlayerShip::DEFAULT_Y_POS()) {
-        ship.SetPosition(ship.GetPosition().x, objects::PlayerShip::DEFAULT_Y_POS());
+    if(ship.getPosition().y <= objects::PlayerShip::DEFAULT_Y_POS()) {
+        ship.setPosition(ship.getPosition().x, objects::PlayerShip::DEFAULT_Y_POS());
     } else {
-        ship.Move(0, mDY);
+        ship.move(0, mDY);
         mDY -= SHIP_DECELERATION;
         if(mDY > 0)
             mDY = SHIP_DECELERATION;

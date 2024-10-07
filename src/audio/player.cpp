@@ -24,14 +24,25 @@
 #ifdef USE_SFML
 #   include <SFML/Audio/Sound.hpp>
 #   include <SFML/Audio/SoundBuffer.hpp>
+#elif __EMSCRIPTEN__
+#   include <SDL/SDL_audio.h>
+#   include <SDL/SDL_mixer.h>
+#   include <SDL/SDL_mixer.h>
 #else
-#   include <SDL2/SDL_mixer.h>
+#   include <SDL_audio.h>
+#   include <SDL_mixer.h>
+#   include <SDL_rwops.h>
 #endif
 
-#include <portability/cpp11.h>
+#include "controller.h"
+#include <core/critical_error.h>
 #include <resources/loader.h>
-#include <stdexcept>
 #include <utils/cache.h>
+
+#include <filesystem>
+#include <string>
+#include <string_view>
+#include <vector>
 
 namespace oci {
 namespace audio {
@@ -42,15 +53,15 @@ namespace {
 
 class Loader {
 public:
-    sf::SoundBuffer operator()(const std::string& name) {
+    sf::SoundBuffer operator()(std::string_view name) {
+        std::filesystem::path path = std::filesystem::path("sfx/") / name;
         std::vector<char> data =
-            resources::ResourcesLoader::Instance().GetData("sfx/" + name);
-        if(data.empty())
-            throw std::logic_error("Sound resource \"sfx/" + name +
-                                   "\" is empty");
+            resources::ResourceLoader::Instance().GetData(path.string());
+        if(data.empty()) [[unlikely]]
+            CriticalError("Sound resource \"sfx/", name, "\" is empty");
         sf::SoundBuffer sb;
-        if(!sb.LoadFromMemory(&data[0], data.size()))
-            throw std::logic_error("Cannot load sound \"" + name + "\"");
+        if(!sb.loadFromMemory(&data[0], data.size())) [[unlikely]]
+            CriticalError("Cannot load sound \"", name, '"');
         return sb;
     }
 };
@@ -58,14 +69,15 @@ public:
 class ControllerImpl : public Controller {
 public:
     ControllerImpl(const sf::SoundBuffer& sb, bool autoplay, bool loop) :
-        mSound(sb, loop)
+        mSound(sb)
     {
+        mSound.setLoop(loop);
         if(autoplay)
-            mSound.Play();
+            mSound.play();
     }
 
     virtual bool IsPlaying() const override {
-        return mSound.GetStatus() == sf::Sound::Playing;
+        return mSound.getStatus() == sf::Sound::Playing;
     }
 
 private:
@@ -74,11 +86,11 @@ private:
 
 } // namespace
 
-std::shared_ptr<Controller> Play(const std::string& name, bool autoplay,
+std::unique_ptr<Controller> Play(std::string_view name, bool autoplay,
                                  bool loop) {
     static Cache<sf::SoundBuffer, Loader> cache;
     const sf::SoundBuffer& sb = cache.Get(name);
-    return std::make_shared<ControllerImpl>(sb, autoplay, loop);
+    return std::make_unique<ControllerImpl>(sb, autoplay, loop);
 }
 
 #else
@@ -95,29 +107,27 @@ public:
 
 class Loader {
 public:
-    shared_ptr<Mix_Chunk> operator()(const std::string& name) {
+    std::shared_ptr<Mix_Chunk> operator()(std::string_view name) {
+        std::filesystem::path path = std::filesystem::path("sfx/") / name;
         std::vector<char> data =
-            resources::ResourcesLoader::Instance().GetData("sfx/" + name);
-        if(data.empty())
-            throw std::logic_error("Sound resource \"sfx/" + name +
-                                   "\" is empty");
-        shared_ptr<Mix_Chunk> res = shared_ptr<Mix_Chunk>(
-            Mix_LoadWAV_RW(SDL_RWFromConstMem(&data[0], data.size()), 1),
+            resources::ResourceLoader::Instance().GetData(path.string());
+        if(data.empty()) [[unlikely]]
+            CriticalError("Sound resource \"sfx/", name, "\" is empty");
+        std::shared_ptr<Mix_Chunk> res = std::shared_ptr<Mix_Chunk>(
+            Mix_LoadWAV_RW(SDL_RWFromConstMem(&data[0], static_cast<int>(data.size())), 1),
             MixChunkDeleter());
-    printf("load %s\n", name.c_str());
-        if(!res)
-            throw std::logic_error("Cannot load sound \"" + name + "\": " +
-                                   Mix_GetError());
+        if(!res) [[unlikely]]
+            CriticalError("Cannot load sound \"", name, "\"\n", Mix_GetError());
         return res;
     }
 };
 
 class ControllerImpl : public Controller {
 public:
-    ControllerImpl(shared_ptr<Mix_Chunk> mix, bool autoplay, bool loop)
-        : mMixChunk(mix), mChannel(-1) {
+    ControllerImpl(Mix_Chunk& mix, bool autoplay, bool loop)
+        : mChannel(-1) {
         if(autoplay)
-            mChannel = Mix_PlayChannel(-1, mMixChunk.get(), loop ? -1 : 0);
+            mChannel = Mix_PlayChannel(-1, &mix, loop ? -1 : 0);
     }
 
     virtual ~ControllerImpl() {
@@ -130,7 +140,6 @@ public:
     }
 
 private:
-    shared_ptr<Mix_Chunk> mMixChunk;
     int mChannel;
 };
 
@@ -150,11 +159,10 @@ static SDLMixerInitializer sdl_mixer_initializer;
 
 } // namespace
 
-shared_ptr<Controller> Play(const std::string& name, bool autoplay,
-                            bool loop) {
-    static Cache<shared_ptr<Mix_Chunk>, Loader> cache;
-    const shared_ptr<Mix_Chunk>& mix = cache.Get(name);
-    return make_shared<ControllerImpl>(mix, autoplay, loop);
+std::unique_ptr<Controller> Play(std::string_view name, bool autoplay, bool loop) {
+    static Cache<std::shared_ptr<Mix_Chunk>, Loader> cache;
+    const std::shared_ptr<Mix_Chunk>& mix = cache.Get(name);
+    return std::make_unique<ControllerImpl>(*mix, autoplay, loop);
 }
 
 #endif

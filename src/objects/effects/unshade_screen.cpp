@@ -21,36 +21,49 @@
 
 #include "unshade_screen.h"
 
-#include <boost/noncopyable.hpp>
+#include <context/object_storage.h>
 #include <core/color.h>
+#include <core/critical_error.h>
 #include <core/image.h>
-#include <core/shape.h>
+#include <core/rectangle_shape.h>
 #include <core/sprite.h>
+#include <core/texture.h>
+#include <core/vector2.h>
 #include <core/window.h>
-#include <stdexcept>
+
+#include <string>
 
 namespace oci {
 namespace objects {
 
 namespace {
 
-class Gradient : public core::Sprite, boost::noncopyable {
+class Gradient : public core::Sprite {
 public:
     static Gradient& Instance() {
         static Gradient instance;
         return instance;
     }
+
+    Vector2u getSize() const noexcept {
+        return mTexture.getSize();
+    }
+
 private:
     Gradient() {
-        if(!mImage.LoadFromFile("res/images/gradient.bmp"))
-            throw std::logic_error("Can not load image file "
-                                   "\"res/images/gradient.bmp\"");
-        mImage.SetSmooth(false);
-        mImage.CreateMaskFromColor(Color::White);
-        SetImage(mImage);
+        Image img;
+        if(!img.loadFromFile("res/images/gradient.bmp")) [[unlikely]]
+            CriticalError("Can not load image file \"res/images/gradient.bmp\"");
+        img.createMaskFromColor(Color::White);
+        if(!mTexture.loadFromImage(img)) [[unlikely]]
+            CriticalError("Can't create a texture");
+        setTexture(mTexture, true);
     }
+
+    Gradient(const Gradient&) = delete;
+    Gradient& operator= (const Gradient&) = delete;
 private:
-    Image mImage;
+    Texture mTexture;
 };
 
 } // namespace
@@ -58,23 +71,31 @@ private:
 void UnshadeScreen::Draw() {
     Gradient& gradient = Gradient::Instance();
     Window& window = Window::Instance();
-    const int tilesize = gradient.GetSize().y;
-    int x = mPosition;
-    unsigned int y = 0;
-    for(; x > 0 && y < window.GetHeight(); x -= tilesize, y += tilesize) {
-        gradient.SetPosition(x - gradient.GetSize().x, y);
-        window.Draw(gradient);
-        window.Draw(Shape::Rectangle(x, y, window.GetWidth(), y + tilesize,
-                                         Color::Black));
+    const Vector2u tex_size = gradient.getSize();
+    const int tilesize = static_cast<int>(tex_size.y);
+    int x = static_cast<int>(mPosition);
+    unsigned y = 0;
+    const Vector2u wnd_size = window.getSize();
+    for(; x > 0 && y < wnd_size.y; x -= tilesize, y += tilesize) {
+        gradient.setPosition(x - static_cast<int>(tex_size.x), y);
+        window.draw(gradient);
+        RectangleShape rs(Vector2f(static_cast<int>(wnd_size.x) - x, tilesize));
+        rs.setPosition(x, y);
+        rs.setFillColor(Color::Black);
+        window.draw(rs);
     }
-    if(y < window.GetHeight())
-        window.Draw(Shape::Rectangle(x, y, window.GetWidth(),
-                                         window.GetHeight(), Color::Black));
+    if(y < window.getSize().y) {
+        RectangleShape rs(Vector2f(wnd_size.x - x, wnd_size.y - y));
+        rs.setPosition(x, y);
+        rs.setFillColor(Color::Black);
+        window.draw(rs);
+    }
 }
 
 void UnshadeScreen::Run() {
-    mPosition += Gradient::Instance().GetSize().y;
-    if(++mPosition > Window::Instance().GetWidth() + Gradient::Instance().GetSize().x)
+    mPosition += Gradient::Instance().getSize().y;
+    unsigned boundary = Window::Instance().getSize().x + Gradient::Instance().getSize().x;
+    if(++mPosition > boundary)
         Storage().KillObject(this);
 }
 

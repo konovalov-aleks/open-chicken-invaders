@@ -19,11 +19,15 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <boost/lexical_cast.hpp>
 #include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/critical_error.h>
 #include <levels/factory.h>
 #include <objects/characters/ufo.h>
-#include <stdexcept>
+
+#include <memory>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -51,10 +55,8 @@ public:
             str = "29";
             ufo_speed = 6;
             break;
-        default:
-            throw std::logic_error(
-                        "level 1.9: unknown level step (" +
-                        boost::lexical_cast<std::string>(step) + ")");
+        default: [[unlikely]]
+            CriticalError("level 1.9: unknown level step (", step, ')');
         }
         mUFO = Storage().CreateObject<objects::UFO>(ufo_speed);
         ShowLevelInfo(str, "bonus");
@@ -67,12 +69,12 @@ protected:
             EndLevel();
     }
 private:
-    weak_ptr<objects::UFO> mUFO;
+    std::weak_ptr<objects::UFO> mUFO;
 };
 
-Factory::Registrator<Level_1_9> reg1("level_1_9", "game", 0);
-Factory::Registrator<Level_1_9> reg2("level_2_9", "game", 1);
-Factory::Registrator<Level_1_9> reg3("level_3_9", "game", 2);
+Factory::Registrar<Level_1_9> reg1("level_1_9", "game", 0);
+Factory::Registrar<Level_1_9> reg2("level_2_9", "game", 1);
+Factory::Registrar<Level_1_9> reg3("level_3_9", "game", 2);
 
 } // namespace levels
 } // namespace oci

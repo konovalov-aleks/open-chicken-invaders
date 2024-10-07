@@ -21,20 +21,33 @@
 
 #include "intro_0.h"
 
-#include <assert.h>
+#include "factory.h"
+#include "intro_level.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
+#include <core/critical_error.h>
+#include <core/vector2.h>
 #include <core/window.h>
-#include "factory.h"
-#include "manager.h"
+#include <objects/base/animated.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/gun/player_bullet.h>
 #include <objects/modifiers/auto_killable.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
-#include <stdexcept>
-#include <utils/array_size.h>
+#include <objects/text/subtitle_text.h>
+#include <solar_system.h>
 #include <utils/cleanup_container.h>
+
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <iterator>
+#include <memory>
+#include <numbers>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -75,7 +88,7 @@ static const float SMOKE_SPEED = -2;
 /// Максимальная координата кур, летящих вправо, за экраном слева (то есть создаются они случайно, от MIN_CHICKEN_POS до 0)
 static const int MIN_CHICKEN_START_POS = 560;
 
-static Factory::Registrator<Intro_0> reg("intro_0", "intro");
+static Factory::Registrar<Intro_0> reg("intro_0", "intro");
 
 void Intro_0::IntroChicken1::Init(const Vector2f& position) {
     AnimatedCollisionObject::Init("chicken_intro.xml", position, 1000, 0.3f);
@@ -89,17 +102,17 @@ void Intro_0::IntroChicken1::OnCollision(const CollisionObjectInfo&) {
 }
 
 void Intro_0::IntroChicken1::Run() {
-    Move(-mSpeed, 0);
+    move(-mSpeed, 0);
 }
 
 void Intro_0::IntroChicken2::Init(const Vector2f& position, Type type) {
     static const float CHICKEN_SPEEDS[] = { 3.0f, 3.5f, 4.0f };
     Animated::Init("chicken_intro.xml", position);
-    assert(type >= 0 && type <= ARRAY_SIZE(CHICKEN_SPEEDS));
+    assert(type >= 0 && type <= std::size(CHICKEN_SPEEDS));
     mSpeed = CHICKEN_SPEEDS[type];
     mType = type;
     SetState(type + 1);
-    SetFrame(rand() % FramesCount());
+    SetFrame(std::rand() % FramesCount());
 }
 
 Visible::DrawPriority Intro_0::IntroChicken2::GetDrawPriority() const {
@@ -107,7 +120,7 @@ Visible::DrawPriority Intro_0::IntroChicken2::GetDrawPriority() const {
 }
 
 void Intro_0::IntroChicken2::Run() {
-    Move(mSpeed, 0);
+    move(mSpeed, 0);
 }
 
 void Intro_0::Init() {
@@ -125,12 +138,12 @@ void Intro_0::Init() {
 }
 
 void Intro_0::RunIntro() {
-    shared_ptr<Sprite> ship(mShip.lock());
-    if(!ship)
-        throw std::logic_error("Произведена попытка использовать удалённый объект Ship");
-    shared_ptr<Exhaust> exhaust(mExhaust.lock());
-    if(!exhaust)
-        throw std::logic_error("Произведена попытка использовать удалённый объект Exhaust");
+    std::shared_ptr<Sprite> ship(mShip.lock());
+    if(!ship) [[unlikely]]
+        CriticalError("Attempt to use a destroyed Ship object");
+    std::shared_ptr<Exhaust> exhaust(mExhaust.lock());
+    if(!exhaust) [[unlikely]]
+        CriticalError("Attempt to use a destroyed Exhaust object");
     switch(mMode) {
     case 0:
         if(mBackgroundController->x < SOLAR_SYSTEM_STOP_POS_X)
@@ -142,19 +155,19 @@ void Intro_0::RunIntro() {
         break;
 
     case 1:
-        if(fabsf(ship->GetPosition().x - SHIP_SHOT_POS) <= SHIP_SPEED) {
+        if(std::abs(ship->getPosition().x - SHIP_SHOT_POS) <= SHIP_SPEED) {
             ++mMode;
             Storage().CreateObject<CPlayerBullet>(
-                "gun1.xml", ship->GetPosition(), BULLET_SPEED, M_PI * 1.5f, 0, 0);
+                "gun1.xml", ship->getPosition(), BULLET_SPEED, std::numbers::pi_v<float> * 1.5f, 0, 0);
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("tr3_239.wav"));
         }
-        // break тут не должно быть!
+        [[fallthrough]];
     case 2:
-        ship->Move(-SHIP_SPEED, 0);
-        exhaust->SetPosition(ship->GetPosition().x + EXHAUST_DELTA_X, exhaust->GetPosition().y);
+        ship->move(-SHIP_SPEED, 0);
+        exhaust->setPosition(ship->getPosition().x + EXHAUST_DELTA_X, exhaust->getPosition().y);
 
-        if(ship->GetPosition().x < SHIP_REVERSE_POS) {
+        if(ship->getPosition().x < SHIP_REVERSE_POS) {
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("recordscratch.wav"));
             ++mMode;
@@ -164,8 +177,8 @@ void Intro_0::RunIntro() {
         break;
 
     case 3:        // чуток ждем и проигрываем звук (шум мотора)
-        ship->Move(SHIP_BACK_SPEED, 0);
-        if(ship->GetPosition().x > SHIP_ENGINE_SOUND_POS_X) {
+        ship->move(SHIP_BACK_SPEED, 0);
+        if(ship->getPosition().x > SHIP_ENGINE_SOUND_POS_X) {
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("gasengstart.wav"));
             mMode++;
@@ -173,23 +186,23 @@ void Intro_0::RunIntro() {
         break;
 
     case 4:
-        ship->Move(SHIP_BACK_SPEED, 0);
-        exhaust->SetPosition(ship->GetPosition().x - EXHAUST_DELTA_X,
-                             exhaust->GetPosition().y);
-        if(rand() % 3)
+        ship->move(SHIP_BACK_SPEED, 0);
+        exhaust->setPosition(ship->getPosition().x - EXHAUST_DELTA_X,
+                             exhaust->getPosition().y);
+        if(std::rand() % 3)
             Storage().CreateObject<CSmoke>(
-                Vector2f(ship->GetPosition().x - EXHAUST_DELTA_X,
-                         ship->GetPosition().y),
-                SMOKE_SPEED, 96 * (rand() % 20 - 10)
+                Vector2f(ship->getPosition().x - EXHAUST_DELTA_X,
+                         ship->getPosition().y),
+                SMOKE_SPEED, 96 * (std::rand() % 20 - 10)
             );
-        if(ship->GetPosition().x > Window::Instance().GetWidth() + 30) {
+        if(ship->getPosition().x > Window::Instance().getSize().x + 30) {
             //    создаем тучу кур...
             for(int i = 0; i < 10; ++i)
                 // большие
                 mChickens2.push_back(
                     Storage().CreateObject<AutoKillable<IntroChicken2, BoundRight> >(
-                        Vector2f(-rand() % MIN_CHICKEN_START_POS,
-                                 rand() % Window::Instance().GetHeight()),
+                        Vector2f(-std::rand() % MIN_CHICKEN_START_POS,
+                                 std::rand() % Window::Instance().getSize().y),
                         IntroChicken2::tBig
                     )
                 );
@@ -197,8 +210,8 @@ void Intro_0::RunIntro() {
                 // средние
                 mChickens2.push_back(
                     Storage().CreateObject<AutoKillable<IntroChicken2, BoundRight> >(
-                        Vector2f(-rand() % MIN_CHICKEN_START_POS,
-                                 rand() % Window::Instance().GetHeight()),
+                        Vector2f(-std::rand() % MIN_CHICKEN_START_POS,
+                                 std::rand() % Window::Instance().getSize().y),
                         IntroChicken2::tMedium
                     )
                 );
@@ -206,8 +219,8 @@ void Intro_0::RunIntro() {
                 // мелкие
                 mChickens2.push_back(
                     Storage().CreateObject<AutoKillable<IntroChicken2, BoundRight> >(
-                        Vector2f(-rand() % MIN_CHICKEN_START_POS,
-                                 rand() % Window::Instance().GetHeight()),
+                        Vector2f(-std::rand() % MIN_CHICKEN_START_POS,
+                                 std::rand() % Window::Instance().getSize().y),
                         IntroChicken2::tSmall
                         )
                 );

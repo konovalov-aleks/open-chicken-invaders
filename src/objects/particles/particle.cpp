@@ -21,6 +21,10 @@
 
 #include "particle.h"
 
+#include <core/vector2.h>
+#include <objects/base/animated.h>
+#include <utils/fast_trigonometry.h>
+
 namespace oci {
 namespace objects {
 
@@ -32,7 +36,7 @@ void Particle::Init(const char* sprite_name, const Vector2f& pos, float speed,
 }
 
 void Particle::Run() {
-    Move(mDX, mDY);
+    move(mDX, mDY);
 }
 
 } // namespace objects

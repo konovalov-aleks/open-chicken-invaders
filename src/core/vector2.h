@@ -22,7 +22,7 @@
 #pragma once
 
 #ifdef USE_SFML
-#   include<SFML/System/Vector2.hpp>
+#   include <SFML/System/Vector2.hpp> // IWYU pragma: export
 #endif
 
 namespace oci {
@@ -31,6 +31,7 @@ namespace oci {
 
 using sf::Vector2f;
 using sf::Vector2i;
+using sf::Vector2u;
 
 #else
 
@@ -62,8 +63,9 @@ public:
     T x, y;
 };
 
-typedef Vector2<float> Vector2f;
-typedef Vector2<int> Vector2i;
+using Vector2f = Vector2<float>;
+using Vector2i = Vector2<int>;
+using Vector2u = Vector2<unsigned>;
 
 #endif
 

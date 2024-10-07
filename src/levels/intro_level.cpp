@@ -21,8 +21,9 @@
 
 #include "intro_level.h"
 
-#include <core/event.h>
-#include <core/window.h>
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/keyboard.h>
 
 namespace oci {
 namespace levels {
@@ -33,7 +34,7 @@ void IntroLevel::Init(const char* levelname) {
 }
 
 void IntroLevel::Run() {
-    if(Window::Instance().GetInput().IsKeyDown(Key::Escape))
+    if(Keyboard::isKeyPressed(Keyboard::Key::Escape))
         EndLevel();
     else
         RunIntro();

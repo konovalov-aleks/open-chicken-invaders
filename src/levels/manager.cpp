@@ -21,12 +21,17 @@
 
 #include "manager.h"
 
-#include <context/manager.h>
-#include <game/state.h>
-#include <objects/text/text.h>
-#include <stdexcept>
 #include "factory.h"
 #include "interface/interface.h"
+#include <context/context.h>
+#include <context/manager.h>
+#include <context/object_storage.h>
+#include <core/critical_error.h>
+#include <game/state.h>
+#include <objects/characters/player_ship.h>
+
+#include <iostream>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -61,8 +66,8 @@ namespace {
 void Manager::NewGame() {
     context::Manager::Instance().KillContext("game");
     context::Manager::Instance().KillContext("intro");
-    context::ObjectsStorage& game_global_storage =
-        context::Manager::Instance().GetContext("game")->GetStorage("global");
+    context::ObjectStorage& game_global_storage =
+        context::Manager::Instance().GetContext("game").GetStorage("global");
     mPlayerShip = game_global_storage.CreateObject<objects::PlayerShip>();
     game_global_storage.CreateObject<Interface>();
     State::Instance().Reset();
@@ -70,11 +75,10 @@ void Manager::NewGame() {
 }
 
 void Manager::SelectLevel(int level_index) {
-    printf("SelectLevel %d\n", level_index);
+    std::cout << "SelectLevel " << level_index << std::endl;
     Factory::Instance().Build(levels[level_index]);
     current_level_index = level_index;
 /*    ObjectsStorage& storage = LevelLocalStorage();
-printf("select level %llx\n", (long long)&storage);
     switch(level_index) {
 //        case 0: new CWarp(10); break;
 //        case 1: new CWarp(9); break;
@@ -131,8 +135,8 @@ void Manager::GameOver() {
 }
 
 objects::PlayerShip& Manager::GetPlayerShip() const {
-    if(!mPlayerShip)
-        throw std::logic_error("Player ship is not created");
+    if(!mPlayerShip) [[unlikely]]
+        CriticalError("Player ship is not created");
     return *mPlayerShip;
 }
 

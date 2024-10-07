@@ -21,16 +21,21 @@
 
 #include "level.h"
 
-#include <assert.h>
-#include <constants.h>
-#include <core/event.h>
-#include <core/window.h>
 #include "manager.h"
+#include <constants.h>
+#include <context/object_storage.h>
+#include <core/keyboard.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <font/font.h>
 #include <menu/mainmenu.h>
 #include <objects/modifiers/blinking.h>
 #include <objects/modifiers/expiring.h>
 #include <objects/text/text.h>
-#include <stddef.h>
+
+#include <iostream>
+#include <string>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -38,24 +43,26 @@ namespace levels {
 using namespace objects;
 using namespace modifiers;
 
-void Level::Init(const std::string& levelname) {
+using namespace std::string_literals;
+
+void Level::Init(const char* levelname) {
     levels::Manager::Instance().LoadLevel(levelname);
 }
 
 void Level::EndLevel() {
-    puts("End level");
+    std::cout << "End level" << std::endl;
     Storage().KillObject(this);
     levels::Manager::Instance().CreateNextLevel();
 }
 
-void Level::ShowLevelInfo(const std::string& index, const std::string& name,
-                          const std::string& description, bool descr_blink) {
+void Level::ShowLevelInfo(const char* index, const char* name,
+                          const char* description, bool descr_blink) {
 
-    printf("show level info %s %s\n", index.c_str(), name.c_str());
-    const int window_center = Window::Instance().GetWidth() / 2;
+    std::cout << "show level info " << index << ", " << name << std::endl;
+    const int window_center = Window::Instance().getSize().x / 2;
     Storage().CreateObject<Expiring<Text> >(
                           20,
-                          "wave " + index,
+                          "wave "s + index,
                           Vector2f(window_center, FirstTextStringY),
                           Font::GetFont("medium.xml"),
                           Text::haCenter, Text::vaCenter);
@@ -65,7 +72,7 @@ void Level::ShowLevelInfo(const std::string& index, const std::string& name,
                           Vector2f(window_center, SecondTextStringY),
                           Font::GetFont("big.xml"),
                           Text::haCenter, Text::vaCenter);
-    if(!description.empty()) {
+    if(description) {
         if(descr_blink)
             Storage().CreateObject<Expiring<Blinkable<Text> > >(
                                 20, // life time
@@ -85,7 +92,7 @@ void Level::ShowLevelInfo(const std::string& index, const std::string& name,
 }
 
 void Level::Run() {
-    if(Window::Instance().GetInput().IsKeyDown(Key::Escape))
+    if(Keyboard::isKeyPressed(Keyboard::Key::Escape))
         MainMenu::SwitchToMenu();
 }
 

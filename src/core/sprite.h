@@ -25,38 +25,50 @@
 #   include<SFML/Graphics/Sprite.hpp>
 #else
 #   include "drawable.h"
-#   include "image.h"
-#   include <portability/cpp11.h>
 #   include "rect.h"
-#   include "vector2.h"
-#endif
 
-namespace oci {
-namespace core {
+#   include <SDL_render.h>
+
+#   include <cassert>
+#endif
 
 #ifdef USE_SFML
 
-using sf::Sprite;
+namespace oci::core {
+    using sf::Sprite;
+} // namespace oci::core
 
 #else
 
+namespace oci {
+    class Texture;
+} // namespace oci
+
+namespace oci::core {
+
 class Sprite : public Drawable {
 public:
-    Sprite() : mImage() {}
-    Sprite(const Image& img, const Vector2f& position = Vector2f(0, 0))
-        : Drawable(position), mImage(&img) {}
+    Sprite() = default;
+    Sprite(const Texture& tex) {
+        setTexture(tex, true);
+    }
 
-    Vector2f GetSize() const;
-    void SetImage(const Image& img) { mImage = &img; }
-    void SetSubRect(const IntRect& /*rect*/) {}
+    const Texture* getTexture() const noexcept { return mTexture; }
+    void setTexture(const Texture& texture, bool resetRect = false)
+    {
+        assert(resetRect); // resetRect == true is not used in the game and not implemented
+        (void)resetRect;
+        mTexture = &texture;
+    }
+
+    FloatRect getGlobalBounds() const noexcept;
 
     void DoDraw(SDL_Renderer* renderer) const override;
 
 private:
-    const Image* mImage;
+    const Texture* mTexture = nullptr;
 };
 
-#endif
+} // namespace oci::core
 
-} // namespace core
-} // namespace oci
+#endif

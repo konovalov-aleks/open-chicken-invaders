@@ -22,7 +22,10 @@
 #include "chicken_part.h"
 
 #include <constants.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/bonus/bonus.h>
 
 namespace oci {
 namespace objects {
@@ -39,13 +42,13 @@ void BonusChickenPart::Init(const Vector2f& position, float xspeed, float yspeed
 
 void BonusChickenPart::Run() {
     if(mTime < 0) {
-        Move(mXSpeed, mYSpeed);
-        if(GetPosition().x < 0 || GetPosition().x > Window::Instance().GetWidth()) {
+        move(mXSpeed, mYSpeed);
+        if(getPosition().x < 0 || getPosition().x > Window::Instance().getSize().x) {
             Storage().KillObject(this);
             return;
         }
-        if(GetPosition().y > FloorLevel()) {
-            SetPosition(GetPosition().x, FloorLevel());
+        if(getPosition().y > FloorLevel()) {
+            setPosition(getPosition().x, FloorLevel());
             if(mYSpeed < 1) {
                 mYSpeed = mXSpeed = 0;
                 mTime = LifeTime;

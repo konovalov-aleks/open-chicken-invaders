@@ -21,9 +21,9 @@
 
 #include "fast_trigonometry.h"
 
-#include "array_size.h"
-#include <assert.h>
-#include <stdlib.h>
+#include <cassert>
+#include <cstddef>
+#include <iterator>
 
 namespace trigonometry {
 
@@ -91,7 +91,7 @@ namespace trigonometry {
     };
 
     float sin(Degree angle) {
-        assert(angle.Value() >= 0 && static_cast<size_t>(angle.Value()) <= ARRAY_SIZE(SIN_VALUES));
+        assert(angle.Value() >= 0 && static_cast<std::size_t>(angle.Value()) <= std::size(SIN_VALUES));
         return SIN_VALUES[angle.Value()];
     }
 
@@ -159,7 +159,7 @@ namespace trigonometry {
     };
 
     float cos(Degree angle) {
-        assert(angle.Value() >= 0 && static_cast<size_t>(angle.Value()) <= ARRAY_SIZE(COS_VALUES));
+        assert(angle.Value() >= 0 && static_cast<std::size_t>(angle.Value()) <= std::size(COS_VALUES));
         return COS_VALUES[angle.Value()];
     }
 

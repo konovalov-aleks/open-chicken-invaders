@@ -27,8 +27,7 @@ namespace oci {
 
 /// Уровень высоты, на котором разбиваются яйца, на который падают бонусы и т.д.
 inline float FloorLevel() {
-    static const float floor_level = Window::Instance().GetHeight() - 20;
-    return floor_level;
+    return Window::Instance().getSize().y - 20;
 }
 
 } // namespace oci

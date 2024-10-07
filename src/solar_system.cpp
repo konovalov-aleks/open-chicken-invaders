@@ -21,11 +21,18 @@
 
 #include "solar_system.h"
 
-#include <assert.h>
 #include <background/background.h>
-#include <boost/lexical_cast.hpp>
-#include <stdexcept>
+#include <context/object_storage.h>
+#include <core/critical_error.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/sprite.h>
+#include <objects/base/visible.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <cassert>
+#include <string_view>
+#include <memory>
 
 namespace oci {
 
@@ -58,17 +65,17 @@ const int SolarSystem::PLANETS_X [] = {
 namespace {
     class Planet : public objects::CommonSprite<objects::Visible::dpPlanet> {
     public:
-        void Init(const std::string& name, int index) {
+        void Init(std::string_view name, int index) {
             Sprite::Init(name,
                          Vector2f(
                              Background::Instance().GetController().GetX() +
                              SolarSystem::PLANETS_X[index],
                              Background::Instance().GetController().GetY() +
-                             (Window::Instance().GetHeight() / 2)));
+                             (Window::Instance().getSize().y / 2)));
         }
     };
 
-    inline weak_ptr<objects::Sprite> CreatePlanet(context::ObjectsStorage& storage, const char* name, int ind) {
+    inline std::weak_ptr<objects::Sprite> CreatePlanet(context::ObjectStorage& storage, const char* name, int ind) {
         return storage.CreateObject<Planet>(name, ind);
     }
 } // namespace
@@ -100,21 +107,20 @@ void SolarSystem::Init(float /*x0*/, float /*y0*/, short planets) {
 
 int SolarSystem::GetPlanetHeight(short ind) {
     assert(ind >= PLANET_IND_SUN && ind <= PLANET_IND_PLUTO);
-    shared_ptr<objects::Sprite> planet(mPlanets[ind].lock());
-    if(!planet)
-        throw std::logic_error("Произведена попытка обращения к несуществующей планете (позиция: " +
-                               boost::lexical_cast<std::string>(ind) + ")");
+    std::shared_ptr<objects::Sprite> planet(mPlanets[ind].lock());
+    if(!planet) [[unlikely]]
+        CriticalError("attempt to access to a non-existent planet (index: ", ind, ')');
     return planet->GetHeight();
 }
 
 void SolarSystem::Run() {
     /// Двигаем все планеты исходя из положения фона
     for(int i = 0; i < 11; ++i) {
-        shared_ptr<objects::Sprite> planet(mPlanets[i].lock());
+        std::shared_ptr<objects::Sprite> planet(mPlanets[i].lock());
         if(planet) {
-            planet->SetPosition(PLANETS_X[i] + Background::Instance().GetController().GetX(),
+            planet->setPosition(PLANETS_X[i] + Background::Instance().GetController().GetX(),
                                 Background::Instance().GetController().GetY() +
-                                (Window::Instance().GetHeight() >> 1));
+                                (Window::Instance().getSize().y >> 1));
         }
     }
 }

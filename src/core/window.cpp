@@ -27,93 +27,91 @@ namespace oci {
 
 #ifndef USE_SFML
 
-#include <stdexcept>
-#include <boost/thread.hpp>
+#include "critical_error.h"
+#include "drawable.h"
+#include "event.h"
+#include "vector2.h"
+#include "video_mode.h"
+
+#include <SDL.h>
+#include <SDL_error.h>
+#include <SDL_events.h>
+#include <SDL_timer.h>
 
 namespace oci {
 
-WindowImpl::WindowImpl() : mFrameMinTime(0) {
-    SDL_Init(SDL_INIT_EVERYTHING);
+WindowImpl::SDLInit::SDLInit()
+{
+    if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS)) [[unlikely]]
+        CriticalError("SDL_Init failed. ", SDL_GetError());
 }
 
-WindowImpl::~WindowImpl() {
+WindowImpl::SDLInit::~SDLInit()
+{
     SDL_Quit();
 }
 
-void WindowImpl::Create(VideoMode mode, const std::string& title, unsigned int) {
+void WindowImpl::create(VideoMode mode, const std::string& title, unsigned int) {
     mSize.x = mode.Width();
     mSize.y = mode.Height();
     mWindow.reset(SDL_CreateWindow(title.c_str(), 0, 0,
                                    mode.Width(), mode.Height(),
                                    SDL_WINDOW_SHOWN));
-    if(!mWindow)
-        throw std::runtime_error("Cannot create window");
+    if(!mWindow) [[unlikely]]
+        CriticalError("Cannot create a window. ", SDL_GetError());
 
     mRenderer.reset(SDL_CreateRenderer(mWindow.get(), -1, SDL_RENDERER_ACCELERATED));
-    if(!mRenderer)
-        throw std::runtime_error("Cannot create renderer");
+    if(!mRenderer) [[unlikely]]
+        CriticalError("Cannot create a renderer. ", SDL_GetError());
 }
 
-void WindowImpl::Close() {
+void WindowImpl::close() {
     mRenderer.reset();
     mWindow.reset();
 }
 
-void WindowImpl::Display() {
-    SDL_RenderPresent(mRenderer.get());
+void WindowImpl::display() {
 #ifndef ANDROID
-    if(mFrameMinTime > 0) {
-        CHRONO::system_clock::time_point current_time = CHRONO::system_clock::now();
-        CHRONO::nanoseconds delta = current_time - mLastFrameTime;
-        if(delta < CHRONO::microseconds(mFrameMinTime)) {
-            boost::this_thread::sleep_for(
-                CHRONO::microseconds(mFrameMinTime) - delta);
-        }
-        mLastFrameTime = current_time;
+    if(mFrameMinTimeMs > 0) {
+        Uint64 now = SDL_GetTicks64();
+        Uint64 elapsed = now - mLastFrameTimeMs;
+        if(elapsed < mFrameMinTimeMs)
+            SDL_Delay(static_cast<Uint32>(mFrameMinTimeMs - elapsed));
+        mLastFrameTimeMs = SDL_GetTicks64();
     }
 #endif
+    SDL_RenderPresent(mRenderer.get());
 }
 
-void WindowImpl::Draw(const Drawable& obj) {
+void WindowImpl::draw(const Drawable& obj) {
     obj.DoDraw(mRenderer.get());
 }
 
-void WindowImpl::Clear() {
+void WindowImpl::clear() {
     SDL_RenderClear(mRenderer.get());
 }
 
-void WindowImpl::ShowMouseCursor(bool show) {
-    SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
+void WindowImpl::setMouseCursorVisible(bool visible) {
+    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
 }
 
-void WindowImpl::SetCursorPosition(unsigned int x, unsigned int y) {
-#ifdef ANDROID
-    const float scale = static_cast<float>(GetRealHeight() / GetHeight());
-#else
-    const float scale = 1.0f;
-#endif
-    SDL_WarpMouseInWindow(mWindow.get(), x * scale, y * scale);
-}
-
-bool WindowImpl::GetEvent(Event& event_received) {
+bool WindowImpl::pollEvent(Event& event_received) {
     SDL_Event event;
     if(SDL_PollEvent(&event)) {
-        event_received.Type = static_cast<Event::EventType>(event.type);
+        event_received.type = static_cast<Event::EventType>(event.type);
         return true;
     }
     return false;
 }
 
-bool WindowImpl::IsOpened() const {
-    return mWindow.get() != NULL;
+bool WindowImpl::isOpen() const {
+    return mWindow.get() != nullptr;
 }
 
-namespace {
-    inline Vector2i GetWindowSize(SDL_Window* wnd) {
-        Vector2i result;
-        SDL_GetWindowSize(wnd, &result.x, &result.y);
-        return result;
-    }
+inline Vector2i GetWindowSize(SDL_Window* wnd) {
+    Vector2i result;
+    SDL_GetWindowSize(wnd, &result.x, &result.y);
+    return result;
 }
 
 unsigned int WindowImpl::GetRealWidth() const {
@@ -124,8 +122,8 @@ unsigned int WindowImpl::GetRealHeight() const {
     return GetWindowSize(mWindow.get()).y;
 }
 
-void WindowImpl::SetFramerateLimit(unsigned int limit) {
-    mFrameMinTime = limit > 0 ? 1000000 / limit : 0;
+void WindowImpl::setFramerateLimit(unsigned int limit) {
+    mFrameMinTimeMs = limit > 0 ? 1000 / limit : 0;
 }
 
 } // namespace oci

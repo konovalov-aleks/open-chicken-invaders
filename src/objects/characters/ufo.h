@@ -21,12 +21,20 @@
 
 #pragma once
 
-#include <audio/controller_holder.h>
 #include <objects/base/active.h>
 #include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object_types.h>
+
+#include <memory>
+
+namespace oci::audio {
+    class Controller;
+} // namespace oci::audio
 
 namespace oci {
 namespace objects {
+
+struct CollisionObjectInfo;
 
 /// летающая тарелка
 class UFO : public AnimatedCollisionObject, public Active {
@@ -45,7 +53,7 @@ private:
     float mSpeed;
     /// Время до следующего выстрела
     int mTime;
-    shared_ptr<audio::Controller> mEngineSound;
+    std::shared_ptr<audio::Controller> mEngineSound;
 };
 
 } // namespace objects

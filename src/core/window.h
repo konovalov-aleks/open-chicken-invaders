@@ -21,19 +21,19 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-
 #ifdef USE_SFML
 #   include <SFML/Graphics/RenderWindow.hpp>
 #else
 #   include "drawable.h"
-#   include "event.h"
-#   include "input.h"
-#   include <portability/chrono.h>
-#   include <portability/memory.h>
-#   include <SDL2/SDL.h>
+#   include "vector2.h"
+
+#   include <SDL_mouse.h>
+#   include <SDL_render.h>
+#   include <SDL_stdinc.h>
+#   include <SDL_video.h>
+
+#   include <memory>
 #   include <string>
-#   include "video_mode.h"
 #endif
 
 namespace oci {
@@ -44,35 +44,32 @@ typedef sf::RenderWindow WindowImpl;
 
 #else
 
+class Event;
+class VideoMode;
+
 class WindowImpl {
 public:
-    WindowImpl();
-    ~WindowImpl();
+    void create(VideoMode mode, const std::string& title, unsigned int style);
+    void close();
+    void display();
+    void draw(const Drawable& obj);
+    void clear();
 
-    void Create(VideoMode mode, const std::string& title, unsigned int style);
-    void Close();
-    void Display();
-    void Draw(const Drawable& obj);
-    void Clear();
+    void setMouseCursorVisible(bool);
 
-    void ShowMouseCursor(bool show);
-    void SetCursorPosition(unsigned int x, unsigned int y);
+    bool pollEvent(Event& event_received);
 
-    bool GetEvent(Event& event_received);
+    bool isOpen() const;
 
-    bool IsOpened() const;
-
-    unsigned int GetWidth() const { return mSize.x; }
-    unsigned int GetHeight() const { return mSize.y; }
+    Vector2u getSize() const noexcept { return mSize; }
 
     unsigned int GetRealWidth() const;
     unsigned int GetRealHeight() const;
 
-    const Input& GetInput() const { return mInput; }
-
+    SDL_Window* SDLHandle() const noexcept { return mWindow.get(); }
     SDL_Renderer* GetRenderer() { return mRenderer.get(); }
 
-    void SetFramerateLimit(unsigned int limit);
+    void setFramerateLimit(unsigned int limit);
 
 private:
     struct WindowDeleter {
@@ -96,19 +93,30 @@ private:
         }
     };
 
-    Input mInput;
-    unique_ptr<SDL_Window, WindowDeleter> mWindow;
-    unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
-    CHRONO::system_clock::time_point mLastFrameTime;
-    Vector2<unsigned int> mSize;
-    int mFrameMinTime;
+    struct SDLInit {
+        SDLInit();
+        ~SDLInit();
+    };
+
+    SDLInit mSdlInit;
+
+    std::unique_ptr<SDL_Window, WindowDeleter> mWindow;
+    std::unique_ptr<SDL_Renderer, RendererDeleter> mRenderer;
+    Uint64 mLastFrameTimeMs = 0;
+    Vector2u mSize = {};
+    Uint32 mFrameMinTimeMs = 0;
 };
 
 #endif
 
-class Window : public WindowImpl, boost::noncopyable {
+class Window : public WindowImpl {
 public:
     static Window& Instance() { return mInstance; }
+
+    Window() = default;
+
+    Window(const Window&) = delete;
+    Window& operator= (const Window&) = delete;
 
 private:
     static Window mInstance;

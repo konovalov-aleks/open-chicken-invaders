@@ -22,17 +22,28 @@
 #include "mainmenu.h"
 
 #include "background_controller.h"
+#include "cursor.h"
+#include <background/background.h>
+#include <context/context.h>
 #include <context/manager.h>
 #include <context/object_holder.h>
-#include <core/event.h>
+#include <context/object_storage.h>
+#include <core/mouse.h>
+#include <core/vector2.h>
 #include <core/window.h>
-#include "cursor.h"
 #include <font/font.h>
 #include <levels/manager.h>
+#include <objects/base/active.h>
 #include <objects/base/sprite.h>
+#include <objects/base/visible.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/text/text.h>
-#include <portability/functional.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <cstdlib>
+#include <functional>
+#include <memory>
+#include <string_view>
 
 namespace oci {
 
@@ -40,7 +51,7 @@ using namespace objects;
 
 namespace {
 
-    static const char MENU_CONTEXT_NAME[] = "menu";
+    const char MENU_CONTEXT_NAME[] = "menu";
 
     class Button : public Sprite, public Active {
     public:
@@ -54,12 +65,12 @@ namespace {
 
         Button() : mPressed(false) {}
 
-        void Init(const std::string& caption, int ypos,
-                  const function<void()>& on_press_callback) {
+        void Init(std::string_view caption, int ypos,
+                  const std::function<void()>& on_press_callback) {
             Sprite::Init("menuitem.xml");
-            SetPosition(Window::Instance().GetWidth() / 2, ypos);
+            setPosition(Window::Instance().getSize().x / 2, ypos);
             mCaption = Storage().CreateObject<Text>(
-                caption, GetPosition(), Font::GetFont("medium.xml"),
+                caption, getPosition(), Font::GetFont("medium.xml"),
                 Text::haCenter, Text::vaCenter);
             mOnPressCallback = on_press_callback;
         }
@@ -69,38 +80,31 @@ namespace {
         }
 
         void Run() override {
-            Vector2f p = TransformToLocal(
-                                Vector2f(
-                                    Window::Instance().GetInput().GetMouseX(),
-                                    Window::Instance().GetInput().GetMouseY()));
-            bool mouse_in_button = p.x >= 0 && p.x < GetSize().x &&
-                                   p.y >= 0 && p.y < GetSize().y;
+            const Vector2i mouse_pos = Mouse::getPosition(Window::Instance());
+            bool mouse_in_button = getGlobalBounds().contains(Vector2f(mouse_pos));
             SetState(mouse_in_button ? sHover : sNormal);
-            if(mouse_in_button && mPressed &&
-               !Window::Instance().GetInput().IsMouseButtonDown(Mouse::Left))
+            if(mouse_in_button && mPressed && !Mouse::isButtonPressed(Mouse::Left))
                 mOnPressCallback();
-            mPressed = mouse_in_button &&
-                Window::Instance().GetInput().IsMouseButtonDown(Mouse::Left);
+            mPressed = mouse_in_button && Mouse::isButtonPressed(Mouse::Left);
         }
 
     private:
         ObjectHolder<Text> mCaption;
         bool mPressed;
-        function<void()> mOnPressCallback;
+        std::function<void()> mOnPressCallback;
     };
 
     class Logo : public CommonSprite<Visible::dpForeground> {
     public:
         void Init() {
             Sprite::Init("logo.xml");
-            SetPosition(Vector2f(Window::Instance().GetWidth() / 2, 76));
+            setPosition(Vector2f(Window::Instance().getSize().x / 2, 76));
         }
     };
-}
 
-namespace {
     inline void doexit() {
-        exit(EXIT_SUCCESS);
+        Window::Instance().close();
+        std::exit(EXIT_SUCCESS);
     }
 } // namespace
 
@@ -110,12 +114,12 @@ void MainMenu::Init() {
 
     Storage().CreateObject<Logo>();
     Storage().CreateObject<Button>("save the world", 260,
-            bind( &levels::Manager::NewGame, &levels::Manager::Instance()));
+            std::bind(&levels::Manager::NewGame, &levels::Manager::Instance()));
     Storage().CreateObject<Button>("quit", 300, doexit);
 
     Storage().CreateObject<Text>(
         "main menu",
-        Vector2f(Window::Instance().GetWidth() / 2, 210),
+        Vector2f(Window::Instance().getSize().x / 2, 210),
         Font::GetFont("big.xml"), Text::haCenter, Text::vaCenter);
 
     Storage().CreateObject<UnshadeScreen>();
@@ -131,9 +135,9 @@ void MainMenu::SwitchToMenu() {
 }
 
 void MainMenu::InitMenu() {
-    shared_ptr<context::Context> context =
+    context::Context& context =
         context::Manager::Instance().GetContext(MENU_CONTEXT_NAME);
-    context->GetStorage(context::storage::LOCAL).CreateObject<MainMenu>();
+    context.GetStorage(context::storage::LOCAL).CreateObject<MainMenu>();
     context::Manager::Instance().SetActiveContext(context);
 }
 

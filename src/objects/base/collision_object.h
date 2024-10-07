@@ -24,6 +24,10 @@
 #include "collision_object_types.h"
 #include "object.h"
 #include "sprite.h"
+#include <core/vector2.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace objects {
@@ -41,8 +45,6 @@ struct CollisionObjectInfo
     CollisionType type;
     short power;
 };
-
-class CollisionObjectHolder;
 
 class ICollisionObject : virtual public Object {
 public:
@@ -75,7 +77,7 @@ protected:
 class CCollisionObject : public ICollisionObject, public Sprite
 {
 public:
-    void Init(const std::string& sprite_name, const Vector2f& pos,
+    void Init(std::string_view sprite_name, const Vector2f& pos,
               short power);
 
     virtual void OnCollision(const CollisionObjectInfo& collisedWith) = 0;

@@ -24,12 +24,18 @@
 #include "audio/controller_holder.h"
 #include "audio/player.h"
 #include "constants.h"
+#include "context/object_storage.h"
+#include "core/vector2.h"
+#include "objects/base/animated_collision_object.h"
+
+#include <compare>
+#include <string_view>
 
 namespace oci {
 namespace objects {
 
 namespace {
-    static const CHRONO::seconds EGG_LIFE_TIME = CHRONO::seconds(1);
+    static const std::chrono::seconds EGG_LIFE_TIME = std::chrono::seconds(1);
     static const int EGG_SPEED = 3;
 }
 
@@ -47,20 +53,20 @@ void Egg::NextFrame() {
 
 void Egg::Run() {
     if(speed) {
-        Move(0, speed);
-        if(GetPosition().y > FloorLevel()) {
-            SetY(FloorLevel());
+        move(0, speed);
+        if(getPosition().y > FloorLevel()) {
+            setPosition(getPosition().x, FloorLevel());
             SetAnimationSpeed(1.0f);
             speed = 0;
 
             Storage().CreateObject<audio::ControllerHolder>(
                 audio::Play("fx11.wav"));
 
-            lifetime = CHRONO::system_clock::now();
+            lifetime = std::chrono::steady_clock::now();
             in_floor = true;
         }
     }
-    if(in_floor && CHRONO::system_clock::now() - lifetime >= EGG_LIFE_TIME)
+    if(in_floor && std::chrono::steady_clock::now() - lifetime >= EGG_LIFE_TIME)
         Storage().KillObject(this);
 }
 

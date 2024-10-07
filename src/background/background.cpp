@@ -21,9 +21,11 @@
 
 #include "background.h"
 
-#include <assert.h>
+#include <core/texture.h>
+#include <core/vector2.h>
 #include <core/window.h>
-#include <stdexcept>
+
+#include <cassert>
 
 namespace oci {
 
@@ -43,35 +45,36 @@ Background& Background::Instance() {
 }
 
 Background::Background() {
-    SetController(make_shared<StaticController>());
+    SetController(std::make_shared<StaticController>());
 }
 
 void Background::Draw() {
-    const int width = mSprite.GetSize().x;
-    const int height = mSprite.GetSize().y;
+    const Vector2u tex_size = mSprite.getTexture()->getSize();
+    const int width = tex_size.x;
+    const int height = tex_size.y;
     int xx = GetController().GetX() % width;
     if(xx > 0)
         xx -= width;
     int y0 = GetController().GetY() % height;
     if(y0 > 0)
         y0 -= height;
-    while(xx < static_cast<int>(Window::Instance().GetWidth())) {
+    while(xx < static_cast<int>(Window::Instance().getSize().x)) {
         int yy = y0;
-        while(yy < static_cast<int>(Window::Instance().GetHeight())) {
-            mSprite.SetPosition(xx, yy);
-            Window::Instance().Draw(mSprite);
+        while(yy < static_cast<int>(Window::Instance().getSize().y)) {
+            mSprite.setPosition(xx, yy);
+            Window::Instance().draw(mSprite);
             yy += height;
         }
         xx += width;
     }
 }
 
-void Background::SetController(const shared_ptr<Controller>& controller) {
+void Background::SetController(const std::shared_ptr<Controller>& controller) {
     assert(controller.get());
     mControllers.push_front(controller);
 }
 
-void Background::ResetController(const shared_ptr<Controller>& controller) {
+void Background::ResetController(const std::shared_ptr<Controller>& controller) {
     mControllers.remove(controller);
 }
 

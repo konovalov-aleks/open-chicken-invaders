@@ -21,17 +21,18 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include "controller.h"
-#include <portability/memory.h>
-#include <string>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <memory>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace audio {
 
-shared_ptr<Controller> Play(const std::string& filename,
-                            bool autoplay = true,
-                            bool loop = false);
+std::unique_ptr<Controller> Play(std::string_view filename,
+                                 bool autoplay = true,
+                                 bool loop = false);
 
 } // namespace audio
 } // namespace oci

@@ -21,8 +21,12 @@
 
 #include "lives_indicator.h"
 
+#include "indicator.h"
+#include <core/vector2.h>
 #include <core/window.h>
 #include <game/state.h>
+
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -30,7 +34,7 @@ namespace interface {
 
 void LivesIndicator::Init() {
     Indicator::Init("heart.xml",
-                    Vector2f(Window::Instance().GetWidth() - 110, 10));
+                    Vector2f(Window::Instance().getSize().x - 110, 10));
 }
 
 int LivesIndicator::GetValue() const {

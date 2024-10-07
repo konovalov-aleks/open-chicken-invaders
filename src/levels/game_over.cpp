@@ -19,12 +19,17 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <core/window.h>
 #include "factory.h"
 #include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <font/font.h>
 #include <objects/effects/unshade_screen.h>
 #include <objects/modifiers/blinking.h>
 #include <objects/text/text.h>
+
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -39,14 +44,14 @@ public:
         Storage().CreateObject<Blinkable<Text> >(
             20, // blink period
             "game over",
-            Vector2f(Window::Instance().GetWidth() / 2,
-                     Window::Instance().GetHeight() / 2),
+            Vector2f(Window::Instance().getSize().x / 2,
+                     Window::Instance().getSize().y / 2),
             Font::GetFont("big.xml"),
             Text::haCenter, Text::vaCenter);
     }
 };
 
-static Factory::Registrator<GameOver> reg("game_over", "");
+static Factory::Registrar<GameOver> reg("game_over", "");
 
 } // namespace levels
 } // namespace oci

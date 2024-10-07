@@ -21,47 +21,58 @@
 
 #include "bullet.h"
 
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/particles/spark.h>
-#include <portability/math.h>
+
+// IWYU pragma: no_include <__math/rounding_functions.h>
+// IWYU pragma: no_include <__math/trigonometric_functions.h>
+#include <cmath>
+#include <cstdlib>
+#include <numbers>
+#include <string_view>
 
 namespace oci {
 namespace objects {
 
-void Bullet::Init(const std::string& sprite_name, const Vector2f& pos,
+void Bullet::Init(std::string_view sprite_name, const Vector2f& pos,
                   float speed, float angle, int _state, short power,
                   int collisionWith, CollisionType collisionType) {
     CCollisionObject::Init(sprite_name, pos, power);
     collision_type = collisionType;
     collision_with = collisionWith;
     SetState(_state);
-    dx0 =  speed * static_cast<float>(sin(angle));
-    dy0 = -speed * static_cast<float>(cos(angle));
+    dx0 =  speed * std::sin(angle);
+    dy0 = -speed * std::cos(angle);
     dx = 0.4f * dx0;
     dy = 0.4f * dy0;
 
-    int frame = round(angle / (M_PI * 2.0) * 32.0f);
+    int frame = std::round(angle / (std::numbers::pi_v<float> * 2.0f) * 32.0f);
     if(frame >= static_cast<int>(FramesCount()))
         frame = 0;
     SetFrame(frame);
 }
 
 void Bullet::OnCollision(const CollisionObjectInfo& /*collisedWith*/) {
-    Spark(Storage(), GetPosition(), 20);
+    Spark(Storage(), getPosition(), 20);
     Storage().KillObject(this);
 }
 
 void Bullet::Run() {
     dx += 0.03f * dx0;
     dy += 0.03f * dy0;
-    if(fabsf(dx) > fabsf(dx0))
+    if(std::abs(dx) > std::abs(dx0))
         dx = dx0;
-    if(fabsf(dy) > fabsf(dy0))
+    if(std::abs(dy) > std::abs(dy0))
         dy = dy0;
 
-    Move(dx, dy);
-    if(GetPosition().x > Window::Instance().GetWidth() || GetPosition().x < 0 ||
-       GetPosition().y > Window::Instance().GetHeight() || GetPosition().y < 0)
+    move(dx, dy);
+    const Vector2u wnd_size =  Window::Instance().getSize();
+    if(getPosition().x > wnd_size.x || getPosition().x < 0 ||
+       getPosition().y > wnd_size.y || getPosition().y < 0)
         Storage().KillObject(this);
 }
 

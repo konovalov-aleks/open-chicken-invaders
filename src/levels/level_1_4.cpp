@@ -21,9 +21,17 @@
 
 #include "level_1_4.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "level_x4.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <objects/characters/asteroid.h>
 #include <objects/modifiers/auto_killable.h>
+
+#include <cstdlib>
+#include <memory>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -31,7 +39,7 @@ namespace levels {
 using namespace objects;
 using namespace modifiers;
 
-static Factory::Registrator<Level_1_4> reg("level_1_4", "game");
+static Factory::Registrar<Level_1_4> reg("level_1_4", "game");
 
 static const float ASTEROID_SPEED = 8.0f;
 
@@ -40,15 +48,15 @@ void Level_1_4::Init() {
     ShowLevelInfo("4", "meteor shower", "watch out!", true);
 }
 
-weak_ptr<objects::Asteroid> Level_1_4::CreateAsteroid() {
-    int x = Window::Instance().GetWidth() + 10;
+std::weak_ptr<objects::Asteroid> Level_1_4::CreateAsteroid() {
+    const Vector2u wndSize = Window::Instance().getSize();
+    int x = wndSize.x + 10;
     int y = -10;
-    if(rand() % 3)
-        x = rand() % Window::Instance().GetWidth() * 3 / 4 +
-            Window::Instance().GetWidth() / 4;
+    if(std::rand() % 3)
+        x = std::rand() % wndSize.x * 3 / 4 + wndSize.x / 4;
     else
-        y = rand() % (Window::Instance().GetHeight() / 2);
-    bool big = rand() & 1;
+        y = std::rand() % (wndSize.y / 2);
+    bool big = std::rand() & 1;
     return Storage().CreateObject<AutoKillable<Asteroid, BoundLeft, BoundBottom> >(
                 Vector2f(x, y), // position
                 6.1f,               // angle

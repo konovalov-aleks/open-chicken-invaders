@@ -22,26 +22,31 @@
 #pragma once
 
 #include "asteroid.h"
-#include <portability/functional.h>
+
+#include <core/vector2.h>
+#include <objects/base/collision_object_types.h>
+
+#include <functional>
+#include <memory>
 
 namespace oci {
 namespace objects {
 
-/// Астероид, который отпрыгивает от границ экрана и раскалывается на 3 части при взрыве
-/// (создаются 3 объекта CAsteroid)
+/// An asteroid that bounces off the screen edges and splits into 3 pieces
+/// when it explodes (3 Asteroid objects are created)
 class JumpingAsteroid : public Asteroid {
 public:
-    typedef function<void(shared_ptr<JumpingAsteroid>)> CreateSplinterCallback;
+    typedef std::function<void(std::shared_ptr<JumpingAsteroid>)> CreateSplinterCallback;
 
-    /// \param split Раскалывать ли астероид после взрыва
+    /// \param split - whether to split the asteroid after an explosion
     void Init(const Vector2f& position, float angle, float speed, short health,
               Type type, bool split, const CreateSplinterCallback& cb);
 
 protected:
     virtual void Run() override;
     virtual void OnBang(CollisionType ct) override;
-    /// Метод вызывается, когда астероид взорвали (нужно создать осколок)
-    /// \param angle Угол, под которым должен летет осколок
+    /// The method is called if the asteroid was exploded (need to create a splinter)
+    /// \param angle - splinter movement angle
     virtual void CreateAsteroidSplinter(float angle);
 
 private:

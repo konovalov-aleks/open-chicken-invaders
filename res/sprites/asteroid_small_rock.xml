@@ -1,0 +1,36 @@
+<sprite>
+	<animation repeat="1" reverse="0">
+		<frame name="gfx/asteroid-small-rock_0.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_1.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_2.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_3.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_4.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_5.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_6.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_7.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_8.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_9.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_10.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_11.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_12.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_13.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_14.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_15.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_16.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_17.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_18.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_19.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_20.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_21.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_22.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_23.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_24.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_25.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_26.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_27.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_28.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_29.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_30.bmp" colorkey="0"/>
+		<frame name="gfx/asteroid-small-rock_31.bmp" colorkey="0"/>
+	</animation>
+</sprite>

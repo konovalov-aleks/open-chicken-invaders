@@ -21,19 +21,31 @@
 
 #include "player_ship.h"
 
+#include "shield.h"
+#include "ship.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <boost/lexical_cast.hpp>
-#include <core/event.h>
-#include <core/input.h>
+#include <context/object_storage.h>
+#include <core/critical_error.h>
+#include <core/keyboard.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <game/state.h>
 #include <levels/manager.h>
+#include <objects/base/active.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/gun/green_gun.h>
-#include <objects/gun/red_gun.h>
+#include <objects/gun/gun.h>
 #include <objects/gun/missile.h>
+#include <objects/gun/red_gun.h>
 #include <objects/particles/bang.h>
-#include <stdexcept>
+
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <memory>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -63,49 +75,49 @@ namespace {
 
         static float ShipUnlimitedX() {
             static const float ship_unlimited_x =
-                Window::Instance().GetWidth() * 2;
+                Window::Instance().getSize().x * 2;
             return ship_unlimited_x;
         }
 
         static float ShipUnlimitedY() {
             static const float ship_unlimited_y =
-                Window::Instance().GetHeight() * 3 / 2;
+                Window::Instance().getSize().y * 3 / 2;
             return ship_unlimited_y;
         }
     };
 
     class BangEffect : public objects::Active {
     public:
-        void Init(const shared_ptr<PlayerShip>& ship) {
+        void Init(const std::shared_ptr<PlayerShip>& ship) {
             mShip = ship;
             mShip->StopFire();
-            Bang(Storage(), mShip->GetPosition(), 20);
+            Bang(Storage(), mShip->getPosition(), 20);
             Storage().CreateObject<audio::ControllerHolder>(
                     audio::Play("fx113.wav"));
-            mShip->SetPosition(Vector2f(
-                Window::Instance().GetWidth() / 2,
-                Window::Instance().GetHeight() + mShip->GetSize().y));
+            const Vector2u wnd_size = Window::Instance().getSize();
+            mShip->setPosition(Vector2f(
+                wnd_size.x / 2, wnd_size.y + mShip->GetHeight()));
             mShip->CreateShield();
         }
 
         void Run() override {
             float speed = std::min(
-                (PlayerShip::DEFAULT_Y_POS() - mShip->GetPosition().y) / 8.0f,
+                (PlayerShip::DEFAULT_Y_POS() - mShip->getPosition().y) / 8.0f,
                 -1.0f);
-            mShip->Move(0, speed);
-            if(fabs(mShip->GetPosition().y - PlayerShip::DEFAULT_Y_POS()) < 1.0f) {
+            mShip->move(0, speed);
+            if(std::abs(mShip->getPosition().y - PlayerShip::DEFAULT_Y_POS()) < 1.0f) {
                 mShip->StartFire();
                 Storage().KillObject(this);
-                mShip->SetPosition(mShip->GetPosition().x, PlayerShip::DEFAULT_Y_POS());
+                mShip->setPosition(mShip->getPosition().x, PlayerShip::DEFAULT_Y_POS());
             }
         }
 
     private:
-        shared_ptr<PlayerShip> mShip;
+        std::shared_ptr<PlayerShip> mShip;
     };
 
     template<typename T, typename T2, typename T3>
-    inline void fit_value_to_range(T& value, T2 min_val, T3 max_val) {
+    void fit_value_to_range(T& value, T2 min_val, T3 max_val) {
         if(value > static_cast<T>(max_val))
             value = static_cast<T>(max_val);
         else if(value < static_cast<T>(min_val))
@@ -125,7 +137,7 @@ void PlayerShip::Init() {
 }
 
 void PlayerShip::CreateShield() {
-    mShield = Storage().CreateObject<Shield>(GetPosition());
+    mShield = Storage().CreateObject<Shield>(getPosition());
 }
 
 int PlayerShip::CollisionWith() const {
@@ -173,11 +185,11 @@ void PlayerShip::OnCollision(const CollisionObjectInfo& collisedWith) {
 }
 
 float PlayerShip::DoGetX() const {
-    return GetPosition().x;
+    return getPosition().x;
 }
 
 float PlayerShip::DoGetY() const {
-    return GetPosition().y;
+    return getPosition().y;
 }
 
 int PlayerShip::DoGetFrameWidth() const {
@@ -189,16 +201,15 @@ int PlayerShip::DoGetFrameHeight() const {
 }
 
 void PlayerShip::Run() {
-    const Input& input = Window::Instance().GetInput();
-    if(input.IsKeyDown(Key::Left))
+    if(Keyboard::isKeyPressed(Keyboard::Left))
         MoveLeft();
-    else if(input.IsKeyDown(Key::Right))
+    else if(Keyboard::isKeyPressed(Keyboard::Right))
         MoveRight();
-    else if(input.IsKeyDown(Key::Return) && !mEnterPressed)
+    else if(Keyboard::isKeyPressed(Keyboard::Return) && !mEnterPressed)
         StartMissile();
     else
         mFDX = 0;
-    mEnterPressed = input.IsKeyDown(Key::Return);
+    mEnterPressed = Keyboard::isKeyPressed(Keyboard::Return);
 
     // стреляем, если надо
     if(--mFireTime < 0) {
@@ -206,8 +217,8 @@ void PlayerShip::Run() {
         Fire();
     }
 
-    float x = GetPosition().x;
-    float y = GetPosition().y;
+    float x = getPosition().x;
+    float y = getPosition().y;
 
     if(mFDX != 0) // если нажата кнопка, то ускоряемся
         mDX += mFDX;
@@ -230,14 +241,14 @@ void PlayerShip::Run() {
     }
     fit_value_to_range(mDY, -Constants::MaxSpeedDY(), Constants::MaxSpeedDY());
 
-    if(fabsf(mTargetX - x) < fabsf(mDX)) {
+    if(std::abs(mTargetX - x) < std::abs(mDX)) {
         x = mTargetX;
         mFDX = mDX = 0;
     } else
         x += mDX;
-    fit_value_to_range(x, 0, Window::Instance().GetWidth());
+    fit_value_to_range(x, 0, Window::Instance().getSize().x);
 
-    if(fabsf(mTargetY - y) < fabsf(mDY)) {
+    if(std::abs(mTargetY - y) < std::abs(mDY)) {
         y = mTargetY;
         mFDY = mDY = 0;
     } else
@@ -253,10 +264,10 @@ void PlayerShip::Run() {
     int a = static_cast<int>(mDX * 2.0f) + 4;
     SetFrame(a < static_cast<int>(FramesCount()) ? (a >= 0 ? a : 0) : FramesCount() - 1);
 
-    SetPosition(x, y);
-    shared_ptr<Shield> shield = mShield.lock();
+    setPosition(x, y);
+    std::shared_ptr<Shield> shield = mShield.lock();
     if(shield)
-        shield->SetPosition(GetPosition());
+        shield->setPosition(getPosition());
     Ship::Run();
 }
 
@@ -275,16 +286,16 @@ void PlayerShip::MoveRight() {
 void PlayerShip::StartMissile() {
     if(mFire && State::Instance().Missiles() > 0) {
         State::Instance().RemoveMissile();
-        Storage().CreateObject<Missile>(GetPosition());
+        Storage().CreateObject<Missile>(getPosition());
     }
 }
 
 void PlayerShip::Fire() {
     if(mFire) {
-        mGun->Fire(GetPosition().x, GetPosition().y);
+        mGun->Fire(getPosition().x, getPosition().y);
         // корабль отъезжает назад после выстрела
         mDeltaY = 3.0f * Constants::OnFireSpeedY();
-        Move(0, mDeltaY);
+        move(0, mDeltaY);
     }
 }
 
@@ -300,9 +311,8 @@ void PlayerShip::SelectGun(TGunType gun_type) {
         case gt_Green:
             mGun.reset(new GreenGun(level));
             break;
-        default:
-            throw std::logic_error("Unknown gun type: " +
-                                   boost::lexical_cast<std::string>(gun_type));
+        default: [[unlikely]]
+            CriticalError("Unknown gun type: ", gun_type);
     }
 }
 

@@ -21,22 +21,28 @@
 
 #pragma once
 
-#include <background/simple_controller.h>
 #include "level.h"
 
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <memory>
+#include <string_view> // IWYU pragma: keep
+
 namespace oci {
+
+class SimpleController;
+
 namespace levels {
 
 class StartRound : public Level {
 public:
     StartRound();
-    void Init(const std::string& round_title);
+    void Init(std::string_view round_title);
 protected:
     void Run() override;
 private:
     float mDY;
     int mTime;
-    shared_ptr<SimpleController> mBackgroundController;
+    std::shared_ptr<SimpleController> mBackgroundController;
 };
 
 } // namespace levels

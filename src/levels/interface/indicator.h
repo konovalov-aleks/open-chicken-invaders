@@ -21,10 +21,16 @@
 
 #pragma once
 
+#include <core/vector2.h>
 #include <objects/base/active.h>
-#include <objects/base/sprite.h>
-#include <objects/modifiers/hidden.h>
-#include <objects/text/text.h>
+#include <objects/base/sprite.h> // IWYU pragma: keep
+#include <objects/base/visible.h>
+#include <objects/modifiers/hidden.h> // IWYU pragma: keep
+#include <objects/text/text.h> // IWYU pragma: keep
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <memory>
+#include <string_view> // IWYU pragma: keep
 
 namespace oci {
 namespace levels {
@@ -32,15 +38,15 @@ namespace interface {
 
 class Indicator : public objects::Active {
 public:
-    void Init(const std::string& sprite_name, const Vector2f& position);
+    void Init(std::string_view sprite_name, const Vector2f& position);
     void Run() override;
 
 protected:
     virtual int GetValue() const = 0;
 
 private:
-    shared_ptr<objects::modifiers::Hidden<objects::Text> > mText;
-    shared_ptr<
+    std::shared_ptr<objects::modifiers::Hidden<objects::Text> > mText;
+    std::shared_ptr<
         objects::modifiers::Hidden<
             objects::CommonSprite<objects::Visible::dpForeground>
         >

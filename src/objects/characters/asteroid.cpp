@@ -23,10 +23,20 @@
 
 #include <audio/controller_holder.h>
 #include <audio/player.h>
-#include <core/window.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <objects/base/animated_collision_object.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
 #include <objects/particles/smoke.h>
-#include <portability/math.h>
-#include <utils/array_size.h>
+
+// IWYU pragma: no_include <__math/inverse_trigonometric_functions.h>
+// IWYU pragma: no_include <__math/trigonometric_functions.h>
+#include <cmath>
+#include <cstdlib>
+#include <iterator>
+#include <numbers>
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -37,25 +47,25 @@ void Asteroid::Init(const Vector2f& position, float angle, float speed,
         "asteroid_small_rock.xml", "asteroid_big_rock.xml",
         "asteroid_small_fire.xml", "asteroid_big_fire.xml"
     };
-    static_assert(ARRAY_SIZE(SPRITE_NAMES) == TYPE_COUNT,
+    static_assert(std::size(SPRITE_NAMES) == TYPE_COUNT,
                   "for each element in enumeration Asteroid::Type must "
                   "exists string in array SPRITE_NAMES");
     AnimatedCollisionObject::Init(SPRITE_NAMES[type], position, health),
-    mDX = speed * static_cast<float>(sin(angle));
-    mDY = speed * static_cast<float>(cos(angle));
+    mDX = speed * std::sin(angle);
+    mDY = speed * std::cos(angle);
     mType = type;
 }
 
 void Asteroid::Run() {
-    if(rand() % 3 == 0) {
+    if(std::rand() % 3 == 0) {
         // FIXME
-        int angle = (atan2(mDX, mDY) * M_PI) / 180;
-        int dx = rand() % GetWidth() - GetWidth() / 2;
+        int angle = (std::atan2(mDX, mDY) * std::numbers::pi) / 180;
+        int dx = std::rand() % GetWidth() - GetWidth() / 2;
         Storage().CreateObject<CSmoke>(
-            Vector2f(GetPosition().x + dx, GetPosition().y),
-            rand() % 3 + 0.5f, angle);
+            Vector2f(getPosition().x + dx, getPosition().y),
+            std::rand() % 3 + 0.5f, angle);
     }
-    Move(mDX, mDY);
+    move(mDX, mDY);
 }
 
 void Asteroid::OnCollision(const CollisionObjectInfo& collisedWith) {
@@ -65,7 +75,7 @@ void Asteroid::OnCollision(const CollisionObjectInfo& collisedWith) {
         power = 0;
 
     if(power <= 0) {
-        Smoke(Storage(), GetPosition(),
+        Smoke(Storage(), getPosition(),
               mType == tRockSmall || mType == tFireSmall ? 20 : 30);
         if(collisedWith.type != ctMissile)
             Storage().CreateObject<audio::ControllerHolder>(

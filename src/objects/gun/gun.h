@@ -21,10 +21,12 @@
 
 #pragma once
 
-#include <assert.h>
-#include <objects/base/sprite.h>
+#include <context/context.h>
 #include <context/manager.h>
-#include <context/objects_storage.h>
+#include <context/object_storage.h> // IWYU pragma: keep
+#include <core/vector2.h>
+
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -51,11 +53,8 @@ protected:
     */
     Gun(short lev, TGunType gun_type);
 
-    context::ObjectsStorage& Storage() {
-        shared_ptr<context::Context> game_context(
-            context::Manager::Instance().GetContext("game"));
-        assert(game_context.get());
-        return game_context->GetStorage("level");
+    context::ObjectStorage& Storage() {
+        return context::Manager::Instance().GetContext("game").GetStorage("level");
     }
 
     template<typename T>

@@ -21,10 +21,19 @@
 
 #include "level_1_5.h"
 
+#include "factory.h"
+#include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <objects/characters/paratrooper.h>
-#include "factory.h"
 #include <utils/cleanup_container.h>
+
+#include <cstdlib>
+#include <functional>
+#include <memory>
+#include <string_view>
 
 namespace oci {
 namespace levels {
@@ -33,22 +42,23 @@ using namespace objects;
 
 const float CLevel_1_5::ChickenSpeed = 2.0f;
 
-static Factory::Registrator<CLevel_1_5> reg1("level_1_5", "game", 0);
-static Factory::Registrator<CLevel_1_5> reg2("level_1_6", "game", 1);
-static Factory::Registrator<CLevel_1_5> reg3("level_1_7", "game", 2);
+static Factory::Registrar<CLevel_1_5> reg1("level_1_5", "game", 0);
+static Factory::Registrar<CLevel_1_5> reg2("level_1_6", "game", 1);
+static Factory::Registrar<CLevel_1_5> reg3("level_1_7", "game", 2);
 
 inline void CLevel_1_5::CreateParatrooper(float x, float y) {
-    weak_ptr<Paratrooper> paratrooper = Storage().CreateObject<Paratrooper>(
+    std::weak_ptr<Paratrooper> paratrooper = Storage().CreateObject<Paratrooper>(
         Vector2f(x, y), ChickenSpeed, 400, 1);
-    shared_ptr<Paratrooper>(paratrooper)->SetOnCreateRandomChickenCallback(
-        bind(static_cast<
+    std::shared_ptr<Paratrooper>(paratrooper)->SetOnCreateRandomChickenCallback(
+        std::bind(static_cast<
                 void(ChickensList::*)(const ChickensList::value_type&)
-            >(&ChickensList::push_front), mChickens, placeholders::_1));
+            >(&ChickensList::push_front), mChickens, std::placeholders::_1));
     mChickens.push_front(paratrooper);
 }
 
 void CLevel_1_5::Init(char Step) {
     GameLevel::Init("level_1_5");
+    const Vector2u wnd_size = Window::Instance().getSize();
     switch(Step) {
     case 0:
         ShowLevelInfo("5", "paratroopers!");
@@ -56,7 +66,7 @@ void CLevel_1_5::Init(char Step) {
             float y0 = -40.0f - 150.0f * y;
             float dy = 40;
             for(int x = 0; x < 7; ++x) {
-                CreateParatrooper(x * Window::Instance().GetWidth() / 7 + 32.0f, y0);
+                CreateParatrooper(x * wnd_size.x / 7 + 32.0f, y0);
                 y0 += dy;
                 dy -= 14;
             }
@@ -65,8 +75,8 @@ void CLevel_1_5::Init(char Step) {
     case 1:
         ShowLevelInfo("6", "death from above");
         for(int n = 0; n < 16; ++n) {
-            int x = rand() % Window::Instance().GetWidth();
-            int y = -(rand() % Window::Instance().GetHeight());
+            int x = std::rand() % wnd_size.x;
+            int y = -(std::rand() % wnd_size.y);
             CreateParatrooper(x, y);
         } break;
     case 2:
@@ -74,7 +84,7 @@ void CLevel_1_5::Init(char Step) {
             ShowLevelInfo("7", "third time lucky");
             float y0 = -20;
             for(int n = 0; n < 3; ++n) {
-                float x0 = Window::Instance().GetWidth() - 30;
+                float x0 = wnd_size.x - 30;
                 for(int k = 0; k < 6; ++k) {
                     CreateParatrooper(x0, y0);
                     x0 -= 100 + rand() % 20;

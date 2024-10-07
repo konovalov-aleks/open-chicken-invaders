@@ -21,7 +21,11 @@
 
 #include "level_x4.h"
 
+#include "game_level.h"
+#include "level.h"
 #include <utils/cleanup_container.h>
+
+#include <cstdlib>
 
 namespace oci {
 namespace levels {
@@ -35,7 +39,7 @@ void Level_x4::Init(int p, int count) {
 void Level_x4::Run() {
     Level::Run();
     if(mCount > 0) {
-        if(rand() % mP == 0) {
+        if(std::rand() % mP == 0) {
            mAsteroids.push_front(CreateAsteroid());
            --mCount;
         }

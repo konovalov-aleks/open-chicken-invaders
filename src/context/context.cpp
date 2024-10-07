@@ -21,15 +21,23 @@
 
 #include "context.h"
 
-#include <assert.h>
-#include <core/window.h>
+#include <context/object_storage.h>
+#include <objects/base/active.h>
+#include <objects/base/animated.h>
+#include <objects/base/collision_object.h>
+#include <objects/base/collision_object_types.h>
+#include <objects/base/visible.h>
+#include <utils/transparent_equal.h>
+#include <utils/transparent_string_hash.h>
+
+// IWYU pragma: no_include <__hash_table>
 #include <list>
 #include <map>
-#include <objects/base/active.h>
-#include <objects/base/collision_object.h>
-#include <objects/base/animated.h>
-#include <objects/base/visible.h>
-#include <utils/for_each.h>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <unordered_map>
+#include <utility>
 
 namespace oci {
 namespace context {
@@ -37,21 +45,21 @@ namespace context {
 namespace {
 
 template<typename T>
-inline shared_ptr<T> lock(const weak_ptr<T>& ptr) {
-        return ptr.lock();
+std::shared_ptr<T> lock(const std::weak_ptr<T>& ptr) {
+    return ptr.lock();
 }
 
 template<typename T1, typename T2>
-inline shared_ptr<T2> lock(const std::pair<T1, weak_ptr<T2> >& ptr) {
+std::shared_ptr<T2> lock(const std::pair<T1, std::weak_ptr<T2> >& ptr) {
     return ptr.second.lock();
 }
 
 template<typename ElementType, typename T, typename Func>
-inline void process(T& container, Func f) {
+void process(T& container, Func f) {
     for(typename T::iterator iter = container.begin();
        iter != container.end();) {
         typename T::iterator current = iter++;
-        shared_ptr<ElementType> ptr = lock(*current);
+        std::shared_ptr<ElementType> ptr = lock(*current);
         if(!ptr)
             container.erase(current);
         else
@@ -64,24 +72,27 @@ inline void process(T& container, Func f) {
 class Context::Impl {
 public:
     std::list<
-        weak_ptr<objects::Active>
+        std::weak_ptr<objects::Active>
     > mActiveObjects;
 
     std::multimap<
         objects::Visible::DrawPriority,
-        weak_ptr<objects::Visible>
+        std::weak_ptr<objects::Visible>
     > mVisibleObjects;
 
     std::list<
-        weak_ptr<objects::Animated>
+        std::weak_ptr<objects::Animated>
     > mAnimatedObjects;
 
     typedef std::list<
-        weak_ptr<objects::ICollisionObject>
+        std::weak_ptr<objects::ICollisionObject>
     > CollisionObjectsList;
     CollisionObjectsList mCollisionObjects;
 
-    typedef unordered_map<std::string, unique_ptr<ObjectsStorage> > ObjectsMap;
+    using ObjectsMap = std::unordered_map<
+        std::string, std::unique_ptr<ObjectStorage>,
+        TransparentStrHash, TransparentEqual
+    >;
     ObjectsMap mObjectStorages;
 };
 
@@ -91,19 +102,19 @@ Context::Context() : mImpl(new Impl()) {
 Context::~Context() {
 }
 
-void Context::RegisterActiveObject(const shared_ptr<objects::Active>& func) {
+void Context::RegisterActiveObject(const std::shared_ptr<objects::Active>& func) {
     mImpl->mActiveObjects.push_front(func);
 }
 
-void Context::RegisterVisible(const shared_ptr<objects::Visible>& obj) {
+void Context::RegisterVisible(const std::shared_ptr<objects::Visible>& obj) {
     mImpl->mVisibleObjects.insert(std::make_pair(obj->GetDrawPriority(), obj));
 }
 
-void Context::RegisterAnimated(const shared_ptr<objects::Animated>& obj) {
+void Context::RegisterAnimated(const std::shared_ptr<objects::Animated>& obj) {
     mImpl->mAnimatedObjects.push_front(obj);
 }
 
-void Context::RegisterCollisionObject(const shared_ptr<objects::ICollisionObject>& obj) {
+void Context::RegisterCollisionObject(const std::shared_ptr<objects::ICollisionObject>& obj) {
     mImpl->mCollisionObjects.push_front(obj);
 }
 
@@ -115,7 +126,7 @@ void Context::ProcessCollisions() {
     for(Context::Impl::CollisionObjectsList::iterator iter1 =
             mImpl->mCollisionObjects.begin();
             iter1 != mImpl->mCollisionObjects.end();) {
-        shared_ptr<objects::ICollisionObject> obj1 = iter1->lock();
+        std::shared_ptr<objects::ICollisionObject> obj1 = iter1->lock();
         if(!obj1) {
             Context::Impl::CollisionObjectsList::iterator old = iter1++;
             mImpl->mCollisionObjects.erase(old);
@@ -123,7 +134,7 @@ void Context::ProcessCollisions() {
         }
         for(Context::Impl::CollisionObjectsList::iterator iter2 = ++iter1;
                 iter2 != mImpl->mCollisionObjects.end(); ++iter2) {
-            shared_ptr<objects::ICollisionObject> obj2 = iter2->lock();
+            std::shared_ptr<objects::ICollisionObject> obj2 = iter2->lock();
             if(obj2 && (obj1->GetCollisionType() & obj2->CollisionWith()) &&
                obj2->DetectCollision(*obj1)) {
                 objects::CollisionObjectInfo ci = obj1->CollisionInfo();
@@ -142,11 +153,11 @@ void Context::Animate() {
     process<objects::Animated>(mImpl->mAnimatedObjects, &objects::Animated::NextFrame);
 }
 
-void Context::ColliseAll(CollisionType collision_type, int power) {
+void Context::CollideAll(CollisionType collision_type, int power) {
     for(Context::Impl::CollisionObjectsList::iterator iter =
        mImpl->mCollisionObjects.begin();
        iter != mImpl->mCollisionObjects.end(); ++iter) {
-        shared_ptr<objects::ICollisionObject> obj( iter->lock() );
+        std::shared_ptr<objects::ICollisionObject> obj( iter->lock() );
         if(obj && obj->CollisionWith() & collision_type) {
             objects::CollisionObjectInfo info(obj->DoGetX(), obj->DoGetY(),
                             obj->DoGetFrameWidth(), obj->DoGetFrameHeight(),
@@ -156,12 +167,12 @@ void Context::ColliseAll(CollisionType collision_type, int power) {
     }
 }
 
-ObjectsStorage& Context::GetStorage(const std::string& name) {
+ObjectStorage& Context::GetStorage(std::string_view name) {
     Context::Impl::ObjectsMap& storages = mImpl->mObjectStorages;
     Context::Impl::ObjectsMap::const_iterator iter = storages.find(name);
     if(iter == storages.end())
         iter = storages.insert(
-                   std::make_pair(name, unique_ptr<ObjectsStorage>(new ObjectsStorage(*this)))
+                   std::make_pair(name, std::unique_ptr<ObjectStorage>(new ObjectStorage(*this)))
                ).first;
     return *iter->second;
 }

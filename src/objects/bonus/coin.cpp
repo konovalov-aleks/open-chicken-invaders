@@ -21,10 +21,15 @@
 
 #include "coin.h"
 
+#include "bonus.h"
 #include <audio/controller_holder.h>
 #include <audio/player.h>
+#include <context/object_storage.h>
+#include <core/vector2.h>
 #include <core/window.h>
 #include <game/state.h>
+
+#include <string_view>
 
 namespace oci {
 namespace objects {
@@ -36,10 +41,11 @@ void BonusCoin::Init(const Vector2f& position, float xspeed, float yspeed) {
 }
 
 void BonusCoin::Run() {
-    Move(mXSpeed, mYSpeed);
+    move(mXSpeed, mYSpeed);
     mYSpeed += Gravity;
-    if(GetPosition().x < 0 || GetPosition().x > Window::Instance().GetWidth() ||
-       GetPosition().y > Window::Instance().GetHeight())
+    const Vector2u wnd_size = Window::Instance().getSize();
+    if(getPosition().x < 0 || getPosition().x > wnd_size.x ||
+       getPosition().y > wnd_size.y)
         Storage().KillObject(this);
 }
 

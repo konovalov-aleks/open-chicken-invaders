@@ -21,18 +21,25 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
 #include "loader.h"
-#include <objects/characters/player_ship.h>
+
+#include <memory>
+
+namespace oci::objects {
+    class PlayerShip;
+} // namespace oci::objects
 
 namespace oci {
 namespace levels {
 
 /// синглтон менеджер уровней
 /** осуществляет предварительную инииализацию и создание уровня */
-class Manager : public Loader, private boost::noncopyable {
+class Manager : public Loader {
 public:
     static Manager& Instance();
+
+    Manager(const Manager&) = delete;
+    Manager& operator= (const Manager&) = delete;
 
     void NewGame();
     /// запускает уровень с номером level_index
@@ -48,7 +55,7 @@ private:
 
     /// номер текущего уровня
     int current_level_index;
-    shared_ptr<objects::PlayerShip> mPlayerShip;
+    std::shared_ptr<objects::PlayerShip> mPlayerShip;
 };
 
 } // namespace levels

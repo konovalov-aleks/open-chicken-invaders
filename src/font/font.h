@@ -21,28 +21,29 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
-#include <core/image.h>
-#include <portability/unordered_map.h>
-#include <string>
+#include <core/texture.h>
+
+// IWYU pragma: no_include <__fwd/string_view.h>
+#include <string_view> // IWYU pragma: keep
+#include <unordered_map>
 
 namespace oci {
 
 class Font {
 public:
-    static const Font& GetFont(const std::string& name);
+    static const Font& GetFont(std::string_view name);
 
-    const Image& operator[] (char s) const;
+    const Texture& operator[] (char s) const;
 
 private:
-    Font(const std::string& name);
+    Font(std::string_view name);
 
-    void Load(const std::string& name);
-    void LoadGlyph(char s, const std::string& filename);
+    void Load(std::string_view name);
+    void LoadGlyph(char s, std::string_view filename);
 
-    unordered_map<char, Image> mImages;
+    std::unordered_map<char, Texture> mTextures;
 
-    friend class FontLoader;
+    friend struct FontLoader;
 };
 
 } // namespace oci

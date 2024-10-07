@@ -22,8 +22,11 @@
 #pragma once
 
 #include "game_level.h"
+#include <core/vector2.h>
 #include <objects/characters/chicken.h>
+
 #include <list>
+#include <memory>
 
 namespace oci {
 namespace levels {
@@ -47,10 +50,10 @@ public:
         char mode;
     };
 
-    void Init(char Step);
+    void Init(int Step);
 
 private:
-    std::list<weak_ptr<LevelChicken> > mChickens;
+    std::list<std::weak_ptr<LevelChicken> > mChickens;
 
     virtual void Run() override;
 

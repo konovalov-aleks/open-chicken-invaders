@@ -21,14 +21,24 @@
 
 #include "level_1_8.h"
 
-#include <core/window.h>
 #include "factory.h"
+#include "game_level.h"
+#include "level.h"
+#include <context/object_storage.h>
+#include <core/vector2.h>
+#include <core/window.h>
+#include <objects/characters/asteroid.h>
+#include <objects/characters/jumping_asteroid.h>
 #include <utils/cleanup_container.h>
+
+#include <cstdlib>
+#include <functional>
+#include <string_view>
 
 namespace oci {
 namespace levels {
 
-static Factory::Registrator<CLevel_1_8> reg("level_1_8", "game", 0);
+static Factory::Registrar<CLevel_1_8> reg("level_1_8", "game", 0);
 
 static const float ASTEROID_SPEED = 8.0f;
 static const float INITIAL_POS_Y = 20.0f;
@@ -37,16 +47,16 @@ void CLevel_1_8::Init(int Step) {
     GameLevel::Init("level_1_4");
     mAsteroids.push_front(
         Storage().CreateObject<objects::JumpingAsteroid>(
-            Vector2f(static_cast<float>(rand() % Window::Instance().GetWidth()),
+            Vector2f(static_cast<float>(std::rand() % Window::Instance().getSize().x),
                      INITIAL_POS_Y),     // position
             1,                           // angle
             ASTEROID_SPEED,              // speed
             10,                          // health
             objects::Asteroid::tRockBig, // type
             true,                        // split
-            bind(static_cast<
+            std::bind(static_cast<
                     void(AsteroidsList::*)(const AsteroidsList::value_type&)
-                >(&AsteroidsList::push_front), &mAsteroids, placeholders::_1)
+                >(&AsteroidsList::push_front), &mAsteroids, std::placeholders::_1)
         )
     );
     ShowLevelInfo(Step == 0 ? "8" : "18", "asteroids!", "no, really", true);

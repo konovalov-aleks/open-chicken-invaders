@@ -22,7 +22,6 @@
 #pragma once
 
 #include <objects/base/active.h>
-#include <string>
 
 namespace oci {
 namespace levels {
@@ -30,7 +29,7 @@ namespace levels {
 /// интерфейс уровня (или мультика)
 class Level : public objects::Active {
 public:
-    void Init(const std::string& levelname);
+    void Init(const char* levelname);
 
     /// функция для удаления текущего уровеня и перехода к новому
     void EndLevel();
@@ -44,8 +43,8 @@ protected:
      *     \param  description     Необязательное описание уровня
      *     \param  descr_blink     Если true, то описание мигает
      */
-    void ShowLevelInfo(const std::string& index, const std::string& name,
-                       const std::string& description = std::string(),
+    void ShowLevelInfo(const char* index, const char* name,
+                       const char* description = nullptr,
                        bool descr_blink = false);
 };
 

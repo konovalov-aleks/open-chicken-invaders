@@ -19,84 +19,48 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <background/background.h>
 #include "context/context.h"
 #include "context/manager.h"
+#include "menu/mainmenu.h"
+#include <background/background.h>
 #include <core/event.h>
 #include <core/video_mode.h>
 #include <core/window.h>
 #include <core/window_style.h>
 #include <diagnostics/benchmark/benchmark.h>
-#include <diagnostics/fps.h>
-#include <exception>
-#include "levels/manager.h"
-#include "menu/mainmenu.h"
-#include <portability/unordered_map.h>
-#include <stdio.h>
 
-using namespace oci;
-
-namespace {
-
-    void onclose(const Event& /*event*/) {
-        Window::Instance().Close();
-    }
-
-    typedef unordered_map<int, void (*)(const Event&)> EventsMap;
-    static EventsMap event_handlers;
-
-    void fill_handlers() {
-        event_handlers.insert(std::make_pair(Event::Closed, onclose));
-    };
-
-    void unexpected_handler() {
-        fputs("Unexpected handler called", stderr);
-        exit(EXIT_FAILURE);
-    }
-
-    void terminate_handler() {
-        fputs("Terminate handler called", stderr);
-        exit(EXIT_FAILURE);
-    }
-
-} // namespace
+#include <cassert>
+#include <cstdlib>
+#include <cstring>
+#include <string>
 
 int main(int argc, char* argv[]) {
-    std::set_unexpected(unexpected_handler);
-    std::set_terminate(terminate_handler);
-    fill_handlers();
-
     using namespace oci;
 
-    try {
-        VideoMode vm(640, 480);
-        Window::Instance().Create(vm, "Chicken invaders", Style::Close);
-        if(argc == 2 && !strcmp(argv[1], "-benchmark"))
-            benchmark::StartBenchmark();
-        else {
-            Window::Instance().SetFramerateLimit(25);
-            MainMenu::InitMenu();
-        }
-        while(Window::Instance().IsOpened()) {
-            Event event;
-            while(Window::Instance().GetEvent(event)) {
-                EventsMap::const_iterator it = event_handlers.find(event.Type);
-                if(it != event_handlers.end())
-                    it->second(event);
+    VideoMode vm(640, 480);
+    Window::Instance().create(vm, "Chicken invaders", Style::Close);
+    if(argc == 2 && !std::strcmp(argv[1], "-benchmark"))
+        benchmark::StartBenchmark();
+    else {
+        Window::Instance().setFramerateLimit(25);
+        MainMenu::InitMenu();
+    }
+    while(Window::Instance().isOpen()) {
+        Event event;
+        while(Window::Instance().pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                Window::Instance().close();
+                return EXIT_SUCCESS;
             }
-            Window::Instance().Clear();
-            shared_ptr<context::Context> context =
-                context::Manager::Instance().GetActiveContext();
-            Background::Instance().Draw();
-            context->Run();
-            context->ProcessCollisions();
-            context->Animate();
-            context->Draw();
-            Window::Instance().Display();
         }
-    } catch(const std::exception& e) {
-        fprintf(stderr, "Error: %s\n", e.what());
-    } catch(...) {
-        fputs("Unknown error :(\n", stderr);
+        Window::Instance().clear();
+        Background::Instance().Draw();
+        context::Context* context = context::Manager::Instance().GetActiveContext();
+        assert(context);
+        context->Run();
+        context->ProcessCollisions();
+        context->Animate();
+        context->Draw();
+        Window::Instance().display();
     }
 }
